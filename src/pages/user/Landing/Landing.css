@@ -1,0 +1,52 @@
+@font-face {
+    font-family: "quote";
+    src: url("../../../assets/fonts/Andika,Roboto_Slab/Roboto_Slab/RobotoSlab-VariableFont_wght.ttf");
+}
+
+.quotes h1{
+    font-family: "quote";
+}
+
+.images{
+    background-image: url("../../../assets/images/Group74.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 90vh;
+}
+
+.quotes button{
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.feature-card-heading{
+    box-shadow: rgba(171, 168, 168, 0.16) 0px 3px 6px, rgba(107, 104, 104, 0.23) 0px 3px 6px;
+    font-family: "quote";
+}
+
+.banner1_img{
+    background-image: url(../../../assets/images/2868468.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;   
+}
+
+.banner2_img{
+    background-image: url(../../../assets/images/3801552.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;   
+}
+
+.banner3_img{
+    background-image: url(../../../assets/images/5945273.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;   
+}
+
+.banner4-div{
+    background-image: url(../../../assets/images/couple-hugs-before-violet-evening-sky-mountains.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;  
+    background-position: center;
+}

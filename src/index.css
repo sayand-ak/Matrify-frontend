@@ -1,0 +1,18 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@font-face {
+    font-family: "font-btn";
+    src: url('./assets/fonts/Work_Sans/WorkSans-VariableFont_wght.ttf') format('truetype'); ;
+}
+
+@font-face {
+    font-family: "quote";
+    src: url("../../../assets/fonts/Andika,Roboto_Slab/Roboto_Slab/RobotoSlab-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "gillroy";
+    src: url("../../../assets/fonts/gilroy/Gilroy-Regular.ttf");
+}
