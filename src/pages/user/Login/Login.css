@@ -1,0 +1,18 @@
+@font-face {
+    font-family: "gillroy";
+    src: url(../../../assets/fonts/gilroy/Gilroy-Regular.ttf);
+}
+
+.image-container{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.form-container input{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
+
+.login-card-container{
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}

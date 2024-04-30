@@ -7,7 +7,6 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
 import { IoIosVideocam } from "react-icons/io";
 import { motion } from 'framer-motion';
-import { useEffect } from "react";
 
 const containerVariants = {
     hidden: { y: '100%', opacity: 0 },
@@ -29,10 +28,6 @@ export function Landing(){
     };
   
     const images:LandingCardProps[] = [ verifyImg, securityImg, matchImg ]; 
-
-    useEffect(() => {
-        document.title = "Matrify - User";
-    })
 
     return(
         <>
