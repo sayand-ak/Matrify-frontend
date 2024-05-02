@@ -3,7 +3,9 @@ import { validatePassword } from "../../../utils/validatePassword";
 import { validatePhone } from "../../../utils/validatePhone";
 import { validateUsername } from "../../../utils/validateUsername";
 import "./SignUp.css";
-import { CustomModal } from "../../../components/users/modal/CustomModal";
+import { CustomModal } from "../../../components/modal/CustomModal";
+import { useNavigate } from "react-router-dom";
+import OtpInput from 'react-otp-input';
 
 
 export function SignUp() {
@@ -17,7 +19,11 @@ export function SignUp() {
     const [passwordErr, setPasswordErr] = useState("");
     const [rePasswordErr, setRePasswordErr] = useState("");
 
+    const [otp, setOtp] = useState("");
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const navigate = useNavigate();
 
     function validate(field: string, value: string) {
         if (field === "uname") {
@@ -64,10 +70,12 @@ export function SignUp() {
             alert("api called.....");
             setIsModalOpen(true);
         }
-
-        
-
     }
+
+    function handleOTPVerification(){
+        navigate("/user/setProfile");
+    }
+
     return(
         <div className="h-[100vh] flex items-center justify-center">
             <div className="signup-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[70vh] md:rounded-[50px] overflow-hidden">
@@ -142,10 +150,10 @@ export function SignUp() {
                             {rePasswordErr && <span className="text-red-500 text-sm">{rePasswordErr}</span>}
                         </div>
 
-                        <div className="flex flex-col items-center w-full">
+                        <div className="flex flex-col w-full">
                             <button 
                                 type="button" 
-                                className="w-[200px] px-5 py-2  md:mt-5 rounded-md bg-[#dd742a] text-white font-semibold"
+                                className="w-[100px] px-5 py-2  md:mt-5 rounded-md bg-[#dd742a] text-white font-semibold"
                                 onClick={handleRegisterSubmit}
                             >
                                 Sign Up
@@ -171,19 +179,43 @@ export function SignUp() {
                     </div>
                 </div>                
             </div>
+
             <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
                 <div className="flex flex-col items-center mt-10 px-6 gap-10">
                     <h2 className="font-gillroy text-2xl font-semibold md:text-3xl">Matrify OTP Verification</h2>
                     <p className="text-lg">Please enter the OTP (one time password) send to your registered phone number to complete the verification.</p>
-                    <div className="relative">
-                        <input type="tel" name="otp" id="" className="bg-[#dfdfdf] w-full text-5xl outline-none tracking-[40px] text-center overflow-hidden bg-transparent" maxLength={5}/>
+                    <div className="h-[50px] w-full flex items-center justify-center">
+                    <OtpInput
+                        value={otp}
+                        onChange={setOtp}
+                        numInputs={4}
+                        renderSeparator={<span>-</span>}
+                        renderInput={(props) => <input {...props} 
+                        style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "5px",
+                            border: "1px solid #dd742a",
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                            textAlign: "center",
+                            marginRight: "10px",
+                            marginLeft: "10px",
+                            outline: "none",
+                        }}/>}
+                    />
                     </div>
                     <div className="flex justify-between w-full">
                         <p>Remaining Time: 01:00</p>
                         <a href="#" className="text-blue-500">Resend OTP?</a>
                     </div>
                     <div className="flex justify-between w-full gap-4">
-                        <button className="w-1/2 px-5 py-3 rounded-md bg-[#dd742a] text-white font-semibold hover:bg-[#999999]">Verify</button>
+                        <button 
+                            className="w-1/2 px-5 py-3 rounded-md bg-[#dd742a] text-white font-semibold hover:bg-[#999999]"
+                            onClick={handleOTPVerification}
+                        >
+                        Verify
+                        </button>
                         <button 
                             className="w-1/2 border-[#dd742a] border-[1px] rounded-md"
                              onClick={() => setIsModalOpen(false)}

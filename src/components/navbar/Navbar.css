@@ -1,0 +1,37 @@
+@font-face {
+    font-family: "font-btn";
+    src: url('./assets/fonts/Work_Sans/WorkSans-VariableFont_wght.ttf') format('truetype'); ;
+}
+
+.nav {
+    height: 11vh;
+    width: 100vw;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+
+.login-btn{
+    font-family: "font-btn";
+    color: #454545;
+    border: 1px solid #EDF0F2;
+    border-radius: 25px;
+}
+
+.nav button{
+    border-radius: 25px;
+    font-family: "font-btn";
+    font-weight: 500;
+    background-color: #EDF0F2;
+    color: #454545;
+}
+
+.nav button:hover{
+    background-color: #e6eaec;
+}
+
+.logo-div{
+    background-image: url(../../../assets/images/MATRIFY-removebg-preview.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

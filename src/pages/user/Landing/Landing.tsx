@@ -1,7 +1,7 @@
 import "./Landing.css";
-import Navbar from "../../../components/users/navbar/Navbar";
-import { Footer } from "../../../components/users/footer/Footer";
-import { LandingCard } from "../../../components/users/landingCard/LandingCard";
+import Navbar from "../../../components/navbar/Navbar";
+import { Footer } from "../../../components/footer/Footer";
+import { LandingCard } from "../../../components/landingCard/LandingCard";
 import { LandingCardProps } from "../../../typings/landing/LandingCardTypes";
 import { FaPhoneAlt } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
