@@ -31,7 +31,7 @@ export function Landing(){
 
     return(
         <>
-            <Navbar/>
+            <Navbar page="landing"/>
             <div className="banner h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#f4f4f490]">
                 <div className="quotes flex-1 flex flex-col justify-center items-center">
                     <div className="px-5 md:px-16 min-h-[50vh]">

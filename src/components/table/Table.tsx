@@ -1,119 +1,34 @@
 import "./Table.css";
+import { CiCircleMore } from "react-icons/ci";
+import { Users } from "../../typings/user/userTypes";
 
-export function Table() {
+
+export function Table({userData, userHeader}: {userData: Users[], userHeader:string[]}) {
     return (
         <table className="flex-col w-full">
             <thead>
                 <tr className="text-center h-[50px]">
-                    <th>SL NO</th>
-                    <th>Name</th>
-                    <th>Profile</th>
-                    <th>Phone</th>
-                    <th>OTP Verified</th>
-                    <th>Status</th>
-                    <th>More</th>
+                {userHeader.map((header, index) => (
+                            <th key={index}>{header}</th>
+                ))}
                 </tr>
             </thead>
+            
             <tbody>
-                <tr className="text-center h-[50px]">
-                    <td>1</td>
-                    <td>John Doe</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>123-456-7890</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>2</td>
-                    <td>Jane Smith</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>987-654-3210</td>
-                    <td>No</td>
-                    <td>Inactive</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>3</td>
-                    <td>Michael Johnson</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>456-789-0123</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>4</td>
-                    <td>Sarah Brown</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>789-012-3456</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>5</td>
-                    <td>Sarah Brown</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>789-012-3456</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>6</td>
-                    <td>Sarah Brown</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>789-012-3456</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>7</td>
-                    <td>Sarah Brown</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>789-012-3456</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>8</td>
-                    <td>Sarah Brown</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>789-012-3456</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
-                <tr className="text-center h-[50px]">
-                    <td>9</td>
-                    <td>Sarah Brown</td>
-                    <th className="flex justify-center">
-                        <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
-                    </th>
-                    <td>789-012-3456</td>
-                    <td>Yes</td>
-                    <td>Active</td>
-                    <td><button>Details</button></td>
-                </tr>
+                { userData.length > 0 && userData.map((user, index) => (
+                    < tr className="text-center h-[50px]">
+                        <td key={index}>{index}</td>
+                        <td>{user.username}</td>
+                        <th className="flex justify-center">
+                            <img src="../../src/assets/images/profile.png" alt="" className="h-10 w-10"/>
+                        </th>
+                        <td>{user.phone? user.phone : "nill"}</td>
+                        <td>{user.email? user.email : "nill"}</td>
+                        <td>{new Date(user.createdAt).toISOString().split('T')[0]}</td>
+                        <td>{user.otpVerified? "verified": "not verified"}</td>
+                        <td><button><CiCircleMore className="text-2xl"/></button></td>
+                    </tr>
+                ))}
             </tbody>
         </table>
     )

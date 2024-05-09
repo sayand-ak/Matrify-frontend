@@ -10,22 +10,43 @@ import { MdOutlineLocalOffer } from 'react-icons/md';
 import { MdOutlineDelete } from 'react-icons/md';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { useState } from 'react';
+import { useAppDispatch } from '../../hooks/useTypedSelectors';
+import { adminLogout } from '../../redux/slices/adminSlices';
+import { useNavigate } from 'react-router-dom';
 
-export default function Sidebar() {
-    const [selected, setSelected] = useState<string|null>(null);
+interface SidebarProps {
+    onClickItem: (itemName: string) => void;
+    showMobileSidebar: boolean;
+    toggleMobileSidebar: () => void; 
+    getUsersData: () => void
+}
 
-    const handleItemClick = (itemName:string) => {
-        setSelected(itemName === selected ? null : itemName); 
+export default function Sidebar({ onClickItem, showMobileSidebar, getUsersData }: SidebarProps) {
+    const [selected, setSelected] = useState<string>("Dashboard");
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+
+    const handleItemClick = async(itemName:string) => {
+        setSelected(itemName === selected ? "Dashboard" : itemName); 
+        onClickItem(itemName); 
+        if(itemName === "Users"){
+            getUsersData();
+        }
+        if(itemName === "Logout"){
+            dispatch(adminLogout());
+            navigate("/admin/login");
+        }
     };
 
     return (
-        <div className="sidebar bg-[#F4F7F9] md:h-[100vh] md:w-[20%] hidden md:block md:fixed md:top-0 z-10">
+        <div className={`sidebar  transition duration-1000 ease-in bg-[#F4F7F9] w-[15rem] top-[4.4rem] md:h-[100vh] md:w-[20%] md:block md:fixed md:top-0 z-10 ${showMobileSidebar ? 'fixed' : 'hidden'}`}>
             <div className="heading md:flex items-center justify-start pl-5 h-40 gap-2 hidden ">
-                <img src="/src/assets/images/MATRIFY-removebg-preview (1).png" className="h-20 w-20" alt="" />
+                <img src="/src/assets/images/logo.png" className="h-20 w-20" alt="" />
                 <h1 className="font-gillroy text-[40px] text-[#a48351]">Matrify</h1>
             </div>
             <div className="options">
-                <ul className="flex flex-row gap-[16px] md:flex-col md:gap-8">
+                <ul className="flex flex-col gap-8">
                     <SidebarItem
                         icon={RxDashboard}
                         text="Dashboard"

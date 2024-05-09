@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { validatePassword } from "../../../utils/validatePassword";
 import { validatePhone } from "../../../utils/validatePhone";
 import { validateUsername } from "../../../utils/validateUsername";
@@ -6,6 +6,12 @@ import "./SignUp.css";
 import { CustomModal } from "../../../components/modal/CustomModal";
 import { useNavigate } from "react-router-dom";
 import OtpInput from 'react-otp-input';
+import { useAppDispatch } from "../../../hooks/useTypedSelectors";
+import { otpVerify, signupUserAsync } from "../../../services/userAPI";
+import { onSignInSubmit } from "../../../services/firebase/auth";
+import { ToastContainer } from "react-toastify";
+import { ConfirmationResult, signInWithPhoneNumber } from "firebase/auth";
+import showToast from "../../../components/Toast/Toast";
 
 
 export function SignUp() {
@@ -19,15 +25,21 @@ export function SignUp() {
     const [passwordErr, setPasswordErr] = useState("");
     const [rePasswordErr, setRePasswordErr] = useState("");
 
+    const [ confirmationResult, setConfirmationResult ] = useState<ConfirmationResult>();
+    const submitBtn = useRef<HTMLButtonElement>(null)
     const [otp, setOtp] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [remainingTime, setRemainingTime] = useState<number | null>(null);
+    const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
+
     const navigate = useNavigate();
+
+    const dispatch = useAppDispatch();
 
     function validate(field: string, value: string) {
         if (field === "uname") {
-            console.log(validateUsername(value));
             
             if(!validateUsername(value)){
                 setUnameErr("Username is invalid");
@@ -62,19 +74,97 @@ export function SignUp() {
         }
     }
 
-    function handleRegisterSubmit(){
+    async function handleRegisterSubmit(){
         if(!uname || !phone || !password){
             setRePasswordErr("Please fill all the fields");
-        }else{
+        } else {
             setRePasswordErr("");
-            alert("api called.....");
-            setIsModalOpen(true);
+            const response = await dispatch(signupUserAsync(phone));
+            console.log(response);
+            
+            if(response.payload.success){
+                const otpIncome = await onSignInSubmit(submitBtn.current);            
+                
+                if (otpIncome) {
+                    setConfirmationResult(await signInWithPhoneNumber(otpIncome?.auth, "+91"+phone, otpIncome?.recaptchaVerifier));
+    
+                    //setting timer 
+                    const currentTime = new Date();
+                    const oneMinuteLater = new Date(currentTime.getTime() + (1 * 60000));
+                    localStorage.setItem("expireTime", oneMinuteLater.toString());
+    
+                    const expireTimeString = localStorage.getItem("expireTime");
+                    if (expireTimeString) {
+                        const expireTime = new Date(expireTimeString);
+                    
+                        // Calculate remaining time
+                        const currentTime = new Date();
+                        const timeDifference = expireTime.getTime() - currentTime.getTime();
+                        const remainingSeconds = Math.floor(timeDifference / 1000);
+                    
+                        // Start the timer if there is remaining time
+                        if (remainingSeconds > 0) {
+                            setRemainingTime(remainingSeconds);
+                    
+                            const interval = setInterval(() => {
+                                setRemainingTime(prevTime => (prevTime && prevTime > 0) ? prevTime - 1 : null);
+                            }, 1000);
+                            setTimerInterval(interval);
+                        } else {
+                            // Handle case when remaining time is not positive
+                            console.log("The remaining time is not positive.");
+                        }
+                    } 
+                    
+                    setIsModalOpen(true);
+                } else {
+                    alert("Firebase error");
+                }
+            }else{
+                showToast("error", response.payload.message);
+            }
+        }
+    }
+    
+
+    async function handleOTPVerification(){
+        if(otp && confirmationResult){
+            confirmationResult.confirm(otp)
+                .then(async (result) => {
+                if(result.user){     
+                                                            
+                    const response = await dispatch(otpVerify({
+                        username: uname,
+                        phone: phone, 
+                        password: password,
+                        firebaseData: result.user
+                    }));
+
+                    if(response.payload.success){
+                        showToast("success", response.payload.message, () => {
+                            navigate("/user/login");
+                        });
+                        
+                    }else{
+                        showToast("error", response.payload.message);
+                    }
+
+                }
+                })
+                .catch((error) => {
+                console.log(error);
+                
+                });
+        }else{
+            alert("invalid OTP")
         }
     }
 
-    function handleOTPVerification(){
-        navigate("/user/setProfile");
-    }
+    useEffect(() => {
+        if (remainingTime === 0) {
+            clearInterval(timerInterval!); // Clear the interval when time is up
+        }
+    }, [remainingTime, timerInterval]);
 
     return(
         <div className="h-[100vh] flex items-center justify-center">
@@ -152,8 +242,10 @@ export function SignUp() {
 
                         <div className="flex flex-col w-full">
                             <button 
+                                id="signupBtn"
                                 type="button" 
-                                className="w-[100px] px-5 py-2  md:mt-5 rounded-md bg-[#dd742a] text-white font-semibold"
+                                ref={submitBtn}
+                                className="signup w-[100px] px-5 py-2  md:mt-5 rounded-md bg-[#dd742a] text-white font-semibold"
                                 onClick={handleRegisterSubmit}
                             >
                                 Sign Up
@@ -180,6 +272,8 @@ export function SignUp() {
                 </div>                
             </div>
 
+            <ToastContainer/>
+
             <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
                 <div className="flex flex-col items-center mt-10 px-6 gap-10">
                     <h2 className="font-gillroy text-2xl font-semibold md:text-3xl">Matrify OTP Verification</h2>
@@ -188,26 +282,25 @@ export function SignUp() {
                     <OtpInput
                         value={otp}
                         onChange={setOtp}
-                        numInputs={4}
+                        numInputs={6}
                         renderSeparator={<span>-</span>}
                         renderInput={(props) => <input {...props} 
+                        className="mx-[3px] md:mx-3"
                         style={{
-                            width: "50px",
-                            height: "50px",
+                            width: "40px",
+                            height: "40px",
                             borderRadius: "5px",
                             border: "1px solid #dd742a",
                             fontSize: "20px",
                             fontWeight: "bold",
                             textAlign: "center",
-                            marginRight: "10px",
-                            marginLeft: "10px",
                             outline: "none",
                         }}/>}
                     />
                     </div>
                     <div className="flex justify-between w-full">
-                        <p>Remaining Time: 01:00</p>
-                        <a href="#" className="text-blue-500">Resend OTP?</a>
+                        <p>Remaining Time: 00:{remainingTime}</p>
+                        <a className="text-blue-500">Resend OTP?</a>
                     </div>
                     <div className="flex justify-between w-full gap-4">
                         <button 

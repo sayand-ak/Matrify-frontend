@@ -1,9 +1,9 @@
-// import { Navigate,Outlet } from "react-router-dom";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../app/store";
+import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/app/store";
 
-// export function UserPrivateRoute{
-//     const { userInfo } = useSelector((state:RootState) => state.auth);
-//     return userInfo ?<Outlet/> :  <Navigate to="/admin/adminLogin" replace />
-// }
+export function UserPrivateRoute(){
+    const { user } = useSelector((state:RootState) => state.user);
+    return user ?<Outlet/> :  <Navigate to="/user/login" replace />
+}
 

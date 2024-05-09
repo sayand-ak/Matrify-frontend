@@ -1,87 +1,94 @@
-import { useState } from "react";
-import { validateEmail } from "../../../utils/validateEmail";
-import { validatePassword } from "../../../utils/validatePassword";
+import { validationSchema } from "../../../utils/validations/validateAdminLogin";
+import { useFormik } from "formik";
+import { AdminLoginType } from "../../../typings/admin/loginType";
 
+import { useNavigate } from "react-router-dom";
+import { loginAdminAsync } from "../../../services/adminAPI";
+import { setAdminCredentials } from "../../../redux/slices/adminSlices";
+
+import { useAppDispatch } from "../../../hooks/useTypedSelectors";
+
+import { ToastContainer } from "react-toastify";
+import showToast from "../../../components/Toast/Toast";
 
 export function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [emailErr, setEmailErr] = useState("");
-    const [passwordErr, setPasswordErr] = useState("");
+   
+    
+    const navigate = useNavigate();
 
-    function validate(type: string, value: string) {
-        if (type === "email") {
-            if (!validateEmail(value)) {
-                setEmailErr("Invalid email entry");
-                setEmail(value);
+    const dispatch = useAppDispatch()
+    
+    const formik = useFormik({
+        initialValues: {
+        email: "",
+        password: "",
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values: AdminLoginType) => {
+        try {
+            const response = await dispatch(loginAdminAsync(values)) 
+            console.log(response)
+            if (response.payload) {
+                showToast("success", "Login Successful", () => {
+                    console.log(response.payload.access);
+                    
+                    localStorage.setItem("adminAccess",response.payload.access);
+                    localStorage.setItem("adminRefresh",response.payload.refresh);
+                    dispatch(setAdminCredentials(response));
+                    navigate("/admin/home");
+                })
             } else {
-                setEmailErr("");
-                setEmail(value);
+                showToast("error", "Something went wrong", () => {
+                    navigate("/admin/login");
+                })
             }
-        } else {
-            if (!validatePassword(value)) {
-                setPasswordErr("Invalid password entry");
-                setPassword(value);
-            } else {
-                setPasswordErr("");
-                setPassword(value);
-            }
+        } catch (error) {
+            alert(error);
         }
-    }
-
+        },
+    });
 
     return (
         <div className="h-[100vh] w-[100vw] flex flex-col-reverse md:flex-row justify-center items-center">
 
             <div className="form-div flex-1 h-full relative">
-                <form action="#" className="h-full flex flex-col items-center justify-center gap-10">
+                <form onSubmit={formik.handleSubmit} className="h-full flex flex-col items-center justify-center gap-10">
                     <img src="/src/assets/images/MATRIFY-removebg-preview.png" alt="" className="absolute top-5 h-[250px] w-[250px]" />
                     <div className="pt-28">
                         <h1 className="text-3xl font-bold font-gillroy">Welcome back</h1>
                         <p className="text-sm text-center pt-2">Please sign in to continue</p>
                     </div>
-                    <div className="w-[350px] md:w-3/4 input-container flex flex-col gap-2">
-                        <label
-                            htmlFor="email"
-                            className="text-sm font-semibold"
-                        >
-                            Email
-                        </label>
-                        <input
-                            type="text"
-                            id="email"
-                            className="py-4 px-4 outline-none w-full rounded-md bg-[#2f7cf018] border-[1px]"
-                            value={email}
-                            onChange={(e) => {validate("email", e.target.value)}}
-                        />
-                        {emailErr && <span className="text-red-500 text-sm">{emailErr}</span>}
-                    </div>
+    
+                    <input
+                        type="text"
+                        id="email"
+                        name="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="py-4 px-4 w-[350px] md:w-3/4 outline-none rounded-md bg-[#2f7cf018] border-[1px]"
+                    />
+                    {formik.touched.email && formik.errors.email ? (
+                        <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                    ) : null}
 
-                    <div className="w-full md:w-3/4 input-container flex flex-col gap-2">
-                        <label
-                            htmlFor="password"
-                            className="text-sm font-semibold"
-                        >
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => {validate("password", e.target.value)}}
-                            className="py-4 px-4 outline-none w-full rounded-md bg-[#2f7cf018] border-[1px]"
-                        />
-                        {passwordErr &&<span className="text-red-500 text-sm">{passwordErr}</span>}
-                    </div>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        className="py-4 px-4 outline-none w-[350px] md:w-3/4 rounded-md bg-[#2f7cf018] border-[1px]"
+                    />
+                    {formik.touched.password && formik.errors.password ? (
+                        <div className="text-red-500 text-sm">{formik.errors.password}</div>
+                    ) : null}
 
-                    <div className="flex flex-col w-full md:w-3/4 items-center">
-                        <button
-                            type="submit"
-                            className="w-full px-5 py-2  md:mt-2 rounded-md bg-[#004071] text-white font-semibold"
-                        >
-                            Login
-                        </button>
-                    </div>
+                    {/* Your submit button */}
+                    <button type="submit" className="w-[350px] md:w-3/4 px-5 py-2  md:mt-2 rounded-md bg-[#004071] text-white font-semibold">
+                        Login
+                    </button>
                 </form>
             </div>
 
@@ -90,6 +97,7 @@ export function Login() {
                 style={{ backgroundImage: `url(${"../src/assets/images/padlock-with-keyhole-icon.jpg"})`, backgroundSize: 'cover'}}
             >
             </div>
+            <ToastContainer/>
 
         </div>
     )
