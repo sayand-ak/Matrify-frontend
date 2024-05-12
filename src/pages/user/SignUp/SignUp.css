@@ -9,9 +9,7 @@
     background-position: center;
 }
 
-.form-container input{
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
-}
+
 
 .signup-card-container{
     background-image: linear-gradient(to right, #ecc483, #e6bd7e, #e0b579, #daae75, #d4a770);

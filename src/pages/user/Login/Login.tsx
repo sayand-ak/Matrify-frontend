@@ -7,11 +7,12 @@ import { validatePassword } from "../../../utils/validatePassword";
 import { GoogleCredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { decodeJwt } from "../../../utils/decodeJwt";
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
-import { googleAuthLogin, userLogin } from "../../../services/userAPI";
+import { forgotPassword, googleAuthLogin, userLogin } from "../../../services/userAPI";
 import { useNavigate } from "react-router-dom";
 import { setUserCredentials } from "../../../redux/slices/userSlices";
 import showToast from "../../../components/Toast/Toast";
 import { ToastContainer } from "react-toastify";
+import { CustomModal } from "../../../components/modal/CustomModal";
 
 
 export function Login() {
@@ -21,6 +22,9 @@ export function Login() {
     const [ password, setPassword ] = useState("");
     const [dataError, setDataError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [forgotEmail, setForgotEmail] = useState("");
+    const [forgotEmailError, setForgotEmailError] = useState("");
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -55,6 +59,15 @@ export function Login() {
               setPasswordError("");
             }
             setPassword(value);
+        } else if(field === "forgotEmail"){
+            if(value.trim() === ""){
+                setForgotEmailError("This field is required");
+            }else if(validateEmail(value)){
+                setForgotEmailError("");
+            }else{
+                setForgotEmailError("Invalid email");
+            }
+            setForgotEmail(value);
         }
       }
     
@@ -66,11 +79,17 @@ export function Login() {
           setPasswordError("Password must be at least 6 characters long");
         } else {
           const response = await dispatch(userLogin({data, password}));
-          console.log(response);
-          
+        
           if(response.payload.success){
             showToast("success", "Login successful", () => {
-                navigate("/user/home");
+                dispatch(setUserCredentials(response.payload.user));
+                localStorage.setItem("userAccess",response.payload.access);
+                localStorage.setItem("userRefresh",response.payload.refresh);
+                if(response.payload.user.profileProgress < 50){
+                    navigate("/user/setProfile");
+                }else{
+                    navigate("/user/home");
+                }
             });
           }else{
             showToast("error", response.payload.message);
@@ -84,15 +103,40 @@ export function Login() {
             const userData = decodeJwt(credentialResponse.credential);
             if (userData) {
                 const response = await dispatch(googleAuthLogin(userData));
-                if(response.payload.message == "new user") {
-                    dispatch(setUserCredentials(response.payload.user));
-                    navigate("/user/setProfile");
-                }else{
-                    dispatch(setUserCredentials(response.payload.user));
-                    navigate("/user/home")
-                }
                 
+                if(response.payload.success){
+                    showToast("success", "Login successful", () => {
+                        
+                        dispatch(setUserCredentials(response.payload.user));
+                        localStorage.setItem("userAccess",response.payload.access);
+                        localStorage.setItem("userRefresh",response.payload.refresh);
+                        if(response.payload.user.profileProgress < 50){
+                            navigate("/user/setProfile");
+                        }else{
+                            navigate("/user/home");
+                        }
+                    });
+                }
             }
+        }
+    }
+
+    async function handleForgotPassword() {
+        if(validateEmail(forgotEmail) || forgotEmail.trim() !== ""){
+            setForgotEmailError("");
+            const response = await dispatch(forgotPassword(forgotEmail));
+            console.log(response);
+            
+            if(response.payload.success){
+                showToast("success", "Password reset link sent to your email", () => {
+                    navigate("/user/login");
+                });
+            } else {
+                showToast("error", response.payload.message);
+            }
+            
+        }else{
+            setForgotEmailError("Invalid email");
         }
     }
 
@@ -101,12 +145,12 @@ export function Login() {
         <div className="h-[100vh] flex items-center justify-center">
             <div className="login-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[70vh] bg-black md:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
-                    <form action="#" className="flex flex-col gap-6 w-[80%] items-center md:items-start mt-20">
+                    <form action="#" className="flex flex-col gap-4 w-[80%] items-center md:items-start mt-10 md:mt-16">
                         <h1 className="heading font-semibold text-3xl font-gillroy">Matrify Login</h1>
-                        <div className="w-full relative">
+                        <div className="w-full flex flex-col">
                             <label 
                                 htmlFor="phone" 
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             > 
                                 Email or phone number
                             </label>
@@ -114,16 +158,17 @@ export function Login() {
                                 type="text"    
                                 id="phone"           
                                 className="py-4 px-4 outline-none w-full rounded-md"
+                                placeholder="eg: example@gmail.com / xxxxxxxxxx"
                                 value={data}
                                 onChange={(e) => validate("data", e.target.value)}
                             />
-                            {dataError && <span className="text-red-500 text-sm">{dataError}</span>}
+                            {<span className="text-red-500 text-sm h-4">{dataError}</span>}
                         </div>
 
-                        <div className="w-full relative">
+                        <div className="w-full flex flex-col">
                             <label 
                                 htmlFor="password" 
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             > 
                                 password
                             </label>
@@ -133,8 +178,9 @@ export function Login() {
                                 className="py-4 px-4 outline-none w-full rounded-md"
                                 value={password}
                                 onChange={(e) => validate("password", e.target.value)}
+                                placeholder="*****************"
                             />
-                            {passwordError && <span className="text-red-500 text-sm">{passwordError}</span>}
+                            {<span className="text-red-500 text-sm h-4">{passwordError}</span>}
 
 
                             <div className="flex justify-between w-full pt-2">
@@ -142,14 +188,57 @@ export function Login() {
                                     <input type="checkbox" name="remember" id="" />
                                     <label htmlFor="remember" className="text-sm text-[#bcbdbe]">Remember me</label>
                                 </span>
-                                <a href="#" className="text-sm text-[#bcbdbe] hover:text-black">Forgot Password?</a>
+
+                                <a 
+                                    href="#" 
+                                    className="text-sm text-[#bcbdbe] hover:text-black"
+                                    onClick={() => {
+                                        setIsModalOpen(true);
+                                    }}
+                                >Forgot Password?</a>
+
+
+                                <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+                                    <div className="flex flex-col items-center mt-10 px-6 gap-10">
+                                        <img src="/src/assets/images/lock_2210233.png" alt="" height={"70rem"} width={"70rem"} />
+                                        <h2 className="font-gillroy text-2xl font-semibold md:text-3xl">Forgot Password?</h2>
+                                        <p className="text-lg">Please enter your registered email. After verification we will send a link in to the email. Reset your password with the link</p>
+                                        <div className="h-[50px] w-full flex flex-col">
+                                            <input 
+                                                type="text" 
+                                                placeholder="Enter email here" 
+                                                className="w-full rounded-lg px-5 py-3 outline-none"
+                                                onChange={(e) => validate("forgotEmail", e.target.value)}
+                                                value={forgotEmail}
+                                            />
+                                            <span className="h-4 text-sm text-red-600 px-2 py-2">{forgotEmailError}</span>
+                                        </div>
+                                        
+                                        <div className="flex justify-between w-full gap-4">
+                                            <button 
+                                                className="w-1/2 px-5 py-3 rounded-md bg-[#1b2931] text-white font-semibold"
+                                                onClick={handleForgotPassword}
+                                            >
+                                            Verify
+                                            </button>
+                                            <button 
+                                                className="w-1/2 border-[#1b2931] border-[1px] rounded-md"
+                                                onClick={() => setIsModalOpen(false)}
+                                            >
+                                            Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </CustomModal>
+
+
                             </div>
                         </div>
 
                         <div className="flex flex-col items-center gap-2 w-full">
                             <button 
                                 type="button" 
-                                className="w-[200px] px-5 py-2 rounded-md bg-[#1b2931] text-white font-semibold hover:bg-[#999999]"
+                                className="w-[200px] px-5 py-2 rounded-md bg-[#1b2931] text-white font-semibold"
                                 onClick={handleLoginSubmit}
                             >
                                 Login
@@ -177,7 +266,10 @@ export function Login() {
                                 ></GoogleLogin>
 
                                 
-                            <p className="text-black pt-3 text-sm font-gillroy block md:hidden">Don't have an account? Sign up</p>
+                            <p className="text-black pt-3 text-sm font-gillroy block md:hidden">
+                                Don't have an account? 
+                                <a href="/user/signup">Sign up</a>
+                            </p>
                         </div>
 
                     </form>

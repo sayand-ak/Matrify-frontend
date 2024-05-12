@@ -1,5 +1,6 @@
 export interface ProfileFormData {
-    email: string;
+    email?: string;
+    phone?: string,
     dob: string;
     motherTongue: string;
     state: string;
@@ -8,4 +9,14 @@ export interface ProfileFormData {
     height: number;
   } 
 
- 
+  export interface FormData{
+    email?: string;
+    phone?: string,
+    dob: string;
+    motherTongue: string;
+    state: string;
+    district: string;
+    gender: string;
+    height: number;
+    image: File| null;
+  }

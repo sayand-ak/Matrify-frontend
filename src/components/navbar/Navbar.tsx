@@ -11,7 +11,7 @@ export default function Navbar({page}: NavbarProps){
     return (
         <div className="nav bg-white items-center justify-between px-5 flex md:px-14">
             <div className="flex">
-                <a href="#" className="hidden md:block">
+                <a href="#">
                     <div className="logo-div h-16 w-20 ">
 
                     </div>
@@ -30,9 +30,9 @@ export default function Navbar({page}: NavbarProps){
             <div className="flex items-center gap-10 justify-end w-full">
                 { page == "landing" &&
                     <div className="flex items-center gap-5 justify-end w-full">
-                        <a href="/user/login" className="login-btn py-3 px-5">Log in</a>
+                        <a href="/user/login" className="login-btn px-3 py-2 md:py-3 md:px-5">Log in</a>
                         <button 
-                            className="py-3 px-5"
+                            className="px-3 py-2 md:py-3 md:px-5"
                             onClick={() =>{
                                 navigate("/user/register")
                             }}>
@@ -47,7 +47,7 @@ export default function Navbar({page}: NavbarProps){
                             <IoSearch className="text-[25px] text-[#838181]"/>
                             <input type="text" placeholder="Search here" className="w-[250px] h-[40px] px-4 bg-[#f4f4f4] outline-none"/>
                         </form>
-                        <div className="h-[3.5rem] w-[3.5rem] border-[1px] border-[#f4f4f4] rounded-full nav-profile-icon">
+                        <div className="relative h-[3.5rem] w-[3.5rem] border-[1px] border-[#f4f4f4] rounded-full nav-profile-icon">
                             
                         </div>
                     </div>

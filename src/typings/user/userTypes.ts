@@ -1,6 +1,9 @@
 import { JwtPayload } from "jwt-decode";
 
 export interface UserData {
+    _id: string;
+    email?:string,
+    phone?:string,
     payload: {
         data: {
             email: string;
@@ -38,3 +41,4 @@ export interface Users{
     createdAt: string;
     otpVerified: boolean
 }
+

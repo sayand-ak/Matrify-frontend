@@ -75,7 +75,7 @@ export function Landing(){
                 whileInView="visible"
                 viewport={{ once: true }} 
             >
-                <div className="banner1 flex flex-col md:flex-row min-h-[70vh] bg-[#f4f4f490] mt-10">
+                <div className="banner1 flex flex-col md:flex-row min-h-[70vh] mt-10">
                     <div className="banner1_img flex-1 min-h-[40vh] rounded-r-[50px] overflow-hidden"></div>
 
                     <div className="banner1_content flex-1 flex flex-col items-center justify-center font-quote py-10">
@@ -93,7 +93,7 @@ export function Landing(){
                 whileInView="visible"
                 viewport={{ once: true }} 
             >
-                <div className="banner2 flex flex-col-reverse md:flex-row min-h-[70vh] bg-[#f4f4f490] font-quote">
+                <div className="banner2 flex flex-col-reverse md:flex-row min-h-[70vh] font-quote">
 
                     <div className="banner2_content flex-1 flex flex-col items-center justify-center py-10">
                         <div className="px-5 w-full md:w-3/4">
@@ -115,7 +115,7 @@ export function Landing(){
                         </div>
                     </div>
                     
-                    <div className="banner2_img flex-1 min-h-[40vh] rounded-l-[50px] overflow-hidden"></div>
+                    <div className="banner2_img flex-1 min-h-[40vh] rounded-[50px] md:rounded-l-[50px] md:rounded-none overflow-hidden"></div>
                 </div>
             </motion.div>
 
@@ -125,9 +125,9 @@ export function Landing(){
                 whileInView="visible"
                 viewport={{ once: true }} 
             >
-                <div className="banner3 flex flex-col md:flex-row min-h-[70vh] bg-[#f4f4f490] font-quote">
+                <div className="banner3 flex flex-col md:flex-row min-h-[70vh] font-quote">
 
-                    <div className="banner3_img flex-1 min-h-[40vh] rounded-r-[50px] overflow-hidden"></div>
+                    <div className="banner3_img flex-1 min-h-[40vh] rounded-[50px] md:rounded-r-[50px] md:rounded-none overflow-hidden"></div>
 
                     <div className="banner3_content flex-1 flex flex-col items-center justify-center py-10">
                         <div className="px-5 w-full md:w-3/4">
@@ -139,16 +139,10 @@ export function Landing(){
                 </div>
             </motion.div>
 
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }} 
-            >
-                <div className="banner4-div font-quote relative h-[50vh] md:h-[90vh]">
-                    <p className="font-semibold w-[50%] text-[#d2d0d0] text-[15px] absolute top-[50%] right-[10px] md:text-4xl">Join hearts, weave destinies - where love find its forever.</p>
-                </div>
-            </motion.div>
+            
+            <div className="banner4-div font-quote relative h-[50vh] md:h-[90vh]">
+                <p className="font-semibold w-[50%] text-[#d2d0d0] text-[15px] absolute top-[50%] right-[10px] md:text-4xl">Join hearts, weave destinies - where love find its forever.</p>
+            </div>
                 
             <Footer/>
 

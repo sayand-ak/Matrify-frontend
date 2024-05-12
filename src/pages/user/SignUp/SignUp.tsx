@@ -168,90 +168,90 @@ export function SignUp() {
 
     return(
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="signup-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[70vh] md:rounded-[50px] overflow-hidden">
+            <div className="signup-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[75vh] md:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
-                    <form action="#" className="flex flex-col gap-6 w-[80%] items-center md:items-start mt-12 md:mt-16">
-                        <h1 className="heading font-semibold text-2xl font-gillroy">Create Your Account</h1>
-                        <div className="w-full input-container relative" id="username-div">
+                    <form action="#" className="flex flex-col w-[80%] items-center md:items-start mt-12 md:mt-16">
+                    <h1 className="heading font-semibold text-3xl font-gillroy pb-2">Matrify Sign up</h1>
+                        <div className="w-full input-container flex flex-col" id="username-div">
                             <label 
                                 htmlFor="username" 
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             >
                                 Username
                             </label>
                             <input 
                                 type="text" 
                                 id="username" 
-                                className="px-4 py-4 outline-none w-full rounded-md"
+                                className="px-4 py-3 outline-none w-full rounded-md"
                                 value={uname}
                                 onChange={(e) => validate("uname", e.target.value)}
                             />
-                            {unameErr && <span className="text-red-500 text-sm">{unameErr}</span>}
+                            {<span className="text-red-500 text-sm h-4">{unameErr}</span>}
                         </div>
 
-                        <div className="w-full input-container relative">
+                        <div className="w-full input-container flex flex-col">
                             <label 
                                 htmlFor="phone" 
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             > 
                                 Phone number
                             </label>
                             <input 
                                 type="text" 
                                 id="phone"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="py-3 px-4 outline-none w-full rounded-md"
                                 value={phone}
                                 onChange={(e) => validate("phone", e.target.value)}
                             />
-                            {phoneErr && <span className="text-red-500 text-sm">{phoneErr}</span>}
+                            {<span className="text-red-500 text-sm h-4">{phoneErr}</span>}
                         </div>
 
-                        <div className="w-full input-container relative">
+                        <div className="w-full input-container flex flex-col">
                         <label 
                                 htmlFor="password" 
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             > 
                                 Password
                             </label>
                             <input 
                                 type="password" 
                                 id="password"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="py-3 px-4 outline-none w-full rounded-md"
                                 value={password}
                                 onChange={(e) => validate("password", e.target.value)}
                             />
-                            {passwordErr && <span className="text-red-500 text-sm">{passwordErr}</span>}
+                            {<span className="text-red-500 text-sm h-4">{passwordErr}</span>}
                         </div>
 
-                        <div className="w-full input-container relative">
+                        <div className="w-full input-container flex flex-col">
                         <label 
                                 htmlFor="re-enterPassword" 
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             > 
                                 Re-enter password
                             </label>
                             <input 
                                 type="password" 
                                 id="re-enterPassword"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="py-3 px-4 outline-none w-full rounded-md"
                                 value={rePassword}
                                 onChange={(e) => validate("repassword", e.target.value)}
                             />
-                            {rePasswordErr && <span className="text-red-500 text-sm">{rePasswordErr}</span>}
+                            {<span className="text-red-500 text-sm h-4">{rePasswordErr}</span>}
                         </div>
 
-                        <div className="flex flex-col w-full">
+                        <div className="flex flex-col w-full items-center">
                             <button 
                                 id="signupBtn"
                                 type="button" 
                                 ref={submitBtn}
-                                className="signup w-[100px] px-5 py-2  md:mt-5 rounded-md bg-[#dd742a] text-white font-semibold"
+                                className="w-[200px] signup px-5 py-2  md:mt-5 rounded-md bg-[#1B2931] text-white font-semibold"
                                 onClick={handleRegisterSubmit}
                             >
                                 Sign Up
                             </button>
 
-                            <p className="text-black text-sm font-gillroy pt-3 block md:hidden">
+                            <p className="text-black text-sm font-gillroy py-3 block md:hidden">
                                 Already have an account?
                                 <a href="/user/login"> Login</a>
                             </p>

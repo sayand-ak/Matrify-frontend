@@ -30,8 +30,6 @@ export function Login() {
             console.log(response)
             if (response.payload) {
                 showToast("success", "Login Successful", () => {
-                    console.log(response.payload.access);
-                    
                     localStorage.setItem("adminAccess",response.payload.access);
                     localStorage.setItem("adminRefresh",response.payload.refresh);
                     dispatch(setAdminCredentials(response));
