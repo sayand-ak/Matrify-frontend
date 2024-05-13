@@ -12,6 +12,8 @@ import { UserPrivateRoute } from './UserPrivateRouter';
 import { Home } from '../../pages/user/Home/Home';
 import { ProfessionDetails } from '../../pages/user/Profession/ProfessionDetails';
 import { ResetPassword } from '../../pages/user/ResetPassword/resetPassword';
+import { FamilyDetails } from '../../pages/user/FamilyDetails/FamilyDetails';
+import { CollectDocs } from '../../pages/user/CollectDocs/CollectDocs';
 
 
 export function UserRoutes (){
@@ -28,9 +30,11 @@ export function UserRoutes (){
             <Route path='/setProfile' element={<SetProfile/>} />
             <Route path='/*' element={<UserPrivateRoute/>} >
                 <Route path='setProfile' element={<SetProfile/>} />
-                <Route path='setProfession' element={<ProfessionDetails/>} />
                 <Route path='home' element={<Home/>} />
             </Route>
+                <Route path='setProfession' element={<ProfessionDetails/>} />
+                <Route path='setFamilyDetails' element={<FamilyDetails/>} />
+                <Route path='collectDocs' element={<CollectDocs/>} />
             <Route path='/resetPassword/:email/:token' element={<ResetPassword/>} />
         {/* <Route path='*'> */}
             {/* <Route path='/setProfile' element={<SetProfile/>}></Route>

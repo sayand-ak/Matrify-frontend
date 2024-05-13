@@ -1,6 +1,7 @@
 // import { useState } from "react";
 import { useFormik } from "formik";
 import { validateFamilyDetails } from "../../../utils/validations/validationFamilyDetails";
+import "./FamilyDetails.css";
 
 export function FamilyDetails() {
     // Define options for dropdowns
@@ -30,16 +31,18 @@ export function FamilyDetails() {
 
     return (
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="familyDetails-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:max-h-[600px] md:rounded-[50px] overflow-hidden bg-[#000000f1]">
+            <div 
+                className="family-form-container flex flex-col-reverse w-full bg-[#5D4D57] h-full md:flex-row md:w-[70vw] md:max-h-[650px] md:rounded-[50px] overflow-hidden"
+            >
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
-                    <form onSubmit={formik.handleSubmit} action="#" className="flex flex-col gap-6 w-[80%] items-center justify-center md:items-start mt-12 md:mt-10">
-                        <h1 className="heading font-semibold text-2xl font-gillroy">Family particular</h1>
+                    <form onSubmit={formik.handleSubmit} action="#" className="flex flex-col w-[80%] items-center justify-center md:items-start">
+                        <h1 className="heading font-semibold text-3xl pb-3 font-gillroy">Family particular</h1>
 
                         <div className="w-full flex gap-2">
-                            <div className="w-1/2 input-container relative">
+                            <div className="w-1/2 input-container flex flex-col">
                                 <label
                                     htmlFor="famStatus"
-                                    className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                    className="text-sm font-semibold pb-2"
                                 >
                                     Family Status
                                 </label>
@@ -56,15 +59,15 @@ export function FamilyDetails() {
                                 </select>
 
                                 {formik.touched.famStatus && formik.errors.famStatus ? (
-                                    <div className="text-red-500 text-xs mt-1">{formik.errors.famStatus}</div>
-                                ) : null}
+                                    <div className="text-red-500 text-xs h-4">{formik.errors.famStatus}</div>
+                                ) : (<div className="h-4"></div>)}
 
                             </div>
 
-                            <div className="w-1/2 input-container relative">
+                            <div className="w-1/2 input-container flex flex-col">
                                 <label
                                     htmlFor="famType"
-                                    className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                    className="text-sm font-semibold pb-2"
                                 >
                                     Family Type
                                 </label>
@@ -81,16 +84,16 @@ export function FamilyDetails() {
                                 </select>
 
                                 {formik.touched.famType && formik.errors.famType ? (
-                                    <div className="text-red-500 text-xs mt-1">{formik.errors.famType}</div>
-                                ) : null}
+                                    <div className="text-red-500 text-xs h-4">{formik.errors.famType}</div>
+                                ) : (<div className="h-4"></div>)}
 
                             </div>
                         </div>
 
-                        <div className="w-full input-container relative">
+                        <div className="w-full input-container flex flex-col">
                             <label
                                 htmlFor="famValue"
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             >
                                 Family Value
                             </label>
@@ -107,15 +110,15 @@ export function FamilyDetails() {
                             </select>
 
                             {formik.touched.famValue && formik.errors.famValue ? (
-                                    <div className="text-red-500 text-xs mt-1">{formik.errors.famValue}</div>
-                                ) : null}
+                                    <div className="text-red-500 text-xs h-4">{formik.errors.famValue}</div>
+                                ) : (<div className="h-4"></div>)}
 
                         </div>
 
-                        <div className="w-full input-container relative">
+                        <div className="w-full input-container flex flex-col">
                             <label
                                 htmlFor="maritalStats"
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             >
                                 Marital Status
                             </label>
@@ -132,15 +135,15 @@ export function FamilyDetails() {
                             </select>
 
                             {formik.touched.maritalStats && formik.errors.maritalStats ? (
-                                    <div className="text-red-500 text-xs mt-1">{formik.errors.maritalStats}</div>
-                            ) : null}
+                                    <div className="text-red-500 text-xs h-4">{formik.errors.maritalStats}</div>
+                            ) : (<div className="h-4"></div>)}
                                 
                         </div>
 
-                        <div className="w-full input-container relative">
+                        <div className="w-full input-container flex flex-col">
                             <label
                                 htmlFor="disabilities"
-                                className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                className="text-sm font-semibold pb-2"
                             >
                                 Any disabilities
                             </label>
@@ -157,16 +160,16 @@ export function FamilyDetails() {
                             </select>
 
                             {formik.touched.disabilities && formik.errors.disabilities ? (
-                                    <div className="text-red-500 text-xs mt-1">{formik.errors.disabilities}</div>
-                            ) : null}
+                                    <div className="text-red-500 text-xs h-4">{formik.errors.disabilities}</div>
+                            ) : (<div className="h-4"></div>)}
 
                         </div>
 
                         {formik.values.disabilities === "Yes" && (
-                            <div className="w-full input-container relative">
+                            <div className="w-full input-container flex flex-col">
                                 <label
                                     htmlFor="description"
-                                    className="absolute transition-all duration-300 -top-2 left-4 text-sm font-semibold"
+                                    className="text-sm font-semibold pb-2"
                                 >
                                     Description
                                 </label>
@@ -178,15 +181,15 @@ export function FamilyDetails() {
                                 />
 
                                 {formik.touched.description && formik.errors.description ? (
-                                    <div className="text-red-500 text-xs mt-1">{formik.errors.description}</div>
-                                ) : null}
+                                    <div className="text-red-500 text-xs h-4">{formik.errors.description}</div>
+                                ) : (<div className="h-4"></div>)}
                             </div>
                         )}
 
-                        <div className="flex flex-col w-full">
+                        <div className="flex flex-col w-full items-center">
                             <button
                                 type="submit"
-                                className="w-[100px] px-5 py-2  md:mt-2 rounded-md bg-[#dd742a] text-white font-semibold"
+                                className="w-[200px] px-5 py-2  md:mt-2 rounded-md bg-[#1b2931] text-white font-semibold"
                             >
                                 Proceed
                             </button>
@@ -196,12 +199,10 @@ export function FamilyDetails() {
 
                 <div
                     className="image-container h-[250px] md:h-full md:flex-1 flex"
-                    style={{ backgroundImage: `url(${"../src/assets/images/family.jpeg"})` }}
+                    style={{ backgroundImage: `url(${"../src/assets/images/family.jpg"})` }}
                 >
-                    <div className="flex flex-col items-center justify-between w-full p-5 h-full md:h-[180px]">
-                        <h1 className="text-white text-xl font-semibold font-gillroy md:text-3xl text-center">
-                            Make the data open and reliable.
-                        </h1>
+                    <div className="flex flex-col items-center justify-center w-full p-5 h-full md:h-full">
+                        
                     </div>
                 </div>
             </div>

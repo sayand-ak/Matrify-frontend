@@ -39,11 +39,11 @@ export function CollectDocs() {
 
     return (
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="familyDetails-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:max-h-[600px] md:rounded-[50px] overflow-hidden bg-black">
+            <div className="flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:max-h-[600px] md:rounded-[50px] overflow-hidden bg-black">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
                     <form
                         action="#"
-                        className="flex flex-col gap-14 w-[80%] items-center justify-center md:items-start mt-12 md:mt-10"
+                        className="flex flex-col gap-10 w-[80%] items-center justify-center md:items-start mt-12 md:mt-10"
                         onSubmit={handleSubmit}
                     >
                         <h1 className="heading font-semibold text-3xl font-gillroy">You are almost there</h1>
@@ -55,10 +55,10 @@ export function CollectDocs() {
                             <input
                                 type="file"
                                 id="educationDocs"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="h-12 w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
                                 onChange={handleEducationDocsChange}
                             />
-                            {educationError && <div className="text-red-500">{educationError}</div>}
+                            {<div className="text-red-500 text-sm h-4">{educationError}</div>}
                         </div>
 
                         <div className="w-full input-container">
@@ -68,36 +68,36 @@ export function CollectDocs() {
                             <input
                                 type="file"
                                 id="professionDocs"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="h-12 w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
                                 onChange={handleProfessionDocsChange}
                             />
-                            {professionError && <div className="text-red-500">{professionError}</div>}
+                            {<div className="text-red-500 text-sm h-4">{professionError}</div>}
                         </div>
 
-                        <div className="flex flex-col w-full">
+                        <div className="flex flex-col w-full items-center mb-5">
                             <button
                                 type="submit"
-                                className="w-[100px] px-5 py-2  md:mt-2 rounded-md bg-[#dd742a] text-white font-semibold"
+                                className="w-[200px] px-5 py-2  md:mt-2 rounded-md bg-[#1b2931] text-white font-semibold"
                             >
-                                Proceed
+                                Submit
                             </button>
                         </div>
                     </form>
                 </div>
 
                 <div
-                    className="image-container h-[300px] md:h-full md:flex-1 flex items-start pt-10 text-[#b5b4b4]"
+                    className="image-container h-[700px] md:h-full md:flex-1 flex items-start pt-10 text-[#b5b4b4]"
                     style={{
-                        backgroundImage: `url(${"../src/assets/images/welcome.jpg"})`,
+                        backgroundImage: `url(${"../src/assets/images/welcomePage.jpg"})`,
                         backgroundSize: "cover",
-                        backgroundPosition: "center",
+                        backgroundPosition: "center" ,
                     }}
                 >
-                    <div className="flex flex-col justify-center items-center w-full p-5 h-full md:h-[100px]">
-                        <h1 className="text-[#b5b4b4] text-lg font-semibold font-gillroy md:text-3xl">
+                    <div className="flex flex-col justify-start items-center w-full h-full md:h-[full]">
+                        <h1 className="text-[#f4f1f1] font-semibold font-gillroy text-3xl md:text-3xl">
                             Welcome to MATRIFY
                         </h1>
-                        <p>It's time to get married</p>
+                        <p className="hidden md:block text-[#d8d3d3]">It's time to get married</p>
                     </div>
                 </div>
             </div>
