@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserGoogleAuthData, UserLoginType, UserSignupType } from "../typings/user/userTypes";
+import { ProfessionData } from "../typings/Profile/professionDataType";
+import { FamilyData, ReligionData } from "../typings/Profile/familyDataTypes";
 
 interface Error{
   response?:{
@@ -172,6 +174,63 @@ export const resetPassword = createAsyncThunk("/api/user/resetPassword", async (
     return (error as Error).response?.data;
   }
 });
+
+export const setProfessionData = createAsyncThunk("/api/user/setProfessionData", async (professionData: ProfessionData) => {
+  try {
+      const response: AxiosResponse = await axiosInstance.post(`${API_URL}/set-profession`, {
+        professionData
+      },{withCredentials: true});
+      
+      return response.data;
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+export const setFamilyData = createAsyncThunk("/api/user/setFamilyData", async (familyData: FamilyData) => {
+  try {
+      const response: AxiosResponse = await axiosInstance.post(`${API_URL}/set-family-details`, {
+        familyData
+      },{withCredentials: true});
+      
+      return response.data;
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+
+export const addDocs = createAsyncThunk("/api/user/addDocs", async (formData: FormData) => {
+  try {
+      const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/add-docs `,
+      formData,
+      {
+        headers: { 
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true
+      }
+      );
+      
+      return response.data;
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+export const addReligion = createAsyncThunk("/api/user/addReligion", async (religionData: ReligionData) => {
+  try {
+      const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/add-religion `,
+      religionData
+      ,{withCredentials: true}
+      );
+      
+      return response.data;
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
 
 
 

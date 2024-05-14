@@ -1,10 +1,22 @@
 import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
+import { addDocs } from "../../../services/userAPI";
+import showToast from "../../../components/Toast/Toast";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 export function CollectDocs() {
     const [educationDocs, setEducationDocs] = useState<File | null>(null);
     const [professionDocs, setProfessionDocs] = useState<File | null>(null);
     const [educationError, setEducationError] = useState<string>("");
     const [professionError, setProfessionError] = useState<string>("");
+
+    const user = useAppSelector((state) => state.user.user);
+
+    const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
+    
 
     const handleEducationDocsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -26,14 +38,31 @@ export function CollectDocs() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!educationDocs) {
             setEducationError("Please select education-related documents");
         }
-        if (!professionDocs) {
+        else if (!professionDocs) {
             setProfessionError("Please select profession-related documents");
+        }
+        else{
+            const formData = new FormData();
+            formData.append("id", user?._id || "");
+
+            formData.append('educationDocs', educationDocs);
+            formData.append('professionDocs', professionDocs);
+
+            const response = await dispatch(addDocs(formData));
+
+            if(response.payload.success){
+                showToast("success", "Documents added successfully", () => {
+                    navigate("/user/home");
+                })
+            }else{
+                showToast("error", "Failed to add documents");
+            }
         }
     };
 
@@ -52,12 +81,23 @@ export function CollectDocs() {
                             <label htmlFor="educationDocs" className="text-sm font-semibold">
                                 Education related Docs
                             </label>
-                            <input
-                                type="file"
-                                id="educationDocs"
-                                className="h-12 w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-                                onChange={handleEducationDocsChange}
-                            />
+                            <div className="flex h-[45px] overflow-hidden rounded-md w-full border border-[#6d6d6d59] relative">
+                                <div className="h-15 w-3/4 flex items-center px-4">
+                                    <p className="truncate w-[240px]">
+                                        {educationDocs ? educationDocs?.name : "choose a file" }
+                                    </p>
+                                </div>
+                                <div 
+                                    className="h-15 bg-[#6d6d6d59] w-1/4 flex items-center justify-center cursor-pointer font-semibold text-[#474646]"
+                                >Browse
+                                </div>
+                                <input
+                                    type="file"
+                                    id="educationDocs"
+                                    className="opacity-0 absolute top-0 h-12 w-full px-4 py-2"
+                                    onChange={handleEducationDocsChange}
+                                />
+                            </div>
                             {<div className="text-red-500 text-sm h-4">{educationError}</div>}
                         </div>
 
@@ -65,14 +105,27 @@ export function CollectDocs() {
                             <label htmlFor="professionDocs" className="text-sm font-semibold">
                                 Profession related Docs
                             </label>
-                            <input
-                                type="file"
-                                id="professionDocs"
-                                className="h-12 w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
-                                onChange={handleProfessionDocsChange}
-                            />
+                            <div className="flex h-[45px] overflow-hidden rounded-md w-full border border-[#6d6d6d59] relative">
+                                <div className="h-15 w-3/4 flex items-center px-4 truncate">
+                                    <p className="truncate w-[240px]">
+                                        {professionDocs ? professionDocs?.name : "choose a file" }
+                                    </p>
+                                </div>
+                                <div 
+                                    className="h-15 bg-[#6d6d6d59] w-1/4 flex items-center justify-center cursor-pointer font-semibold text-[#474646]"
+                                >Browse
+                                </div>
+
+                                <input
+                                    type="file"
+                                    id="professionDocs"
+                                    className="opacity-0 absolute top-0  h-12 w-full"
+                                    onChange={handleProfessionDocsChange}
+                                />
+                            </div>
                             {<div className="text-red-500 text-sm h-4">{professionError}</div>}
                         </div>
+
 
                         <div className="flex flex-col w-full items-center mb-5">
                             <button
@@ -94,11 +147,12 @@ export function CollectDocs() {
                     }}
                 >
                     <div className="flex flex-col justify-start items-center w-full h-full md:h-[full]">
-                        <h1 className="text-[#f4f1f1] font-semibold font-gillroy text-3xl md:text-3xl">
+                        <h1 className="text-[#c6bbb6] font-semibold font-gillroy text-3xl md:text-3xl">
                             Welcome to MATRIFY
                         </h1>
-                        <p className="hidden md:block text-[#d8d3d3]">It's time to get married</p>
+                        <p className="hidden md:block text-[#c6bbb6]">It's time to get married</p>
                     </div>
+                    <ToastContainer/>
                 </div>
             </div>
         </div>

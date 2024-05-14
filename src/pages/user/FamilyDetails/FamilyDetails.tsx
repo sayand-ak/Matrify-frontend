@@ -2,6 +2,12 @@
 import { useFormik } from "formik";
 import { validateFamilyDetails } from "../../../utils/validations/validationFamilyDetails";
 import "./FamilyDetails.css";
+import { FamilyData } from "../../../typings/Profile/familyDataTypes";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
+import { setFamilyData } from "../../../services/userAPI";
+import showToast from "../../../components/Toast/Toast";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 export function FamilyDetails() {
     // Define options for dropdowns
@@ -10,6 +16,12 @@ export function FamilyDetails() {
     const familyValueOptions = ["Moderate", "High", "Low", "Orthodox", "Atheist", "Liberal", "Conservative"];
     const maritalStatusOptions = ["Single", "Divorced", "Widowed"];
     const disabilitiesOptions = ["No", "Yes"];
+
+    const user = useAppSelector((state) => state.user.user);
+
+    const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -21,11 +33,26 @@ export function FamilyDetails() {
             description: ""
         },
         validationSchema: validateFamilyDetails,
-        onSubmit: (values) => {
-            console.log(values)
-            // Handle form submission with validated values
-            console.log("Family Form submitted with values:", values);
-            // You can perform additional actions like API calls here
+        onSubmit: async (values) => {
+            const familyData: FamilyData = {
+                userId:  user && user._id ? user._id : "",
+                familyType: values.famType,
+                familyStats: values.famStatus,
+                familyValue: values.famValue,
+                martialStatus: values.maritalStats,
+                disabilities: values.disabilities,
+                description: values.description
+            }
+            const response = await dispatch(setFamilyData(familyData));
+            
+            if(response.payload.success){
+                showToast("success", "family Details Updated Successfully", () => {
+                    navigate("/user/setReligiousDetails")
+                })
+            }else{
+                showToast("error", response.payload.message)
+            }
+            
         },
     });
 
@@ -36,7 +63,7 @@ export function FamilyDetails() {
             >
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
                     <form onSubmit={formik.handleSubmit} action="#" className="flex flex-col w-[80%] items-center justify-center md:items-start">
-                        <h1 className="heading font-semibold text-3xl pb-3 font-gillroy">Family particular</h1>
+                        <h1 className="heading font-semibold text-3xl pb-3 font-gillroy pt-10">Family particular</h1>
 
                         <div className="w-full flex gap-2">
                             <div className="w-1/2 input-container flex flex-col">
@@ -205,6 +232,7 @@ export function FamilyDetails() {
                         
                     </div>
                 </div>
+                <ToastContainer/>
             </div>
         </div>
     );

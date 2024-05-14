@@ -1,11 +1,24 @@
 import { useFormik } from "formik";
 import { validateProfessionDetails } from "../../../utils/validations/validateProfessionData";
 import "./ProfessionDetails.css";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
+import { ProfessionData } from "../../../typings/Profile/professionDataType";
+import { setProfessionData } from "../../../services/userAPI";
+import showToast from "../../../components/Toast/Toast";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 export function ProfessionDetails() {
 
     const educationOptions = ["High School", "Bachelor's Degree", "Master's Degree", "Doctorate"];
     const employmentOptions = ["Employed", "Unemployed", "Self-employed"];
+
+    const user = useAppSelector((state) => state.user.user);
+
+    const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
+    
 
     const formik = useFormik({
         initialValues: {
@@ -15,12 +28,23 @@ export function ProfessionDetails() {
             annualIncome: "",
         },
         validationSchema: validateProfessionDetails,
-        onSubmit: (values) => {
-            alert(values)
-            console.log(values)
-            // Handle form submission with validated values
-            console.log("Profession Form submitted with values:", values);
-            // You can perform additional actions like API calls here
+        onSubmit: async(values) => {
+            const professionData: ProfessionData = {
+                userId:  user && user._id ? user._id : "",
+                education: values.highestEducation,
+                empStatus: values.employmentStatus,
+                occupation: values.occupation,
+                annualIncome: Number(values.annualIncome),
+            }
+            const response = await dispatch(setProfessionData(professionData));
+
+            if(response.payload.success){
+                showToast("success", "Profession Details Updated Successfully", () => {
+                    navigate("/user/setFamilyDetails")
+                })
+            }else{
+                showToast("error", response.payload.message)
+            }
         },
     });
 
@@ -125,6 +149,7 @@ export function ProfessionDetails() {
                                 Proceed
                             </button>
                         </div>
+                        <ToastContainer/>
 
                     </form>
                 </div>

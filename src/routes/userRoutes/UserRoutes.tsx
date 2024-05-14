@@ -14,6 +14,7 @@ import { ProfessionDetails } from '../../pages/user/Profession/ProfessionDetails
 import { ResetPassword } from '../../pages/user/ResetPassword/resetPassword';
 import { FamilyDetails } from '../../pages/user/FamilyDetails/FamilyDetails';
 import { CollectDocs } from '../../pages/user/CollectDocs/CollectDocs';
+import { SpiritualityDetails } from '../../pages/user/SpiritualityDetails/SpiritualityDetails';
 
 
 export function UserRoutes (){
@@ -32,8 +33,11 @@ export function UserRoutes (){
                 <Route path='setProfile' element={<SetProfile/>} />
                 <Route path='home' element={<Home/>} />
             </Route>
+
                 <Route path='setProfession' element={<ProfessionDetails/>} />
                 <Route path='setFamilyDetails' element={<FamilyDetails/>} />
+                <Route path='setReligiousDetails' element={<SpiritualityDetails/>} />
+                
                 <Route path='collectDocs' element={<CollectDocs/>} />
             <Route path='/resetPassword/:email/:token' element={<ResetPassword/>} />
         {/* <Route path='*'> */}
