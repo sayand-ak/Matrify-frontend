@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./SetProfile.css";
 import { handleImageChange } from "../../../utils/handleImageChange";
 import { useFormik } from "formik";
 import { ProfileFormData } from "../../../typings/Profile/profileTypes";
 import { profileSchema } from "../../../utils/validations/validateProfileData";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
-import { setProfile } from "../../../services/userAPI";
+import { getCitiesApi, getStateApiAccessToken, setProfile } from "../../../services/userAPI";
 import showToast from "../../../components/Toast/Toast";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../../components/loader/Loader";
 import { ToastContainer } from "react-toastify";
+import { states } from 'indian_address';
+
 
 export function SetProfile() {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -17,13 +19,35 @@ export function SetProfile() {
     const emailExist:string | null = useAppSelector((state) => state.user.user?.email) || null;
     const phoneExist:string | null = useAppSelector((state) => state.user.user?.phone) || null;
 
+    const [selectedState, setSelectedState] = useState<string>();  
+
+    const [cities, setCities] = useState<string[]>([])
+
     const [loading , setLoading] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const selector = useAppSelector((state) => state.user.user);
-
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            if (selectedState) {
+                try {
+                    const token = await getStateApiAccessToken();
+                    
+                    if (token) {
+                        const cities = await getCitiesApi(token.auth_token, selectedState);
+                        setCities(cities.map((city:{city_name:string}) => city.city_name));
+                    }
+                } catch (error) {
+                    console.error("Error fetching cities data:", error);
+                }
+            }
+        };
+    
+        fetchData();
+    }, [selectedState]);
     
     
     const formik = useFormik<ProfileFormData>({
@@ -221,21 +245,28 @@ export function SetProfile() {
                     >
                         State
                     </label>
-                    <input
-                        type="text"
+                    <select
                         id="state"
                         name="state"
                         className="py-4 px-4 outline-none w-full rounded-md"
-                        onChange={formik.handleChange}
+                        onChange={(e) => {
+                            formik.handleChange(e)
+                            setSelectedState(e.target.value);
+                        }}
                         onBlur={formik.handleBlur}
                         value={formik.values.state}
+
                         disabled={loading}
-                    />
-                    {(
-                        <div className="error text-[12px] text-red-600 h-2">
-                        {formik.errors.state}
-                        </div>
-                    )}
+                    >
+                        <option value="">Select state</option>
+                        {
+                            states.map((state) => (
+                                <option key={state} value={state}>
+                                    {state}
+                                </option>
+                            ))
+                        }
+                    </select>
                 </div>
 
                 <div className="w-full flex flex-col">
@@ -245,8 +276,7 @@ export function SetProfile() {
                     >
                         District
                     </label>
-                    <input
-                        type="text"
+                    <select
                         id="district"
                         name="district"
                         className="py-4 px-4 outline-none w-full rounded-md"
@@ -254,7 +284,16 @@ export function SetProfile() {
                         onBlur={formik.handleBlur}
                         value={formik.values.district}
                         disabled={loading}
-                    />
+                    >
+                        <option value="">Select state</option>
+                        {
+                            cities.map((city) => (
+                                <option key={city} value={city}>
+                                    {city}
+                                </option>
+                            ))
+                        }
+                    </select>
                     {(
                         <div className="error text-[12px] text-red-600 h-2">
                         {formik.errors.district}
@@ -323,7 +362,7 @@ export function SetProfile() {
                     type="submit"
                     className="px-5 py-2 my-10 rounded-md bg-[#1B2931] text-white font-semibold w-[200px] flex items-center justify-center"
                 >
-                    {loading ? <Loader/> : "Proceed"}
+                    {loading ? <Loader dimension={40}/> : "Proceed"}
                 </button>
             </div>
             <ToastContainer/>

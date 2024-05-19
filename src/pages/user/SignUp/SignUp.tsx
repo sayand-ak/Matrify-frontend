@@ -10,7 +10,7 @@ import { useAppDispatch } from "../../../hooks/useTypedSelectors";
 import { otpVerify, signupUserAsync } from "../../../services/userAPI";
 import { onSignInSubmit } from "../../../services/firebase/auth";
 import { ToastContainer } from "react-toastify";
-import { ConfirmationResult, signInWithPhoneNumber } from "firebase/auth";
+import { Auth, ConfirmationResult, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import showToast from "../../../components/Toast/Toast";
 
 
@@ -26,7 +26,10 @@ export function SignUp() {
     const [rePasswordErr, setRePasswordErr] = useState("");
 
     const [ confirmationResult, setConfirmationResult ] = useState<ConfirmationResult>();
+
     const submitBtn = useRef<HTMLButtonElement>(null)
+    const resendLink = useRef<HTMLButtonElement>(null)
+
     const [otp, setOtp] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,9 +37,24 @@ export function SignUp() {
     const [remainingTime, setRemainingTime] = useState<number | null>(null);
     const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
 
+    const [resendOtp, setResendOtp] = useState(false);
+
+    const [otpIncome, setOtpIncome] = useState<{auth: Auth, recaptchaVerifier: RecaptchaVerifier} | null>(null);
+
+    
+
     const navigate = useNavigate();
 
     const dispatch = useAppDispatch();
+
+
+    useEffect(() => {
+        if(remainingTime === 0){
+            setResendOtp(true);
+            clearInterval(timerInterval as NodeJS.Timeout);
+        }
+    }, [remainingTime, timerInterval])
+
 
     function validate(field: string, value: string) {
         if (field === "uname") {
@@ -80,12 +98,14 @@ export function SignUp() {
         } else {
             setRePasswordErr("");
             const response = await dispatch(signupUserAsync(phone));
-            console.log(response);
             
             if(response.payload.success){
-                const otpIncome = await onSignInSubmit(submitBtn.current);            
                 
-                if (otpIncome) {
+                const otpConfig = onSignInSubmit(submitBtn.current) || null;
+                
+                setOtpIncome(otpConfig);            
+                
+                if (otpIncome && otpConfig) {
                     setConfirmationResult(await signInWithPhoneNumber(otpIncome?.auth, "+91"+phone, otpIncome?.recaptchaVerifier));
     
                     //setting timer 
@@ -110,15 +130,14 @@ export function SignUp() {
                                 setRemainingTime(prevTime => (prevTime && prevTime > 0) ? prevTime - 1 : null);
                             }, 1000);
                             setTimerInterval(interval);
-                        } else {
-                            // Handle case when remaining time is not positive
-                            console.log("The remaining time is not positive.");
                         }
                     } 
                     
                     setIsModalOpen(true);
-                } else {
-                    alert("Firebase error");
+    
+                } else{
+                    console.log("error");
+                    
                 }
             }else{
                 showToast("error", response.payload.message);
@@ -149,10 +168,14 @@ export function SignUp() {
                         showToast("error", response.payload.message);
                     }
 
+                }else{
+                    showToast("error", "Invalid OTP");
                 }
                 })
                 .catch((error) => {
-                console.log(error);
+                    console.log(error);
+                    
+                    showToast("error", "Invalid OTP.Check OTP and try again");
                 
                 });
         }else{
@@ -160,11 +183,61 @@ export function SignUp() {
         }
     }
 
-    useEffect(() => {
-        if (remainingTime === 0) {
-            clearInterval(timerInterval!); // Clear the interval when time is up
+
+    async function handleResendOTP() {
+
+        try {
+            alert();
+            const otpConfig = onSignInSubmit(resendLink.current) || null;
+            
+            // Resend OTP logic
+            setOtpIncome(otpConfig);
+            console.log("-------------",otpIncome,"-----------");
+            
+            if (otpIncome) {
+                setConfirmationResult(await signInWithPhoneNumber(otpIncome?.auth, "+91"+phone, otpIncome?.recaptchaVerifier));
+    
+                //setting timer 
+                const currentTime = new Date();
+                const oneMinuteLater = new Date(currentTime.getTime() + (1 * 60000));
+                localStorage.setItem("expireTime", oneMinuteLater.toString());
+    
+                const expireTimeString = localStorage.getItem("expireTime");
+                if (expireTimeString) {
+                    const expireTime = new Date(expireTimeString);
+                
+                    // Calculate remaining time
+                    const currentTime = new Date();
+                    const timeDifference = expireTime.getTime() - currentTime.getTime();
+                    const remainingSeconds = Math.floor(timeDifference / 1000);
+                
+                    // Start the timer if there is remaining time
+                    if (remainingSeconds > 0) {
+                        setRemainingTime(remainingSeconds);
+                
+                        const interval = setInterval(() => {
+                            setRemainingTime(prevTime => (prevTime && prevTime > 0) ? prevTime - 1 : null);
+                        }, 1000);
+                        setTimerInterval(interval);
+                    } else {
+                        // Handle case when remaining time is not positive
+                        console.log("The remaining time is not positive.");
+                    }
+                } 
+                
+                setIsModalOpen(true);
+            } else {
+                alert("Firebase error");
+            }
+            
+        } catch (error) {
+            console.log(error);
+            
         }
-    }, [remainingTime, timerInterval]);
+
+    }
+    
+
 
     return(
         <div className="h-[100vh] flex items-center justify-center">
@@ -286,11 +359,12 @@ export function SignUp() {
                         renderSeparator={<span>-</span>}
                         renderInput={(props) => <input {...props} 
                         className="mx-[3px] md:mx-3"
+                        disabled={resendOtp}
                         style={{
                             width: "40px",
                             height: "40px",
                             borderRadius: "5px",
-                            border: "1px solid #dd742a",
+                            border: "1px solid #1B2931",
                             fontSize: "20px",
                             fontWeight: "bold",
                             textAlign: "center",
@@ -300,17 +374,20 @@ export function SignUp() {
                     </div>
                     <div className="flex justify-between w-full">
                         <p>Remaining Time: 00:{remainingTime}</p>
-                        <a className="text-blue-500">Resend OTP?</a>
+                        <button className={`${resendOtp ? "text-blue-500" : "text-gray-400"}`} disabled={!resendOtp} onClick={() => {
+                            handleResendOTP()
+                            
+                        }}  ref={resendLink}>Resend OTP?</button>
                     </div>
                     <div className="flex justify-between w-full gap-4">
                         <button 
-                            className="w-1/2 px-5 py-3 rounded-md bg-[#dd742a] text-white font-semibold hover:bg-[#999999]"
+                            className="w-1/2 px-5 py-3 rounded-md bg-[#1B2931] text-white font-semibold hover:bg-[#999999]"
                             onClick={handleOTPVerification}
                         >
                         Verify
                         </button>
                         <button 
-                            className="w-1/2 border-[#dd742a] border-[1px] rounded-md"
+                            className="w-1/2 border-[#1B2931] border-[1px] rounded-md"
                              onClick={() => setIsModalOpen(false)}
                         >
                         Cancel

@@ -73,10 +73,14 @@ export const loginAdminAsync = createAsyncThunk("/api/admin/login", async ({ ema
   return response.data;
 });
 
-export const listUser = createAsyncThunk("/api/admin/list-users", async () => {
-  const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-users`,{ withCredentials: true });
-  
-  console.log(response);
-  
+export const listUser = createAsyncThunk("/api/admin/list-users", async (count: number) => {
+  const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-users/page?count=${count}`,{ withCredentials: true });
+    
+  return response.data;
+});
+
+export const searchUser = createAsyncThunk("/api/admin/search-users", async (searchTxt: string) => {
+  const response: AxiosResponse = await axiosInstance.get(`${API_URL}/search-user/text?expr=${searchTxt}`,{ withCredentials: true });
+    
   return response.data;
 });

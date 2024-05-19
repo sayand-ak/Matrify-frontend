@@ -39,6 +39,7 @@ export interface Users{
     email?: string;
     phone?: string;
     createdAt: string;
-    otpVerified: boolean
+    otpVerified: boolean;
+    image?: string;
 }
 

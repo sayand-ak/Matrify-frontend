@@ -18,9 +18,9 @@ export function SidebarItem ({ icon: Icon, text, className = '', onClick, select
     };
 
     return (
-        <li className={`cursor-pointer pl-4 flex gap-3 md:gap-2 md:pl-10 ${className} ${isActive ? 'active' : ''}` } onClick={handleClick}>
-            <Icon className="text-[30px] md:text-[20px]" />
-            <p className="text-[15px] flex items-center">{text}</p>
+        <li className={`cursor-pointer flex justify-start md:justify-center lg:justify-start pl-12 md:pl-0 lg:pl-12 gap-3 md:gap-2 h-12 items-center ${className} ${isActive ? 'active' : ''}` } onClick={handleClick}>
+            <Icon className="lg:text-[24px] text-[25px]" />
+            <p className="text-[15px] items-center flex md:hidden lg:flex font-semibold">{text}</p>
         </li>
     );
 }

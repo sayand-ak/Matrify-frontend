@@ -143,7 +143,7 @@ export function Login() {
     
     return (
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="login-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[70vh] bg-black md:rounded-[50px] overflow-hidden">
+            <div className="login-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[75vh] bg-black md:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
                     <form action="#" className="flex flex-col gap-4 w-[80%] items-center md:items-start mt-10 md:mt-16">
                         <h1 className="heading font-semibold text-3xl font-gillroy">Matrify Login</h1>
@@ -263,7 +263,7 @@ export function Login() {
                                 promptMomentNotification={() => console.log('Moment notification')}
                                 useOneTap={true}
                                 containerProps={{ style: { display: 'Inline-block' } }}
-                                ></GoogleLogin>
+                            ></GoogleLogin>
 
                                 
                             <p className="text-black pt-3 text-sm font-gillroy block md:hidden">

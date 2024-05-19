@@ -15,8 +15,8 @@ export function AdminRoutes (){
         <Routes>
             <Route path='/login' element={<Login/>} />
             <Route path='*' element={<AdminPrivateRoute/>}>
-                <Route path='*' element={<Home/>} />
             </Route>
+                <Route path='home' element={<Home/>} />
         </Routes>
     )
 }

@@ -1,4 +1,6 @@
 /* Table.css */
+
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -10,13 +12,13 @@ table {
   }
   
   th {
-    background-color: #f2f2f2;
+    background-color: #F3F6F7;
     color: #333;
     font-weight: bold;
   }
   
   tr:hover {
-    background-color: #f2f2f2;
+    background-color: #F3F6F7;
   }
   
   /* Additional styles for the image */

@@ -1,16 +1,15 @@
 import { ColorRing } from 'react-loader-spinner';
 
 
-export function Loader() {
+export function Loader({dimension}:{dimension: number}) {
     return (
         <ColorRing
             visible={true}
-            height="40"
-            width="40"
+            height={dimension}
+            width={dimension}
             ariaLabel="color-ring-loading"
-            wrapperStyle={{}}
             wrapperClass="color-ring-wrapper"
-            colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            colors={['#C2A170', '#C2A170', '#C2A170', '#C2A170', '#C2A170']}
         />
     )
 }

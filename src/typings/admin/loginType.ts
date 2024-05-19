@@ -10,6 +10,7 @@ export interface AdminLoginType {
     success: boolean;
     token?: string;
     data?: AdminData;
+    totalPages?: number,
     message?: string;
   }
   

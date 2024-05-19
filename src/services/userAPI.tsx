@@ -232,5 +232,83 @@ export const addReligion = createAsyncThunk("/api/user/addReligion", async (reli
 });
 
 
+export const getStateApiAccessToken = async () => {
+  try {
+    const response: AxiosResponse = await axios.get(
+      "https://www.universal-tutorial.com/api/getaccesstoken",
+      {
+        headers: {
+          "api-token": process.env.STATE_API_KEY,
+          "Accept": "application/json",
+          "user-email": "sayandak2002@gmail.com"
+        }
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    // Handle errors here
+    console.error("Error fetching access token:", error);
+    return null; // Or throw an error or handle it based on your needs
+  }
+};
+
+export const getStatesApi = async (accessToken: string) => {
+  try {
+    const response: AxiosResponse = await axios.get(
+      `https://www.universal-tutorial.com/api/cities/india`,
+      {
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Accept": "application/json",
+        }
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    console.log("error in states data");
+    
+    return null
+  }
+}
 
 
+export const getCitiesApi = async (accessToken: string, selectedState: string) => {
+  try {
+    const response: AxiosResponse = await axios.get(
+      `https://www.universal-tutorial.com/api/cities/${selectedState}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Accept": "application/json",
+        }
+      }
+    );
+    return response.data; 
+  } catch (error) {
+    console.log("error in states data");
+    
+    return null
+  }
+}
+
+export const userProfile = createAsyncThunk("/api/user/users-profile", async (userId: string) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/profile/${userId}`,{withCredentials: true});
+      
+    return response.data;
+    
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+export const addPreferences = createAsyncThunk("/api/user/add-preferences", async (preference: string) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.post(`${API_URL}/add-preferences`, preference, {withCredentials: true});
+      
+    return response.data;
+    
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});

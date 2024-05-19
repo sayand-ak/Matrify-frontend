@@ -1,8 +1,21 @@
 .nav{
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
-    background-color: #F4F7F9;
+    background-color: #fff;
 }
 
-.profile:hover + .email{
+.search-div{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
+
+.email{
+    display: none;
+}
+
+.profile:hover .email{
     display: block;
 }
+
+.table-container{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+

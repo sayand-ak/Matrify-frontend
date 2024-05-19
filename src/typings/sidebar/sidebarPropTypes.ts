@@ -7,3 +7,12 @@ export interface SidebarItemProps {
     onClick?: () => void;
     selected: boolean;
 }
+
+export interface SidebarProps {
+    role: string
+    items: {
+        name: string;
+        icon: IconType;
+    }[];
+    onClickItem: (itemName: string) => void;
+}

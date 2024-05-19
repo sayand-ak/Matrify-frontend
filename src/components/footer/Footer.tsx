@@ -15,7 +15,7 @@ export function Footer() {
         <div className="w-[100vw] bg-black min-h-[50vh] flex items-center" >
 
             <ul className="footer-container flex gap-12 flex-wrap">
-                <li className="w-[fit-content]">
+                <li className="w-[fit-content] flex items-center">
                     <img src="/src/assets/images/MATRIFY-removebg-preview.png" alt="" className="h-[10rem] w-[10rem] md:h-[20rem] md:w-[20rem]"/>
                 </li>
                 <li className="pt-8">
