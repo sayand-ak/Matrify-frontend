@@ -47,7 +47,7 @@ export function SetProfile() {
         };
     
         fetchData();
-    }, [selectedState]);
+    }, [selectedState]);    
     
     
     const formik = useFormik<ProfileFormData>({
@@ -374,29 +374,29 @@ export function SetProfile() {
               Tell us more about you
             </h1>
             <div className="image-container px-7 p-[10px] md:h-full md:flex-1 flex items-center justify-center bg-[#f4f4f4] border-l-[1px]">
-            <div
-                className="relative rounded-full w-[250px] h-[250px] md:w-[350px] md:h-[350px] border-[1px] border-[#c4c1c1]"
-                    style={{
-                    backgroundImage: `url(${
-                        imageUrl ? imageUrl : "../src/assets/images/profile.png"
-                    })`,
-                    backgroundSize: "cover",
-                    }}
-            >
-                <input
-                    type="file"
-                    className="w-full h-full opacity-0"
-                    onChange={(e) => handleImageChange(e, setImageUrl, setImageFile)}
-                    disabled={loading}
-                />
                 <div
-                    className="bg-white rounded-full h-[60px] w-[60px] absolute bottom-2 right-9 flex"
-                    style={{
-                        backgroundImage: `url(${"../src/assets/images/plus_9202063.png"})`,
+                    className="relative rounded-full w-[250px] h-[250px] md:w-[350px] md:h-[350px] border-[1px] border-[#c4c1c1]"
+                        style={{
+                        backgroundImage: `url(${
+                            imageUrl ? imageUrl : "../src/assets/images/profile.png"
+                        })`,
                         backgroundSize: "cover",
-                    }}
-                ></div>
-            </div>
+                        }}
+                >
+                    <input
+                        type="file"
+                        className="w-full h-full opacity-0"
+                        onChange={(e) => handleImageChange(e, setImageUrl, setImageFile)}
+                        disabled={loading}
+                    />
+                    <div
+                        className="bg-white rounded-full h-[60px] w-[60px] absolute bottom-2 right-9 flex"
+                        style={{
+                            backgroundImage: `url(${"../src/assets/images/plus_9202063.png"})`,
+                            backgroundSize: "cover",
+                        }}
+                    ></div>
+                </div>
             </div>  
         </div>
       </div>

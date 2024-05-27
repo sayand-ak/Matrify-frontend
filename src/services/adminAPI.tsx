@@ -81,6 +81,33 @@ export const listUser = createAsyncThunk("/api/admin/list-users", async (count: 
 
 export const searchUser = createAsyncThunk("/api/admin/search-users", async (searchTxt: string) => {
   const response: AxiosResponse = await axiosInstance.get(`${API_URL}/search-user/text?expr=${searchTxt}`,{ withCredentials: true });
-    
+  
   return response.data;
 });
+
+export const listSubscription = createAsyncThunk("/api/admin/list-subscription", async(count: number) => {
+  const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-subscriptions/page?count=${count}`,{ withCredentials: true });
+
+  return response.data;
+});
+
+
+
+interface AddSubscriptionPayload {
+  amount:{
+    weekly: number;
+    monthly: number;
+    yearly: number;
+  },
+  status: string;
+}
+
+export const addSubscription = createAsyncThunk('admin/addSubscription',async (subscriptionData: AddSubscriptionPayload) => {
+      const response: AxiosResponse = await axios.post(
+          `${API_URL}/add-subscription`,
+          subscriptionData,
+          { withCredentials: true }
+      );
+      return response.data;
+  }
+);

@@ -39,7 +39,23 @@ export interface Users{
     email?: string;
     phone?: string;
     createdAt: string;
-    otpVerified: boolean;
+    otpVerified?: boolean;
     image?: string;
+}
+
+export enum Status {
+    Active = 'active',
+    Inactive = 'inactive',
+}
+
+export interface Subscription{
+    _id?: string,
+    amount: {
+        weekly: number;
+        monthly: number;
+        yearly: number;
+    },
+    status: Status;
+    updatedAt?: Date;
 }
 

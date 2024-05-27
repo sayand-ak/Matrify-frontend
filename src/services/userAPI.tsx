@@ -304,11 +304,50 @@ export const userProfile = createAsyncThunk("/api/user/users-profile", async (us
 
 export const addPreferences = createAsyncThunk("/api/user/add-preferences", async (preference: string) => {
   try {
-    const response: AxiosResponse = await axiosInstance.post(`${API_URL}/add-preferences`, preference, {withCredentials: true});
+    const response: AxiosResponse = await axiosInstance.post(`${API_URL}/add-preferences`, {preference: preference}, {withCredentials: true});
       
     return response.data;
     
   } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+
+export const editProfile = createAsyncThunk("/api/user/editProfile", async(formData: FormData) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.patch(
+      `${API_URL}/edit-user-details`,
+      formData, 
+      {
+        headers: { 
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true
+      }
+    );
+    return response.data;
+    
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+export const getActiveSubscription = createAsyncThunk("/api/user/getActiveSubscription", async() => {
+  try {
+    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-active-subscription`,{withCredentials: true});
+    return response.data;
+  } catch (error) {
+    return (error as Error).response?.data;
+  }
+});
+
+export const createSubscriptionSession = createAsyncThunk("/api/user/createSubscriptionSession", async({subId, type, amount, userId}:{subId: string, type: string, amount: number, userId: string}) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.post(`${API_URL}/create-checkout-session`,{subId: subId, type: type, amount: amount, userId: userId}, {withCredentials: true});    
+    return response.data;
+  } catch (error) {    
+    
     return (error as Error).response?.data;
   }
 });

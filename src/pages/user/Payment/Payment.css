@@ -1,0 +1,15 @@
+.active-payment{
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    transition: transform 0.3s;
+    transform: scale(1.1, 1.1);
+}
+
+.weekly,.yearly,.monthly{
+    border: 1px solid rgb(208, 206, 206);
+}
+
+.logo-heading{
+    background: linear-gradient(to right, #BC8F69, #ddc59a);
+    background-clip: text;
+    color: transparent;
+}

@@ -79,6 +79,7 @@ export function Login() {
           setPasswordError("Password must be at least 6 characters long");
         } else {
           const response = await dispatch(userLogin({data, password}));
+        console.log(response.payload);
         
           if(response.payload.success){
             showToast("success", "Login successful", () => {
@@ -88,7 +89,11 @@ export function Login() {
                 if(response.payload.user.profileProgress < 50){
                     navigate("/user/setProfile");
                 }else{
-                    navigate("/user/home");
+                    if(response.payload.user.subscribed === true){
+                        navigate("/user/home");
+                    }else{
+                        navigate("/user/payment");
+                    }
                 }
             });
           }else{
@@ -103,6 +108,7 @@ export function Login() {
             const userData = decodeJwt(credentialResponse.credential);
             if (userData) {
                 const response = await dispatch(googleAuthLogin(userData));
+                console.log(response);
                 
                 if(response.payload.success){
                     showToast("success", "Login successful", () => {
@@ -113,7 +119,11 @@ export function Login() {
                         if(response.payload.user.profileProgress < 50){
                             navigate("/user/setProfile");
                         }else{
-                            navigate("/user/home");
+                            if(response.payload.user.subscribed === true){
+                                navigate("/user/home");
+                            }else{
+                                navigate("/user/payment");
+                            }
                         }
                     });
                 }

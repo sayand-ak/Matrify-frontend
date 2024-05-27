@@ -1,7 +1,6 @@
 // Import necessary components and icons
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useState } from 'react';
-import { Table } from "../../../components/table/Table";
 import { Dashboard } from "../../../components/dashboard/Dashboard";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 
@@ -23,18 +22,22 @@ import { IconType } from "react-icons";
 import { searchUser } from "../../../services/adminAPI";
 import { Users } from "../../../typings/user/userTypes";
 import { SearchBox } from "../../../components/searchbox/searchBox";
+import { AdminPayment } from "../Payment/Payment";
+import { ListUser } from "../ListUsers/ListUsers";
 
 
 
 export function Home() {
     const [showTable, setShowTable] = useState(false);
     const [showDashboard, setShowDashboard] = useState(true);
-    const [search, setSearch] = useState("");
+    const [showAdminPayment, setShowAdminPayment] = useState(false);
 
+    const [search, setSearch] = useState("");
     const [searchUserData, setSearchUserData] = useState<Users[]>([]);
+    const [value] = useDebounce(searchUserData, 1000);
+
     const [sidebarToggle, setSidebarToggle] = useState(true)
 
-    const [value] = useDebounce(searchUserData, 1000);
 
     const dispatch = useAppDispatch();
 
@@ -64,6 +67,12 @@ export function Home() {
             setShowDashboard(true);
         }else{
             setShowDashboard(false);
+        }
+
+        if (itemName === "Payment") {
+            setShowAdminPayment(true);
+        } else {
+            setShowAdminPayment(false);
         }
     };
 
@@ -127,20 +136,23 @@ export function Home() {
                         </div>
                     </div>
                 </div>
-                {
-                    showDashboard &&
-                    <Dashboard/>
-                }
 
-                {
-                    showTable && 
-                    <div className="flex flex-col pt-14 w-[90%] ">
-                        <div className="table-container h-[fit-content] flex rounded-[10px] overflow-x-auto">
-                            {<Table searchData={value}/>}
-                        </div>
+
+                    <div className="flex flex-col pt-5 w-[93%]">
+                        {
+                            showDashboard &&
+                            <Dashboard/>
+                        }
+                        {
+                            showTable && 
+                            <ListUser value={value}/>
+                        }
+                        {
+                            showAdminPayment && 
+                            <AdminPayment/>
+                        }
 
                     </div>
-                }
             </div>
 
         </div>

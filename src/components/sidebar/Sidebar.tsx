@@ -1,6 +1,5 @@
 import { SidebarItem } from './SidebarItem';
 import "./Sidebar.css";
-import { MdOutlineDelete } from 'react-icons/md';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { useState } from 'react';
 import { useAppDispatch } from '../../hooks/useTypedSelectors';
@@ -21,10 +20,11 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
             dispatch(adminLogout());
             navigate("/admin/login");
         }
+       
     };
 
     return (
-        <div className={`sidebar block bg-[#fff] min-w-[5rem] md:w-[7rem] lg:w-[24rem] min-h-[100vh] z-0`}>
+        <div className={`sidebar block bg-[#fff] min-w-[5rem] md:w-[7rem] lg:w-[21rem] min-h-[85vh] z-0`}>
 
             {role != "user"  && <div className="heading flex items-center justify-center lg:justify-start lg:pl-7 h-40 gap-2">
                 <img src="/src/assets/images/logo.png" className="h-14 w-14 xl:h-20 xl:w-20" alt="" />
@@ -50,15 +50,6 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
                         <hr />
                     </li>
                     
-                    {role == "admin" &&
-                        <SidebarItem
-                            icon={MdOutlineDelete}
-                            text="Delete Account"
-                            className="text-red-700 flex"
-                            onClick={() => handleItemClick("Delete Account", "admin")}
-                            selected={selected === "Delete Account"} 
-                        />
-                    }
                     <SidebarItem
                         icon={IoLogOutOutline}
                         text="Logout"

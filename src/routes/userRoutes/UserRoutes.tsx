@@ -13,6 +13,8 @@ import { FamilyDetails } from '../../pages/user/FamilyDetails/FamilyDetails';
 import { CollectDocs } from '../../pages/user/CollectDocs/CollectDocs';
 import { SpiritualityDetails } from '../../pages/user/SpiritualityDetails/SpiritualityDetails';
 import { Profile } from '../../pages/user/Profile/Profile';
+import { Payment } from '../../pages/user/Payment/Payment';
+import { PaymentSuccess } from '../../pages/user/PaymentSuccess/PaymentSuccess';
 
 
 export function UserRoutes (){
@@ -37,6 +39,9 @@ export function UserRoutes (){
             </Route>
 
             <Route path='profile' element={<Profile/>} />
+            <Route path='payment' element={<Payment/>} />
+            
+            <Route path='paymentSuccess/:type' element={<PaymentSuccess/>} />
 
 
             <Route path='/resetPassword/:email/:token' element={<ResetPassword/>} />
