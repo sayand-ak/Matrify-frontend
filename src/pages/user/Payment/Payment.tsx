@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import "./Payment.css";
 import React from 'react';
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
-import { createSubscriptionSession, getActiveSubscription } from "../../../services/userAPI";
-import { Subscription } from "../../../typings/user/userTypes";
+import { createSubscriptionSession, findActiveOffer, getActiveSubscription } from "../../../services/userAPI";
+import { Offer, Subscription } from "../../../typings/user/userTypes";
 import { BsSkipBackward } from "react-icons/bs";
 import { PayButton } from "../../../components/PayButton/PayButton";
 
@@ -21,6 +21,8 @@ export function Payment () {
     const yearlyRef = useRef<HTMLDivElement | null>(null);
 
     const [subscriptionAmt, setSubscriptionAmt] = useState<Subscription>();
+
+    const [offers, setOffers] = useState<Offer | null>();
     const selector = useAppSelector((state) => state.user.user)
 
     const tickSvg = <svg width="28" height="16" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,10 +39,13 @@ export function Payment () {
             const response = await dispatch(getActiveSubscription());
             
             setSubscriptionAmt(response.payload.data)
+            const offers = await dispatch(findActiveOffer());
+            setOffers(offers.payload.data);
+
         }
         
         fetchActiveSubscription()
-    },[dispatch]);
+    },[dispatch]);    
 
 
 
@@ -113,6 +118,7 @@ export function Payment () {
                 <p 
                     className="w-full text-center text-[1rem] md:text-[1.3rem] lg:text-[1.7rem] text-[#707070]"
                 >You will be able to access advance interaction features</p>
+                <p className="text-[35px] font-bold text-[#C59D77]">Get {offers?.offerPercentage}% off on our {offers?.title}</p>
             </div>
 
             <div className="payment-card-container min-h-[35rem] flex-col lg:flex-row flex gap-10 items-center justify-around sm:px-10 md:px-40 lg:px-20 my-10">

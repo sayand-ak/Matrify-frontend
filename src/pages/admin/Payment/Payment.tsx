@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import "../../admin/Home/Home.css";
 import { Table } from "../../../components/table/Table";
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
-import { addSubscription, listSubscription } from "../../../services/adminAPI";
+import { addSubscription, addSubscriptionOffer, listSubscription, listSubscriptionOffers } from "../../../services/adminAPI";
 import { Subscription } from "../../../typings/user/userTypes";
 import { CustomModal } from "../../../components/modal/CustomModal";
+import { validationSchema, validateSubscriptionOfferData } from "../../../utils/validations/validateSubsctiptionData";
 
 export function AdminPayment() {
     const [activeTab, setActiveTab] = useState("PLANS");
@@ -15,6 +15,8 @@ export function AdminPayment() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState<"success" | "error" | string>("");
+
+    const [offers, setOffers] = useState([]); // State to store offers
 
     const headers = [
         "SL NO",
@@ -25,68 +27,71 @@ export function AdminPayment() {
         "Status",
     ];
 
+    const offerHeaders = [
+        "Offer ID",
+        "Title",
+        "Description",
+        "Offer %",
+        "Status",
+        "Starts At",
+        "Ends At"
+    ];
+
     const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
     const [paginationCount, setPaginationCount] = useState(1);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
 
     useEffect(() => {
         async function getSubscriptionData() {
-            const response = await dispatch(listSubscription(paginationCount - 1)); 
-            console.log(response);
-            
             setIsLoading(true);
-            
-            setTotalItemsCount(response.payload.totalPages);
+            const response = await dispatch(listSubscription(paginationCount - 1));
+            setIsLoading(false);
             if (response.payload.data) {
-                setIsLoading(false);
                 setSubscriptions(response.payload.data);
+                setTotalItemsCount(response.payload.totalPages);
             } else {
                 alert(response.payload.message);
             }
         }
-        getSubscriptionData();
-    }, [paginationCount]);
+
+        async function getOffersData() {
+            setIsLoading(true);
+            const response = await dispatch(listSubscriptionOffers(paginationCount - 1));
+            setIsLoading(false);            
+            if (response.payload.data) {                
+                setOffers(response.payload.data);                
+                setTotalItemsCount(response.payload.totalPages);
+            } else {
+                alert(response.payload.message);
+            }
+        }
+
+        if (activeTab === "PLANS") {
+            getSubscriptionData();
+        } else if (activeTab === "OFFERS") {
+            getOffersData();
+        }
+    }, [activeTab, paginationCount, dispatch]);
 
     const handlePagination = async (direction: string) => {
         let newPaginationCount = paginationCount;
-        if (direction === "left" && paginationCount > 1) { 
+        if (direction === "left" && paginationCount > 1) {
             newPaginationCount -= 1;
         } else if (direction === "right" && paginationCount < Math.ceil(totalItemsCount / 6)) {
             newPaginationCount += 1;
         } else {
             return;
         }
-        setPaginationCount(newPaginationCount); 
+        setPaginationCount(newPaginationCount);
     };
 
-    const handleTabClick = (tab:string) => {
+    const handleTabClick = (tab: string) => {
         setActiveTab(tab);
     };
 
     const handleModalOpen = () => {
         setIsModalOpen(true);
-    }
-
-    const validationSchema = Yup.object({
-        weekly: Yup.number()
-            .min(1, 'Weekly amount must be at least 1')
-            .required('Weekly amount is required')
-            .test('is-less-than-monthly', 'Weekly amount must be less than monthly amount', function (value) {
-                return value < this.parent.monthly;
-            })
-            .test('is-less-than-yearly', 'Weekly amount must be less than yearly amount', function (value) {
-                return value < this.parent.yearly;
-            }),
-        monthly: Yup.number()
-            .min(1, 'Monthly amount must be at least 1')
-            .required('Monthly amount is required')
-            .test('is-less-than-yearly', 'Monthly amount must be less than yearly amount', function (value) {
-                return value < this.parent.yearly;
-            }),
-        yearly: Yup.number()
-            .min(1, 'Yearly amount must be at least 1')
-            .required('Yearly amount is required'),
-    });
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -96,16 +101,16 @@ export function AdminPayment() {
             status: 'active'
         },
         validationSchema,
-        onSubmit: async(values) => {
+        onSubmit: async (values) => {
             const subscriptionData = {
-                amount:{
+                amount: {
                     weekly: values.weekly,
                     monthly: values.monthly,
                     yearly: values.yearly
                 },
                 status: values.status
-            }
-            
+            };
+
             const response = await dispatch(addSubscription(subscriptionData));
             if (response.payload.success) {
                 setMessage("Subscription added successfully!");
@@ -117,7 +122,41 @@ export function AdminPayment() {
 
             setTimeout(() => {
                 setMessage("");
-                setMessageType("")
+                setMessageType("");
+            }, 10000);
+        },
+    });
+
+    const offerFormik = useFormik({
+        initialValues: {
+            title: '',
+            description: '',
+            offerPercentage: 0,
+            startsAt: '',
+            endsAt: '',
+        },
+        validationSchema: validateSubscriptionOfferData,
+        onSubmit: async (values) => {
+            const offerData = {
+                title: values.title,
+                description: values.description,
+                offerPercentage: values.offerPercentage,
+                startsAt: values.startsAt,
+                endsAt: values.endsAt,
+            };
+
+            const response = await dispatch(addSubscriptionOffer(offerData));
+            if (response.payload.success) {
+                setMessage("Subscription offer added successfully!");
+                setMessageType("success");
+            } else {
+                setMessage(response.payload.message || "An error occurred");
+                setMessageType("error");
+            }
+
+            setTimeout(() => {
+                setMessage("");
+                setMessageType("");
             }, 10000);
         },
     });
@@ -144,16 +183,19 @@ export function AdminPayment() {
                     HISTORY
                 </button>
             </div>
-            {
-                activeTab === "PLANS" &&
+
+            {/* Add Plan Section */}
+            {activeTab === "PLANS" && (
                 <>
                     <div className="flex justify-end p-5">
                         <button
-                            className="font-bold text-[#B28849] px-5 py-2 rounded-lg border-2 border-[#B28849] hover:bg-[#B28849] hover:text-white"
+                            className="font-bold px-5 py-2 rounded-lg bg-[#E7C68F] hover:bg-[#c2a169] text-white"
                             onClick={handleModalOpen}
-                        >Add Plan</button>
+                        >
+                            Add Plan
+                        </button>
                     </div>
-                    <Table 
+                    <Table
                         headers={headers}
                         data={subscriptions}
                         isLoading={isLoading}
@@ -166,10 +208,8 @@ export function AdminPayment() {
                         <form onSubmit={formik.handleSubmit} className="min-h-[25rem] min-w-[25rem] flex gap-8 flex-col items-center justify-center">
                             <h1 className="text-[25px] font-bold pt-10">Add Subscription Plan</h1>
                             <span className="bg-[#ffdd0088] py-5 text-[14px] w-full px-10 italic text-[#7e5656]">
-                                <p className="font-semibold">
-                                    CAUTION:
-                                </p>
-                                 The new amount will be the subscription amount from now...
+                                <p className="font-semibold">CAUTION:</p>
+                                The new amount will be the subscription amount from now...
                             </span>
                             <div className="flex flex-col w-3/4">
                                 <label htmlFor="weekly" className="pb-2">Weekly Amount</label>
@@ -181,10 +221,10 @@ export function AdminPayment() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.weekly}
-                                    />
+                                />
                                 {formik.touched.weekly && formik.errors.weekly ? (
                                     <div className="text-red-500 text-sm">{formik.errors.weekly}</div>
-                                    ) : null}
+                                ) : null}
                             </div>
                             <div className="flex flex-col w-3/4">
                                 <label htmlFor="monthly" className="pb-2">Monthly Amount</label>
@@ -196,12 +236,11 @@ export function AdminPayment() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.monthly}
-                                    />
+                                />
                                 {formik.touched.monthly && formik.errors.monthly ? (
                                     <div className="text-red-500 text-sm">{formik.errors.monthly}</div>
-                                    ) : null}
+                                ) : null}
                             </div>
-
                             <div className="flex flex-col w-3/4">
                                 <label htmlFor="yearly" className="pb-2">Yearly Amount</label>
                                 <input
@@ -212,39 +251,142 @@ export function AdminPayment() {
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     value={formik.values.yearly}
-                                    />
+                                />
                                 {formik.touched.yearly && formik.errors.yearly ? (
                                     <div className="text-red-500 text-sm">{formik.errors.yearly}</div>
                                 ) : null}
                             </div>
-                            
                             <div className="w-full flex flex-col items-center">
                                 <button type="submit" className="px-4 py-2 bg-[#B28849] rounded-lg text-white font-bold mb-5">Submit</button>
-                                
-                                {(
-                                    <>
-                                    {
-                                        messageType == "success" &&
-                                        <div className={`${messageType === "success" && "bg-green-400 flex h-10"} w-full items-center justify-center text-[16px]`}>
-                                            {message}
-                                        </div>
-                                    }
-                                    {
-                                        messageType == "error" &&
-                                        <div className={`${messageType === "error" && "bg-red-400 flex h-10"} w-full items-center justify-center text-[16px]`}>
-                                            {message}
-                                        </div>
-                                    }
-                                    </>
+                                {message && (
+                                    <div className={`${messageType === "success" ? "bg-green-400" : "bg-red-400"} flex w-full justify-center items-center text-white p-2 text-[14px]`}>
+                                        {message}
+                                    </div>
                                 )}
-
                             </div>
-
-
                         </form>
                     </CustomModal>
                 </>
-            }
+            )}
+
+            {/* Add Offer Section */}
+            {activeTab === "OFFERS" && (
+                <>
+                    <div className="flex justify-end p-5">
+                        <button
+                            className="font-bold px-5 py-2 rounded-lg  bg-[#E7C68F] hover:bg-[#c2a169] text-white"
+                            onClick={handleModalOpen}
+                        >
+                            Add Offer
+                        </button>
+                    </div>
+                    <Table
+                        headers={offerHeaders} 
+                        data={offers}
+                        isLoading={isLoading}
+                        handlePagination={handlePagination}
+                        paginationCount={paginationCount}
+                        totalItemsCount={totalItemsCount}
+                        type={'offer'}
+                    />
+                    <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+                        <form onSubmit={offerFormik.handleSubmit} className="min-h-[25rem] min-w-[25rem] flex gap-8 flex-col items-center justify-center">
+                            <h1 className="text-[25px] font-bold pt-10">Add Subscription Offer</h1>
+                            <span className="bg-[#ffdd0088] py-5 text-[14px] w-full px-10 italic text-[#7e5656]">
+                                <p className="font-semibold">CAUTION:</p>
+                                Adding a new offer will update the offers list immediately...
+                            </span>
+                            <div className="flex flex-col w-3/4">
+                                <label htmlFor="title" className="pb-2">Offer Title</label>
+                                <input
+                                    id="title"
+                                    name="title"
+                                    type="text"
+                                    className="h-10 shadow-sm rounded-lg outline-none px-5"
+                                    onChange={offerFormik.handleChange}
+                                    onBlur={offerFormik.handleBlur}
+                                    value={offerFormik.values.title}
+                                />
+                                {offerFormik.touched.title && offerFormik.errors.title ? (
+                                    <div className="text-red-500 text-sm">{offerFormik.errors.title}</div>
+                                ) : null}
+                            </div>
+                            <div className="flex flex-col w-3/4">
+                                <label htmlFor="description" className="pb-2">Offer Description</label>
+                                <input
+                                    id="description"
+                                    name="description"
+                                    type="text"
+                                    className="h-10 shadow-sm rounded-lg outline-none px-5"
+                                    onChange={offerFormik.handleChange}
+                                    onBlur={offerFormik.handleBlur}
+                                    value={offerFormik.values.description}
+                                />
+                                {offerFormik.touched.description && offerFormik.errors.description ? (
+                                    <div className="text-red-500 text-sm">{offerFormik.errors.description}</div>
+                                ) : null}
+                            </div>
+                            <div className="flex flex-col w-3/4">
+                                <label htmlFor="offerPercentage" className="pb-2">Offer Percentage</label>
+                                <input
+                                    id="offerPercentage"
+                                    name="offerPercentage"
+                                    type="number"
+                                    className="h-10 shadow-sm rounded-lg outline-none px-5"
+                                    onChange={offerFormik.handleChange}
+                                    onBlur={offerFormik.handleBlur}
+                                    value={offerFormik.values.offerPercentage}
+                                />
+                                {offerFormik.touched.offerPercentage && offerFormik.errors.offerPercentage ? (
+                                    <div className="text-red-500 text-sm">{offerFormik.errors.offerPercentage}</div>
+                                ) : null}
+                            </div>
+                            
+                            <div className="flex gap-2">
+
+                                <div className="flex flex-col w-3/4">
+                                    <label htmlFor="startsAt" className="pb-2">Starts At</label>
+                                    <input
+                                        id="startsAt"
+                                        name="startsAt"
+                                        type="date"
+                                        className="h-10 shadow-sm rounded-lg outline-none px-5"
+                                        onChange={offerFormik.handleChange}
+                                        onBlur={offerFormik.handleBlur}
+                                        value={offerFormik.values.startsAt}
+                                    />
+                                    {offerFormik.touched.startsAt && offerFormik.errors.startsAt ? (
+                                        <div className="text-red-500 text-sm">{offerFormik.errors.startsAt}</div>
+                                    ) : null}
+                                </div>
+                                <div className="flex flex-col w-3/4">
+                                    <label htmlFor="endsAt" className="pb-2">Ends At</label>
+                                    <input
+                                        id="endsAt"
+                                        name="endsAt"
+                                        type="date"
+                                        className="h-10 shadow-sm rounded-lg outline-none px-5"
+                                        onChange={offerFormik.handleChange}
+                                        onBlur={offerFormik.handleBlur}
+                                        value={offerFormik.values.endsAt}
+                                    />
+                                    {offerFormik.touched.endsAt && offerFormik.errors.endsAt ? (
+                                        <div className="text-red-500 text-sm">{offerFormik.errors.endsAt}</div>
+                                    ) : null}
+                                </div>
+                            </div>
+                            <div className="w-full flex flex-col items-center">
+                                <button type="submit" className="px-4 py-2 bg-[#B28849] rounded-lg text-white font-bold mb-5">Submit</button>
+                                {message && (
+                                    <div className={`${messageType === "success" ? "bg-green-400" : "bg-red-400"} flex w-full justify-center items-center text-white p-2 text-[14px]`}>
+                                        {message}
+                                    </div>
+                                )}
+                            </div>
+                        </form>
+                    </CustomModal>
+                </>
+            )}
         </>
     );
 }

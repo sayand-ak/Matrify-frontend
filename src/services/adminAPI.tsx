@@ -111,3 +111,28 @@ export const addSubscription = createAsyncThunk('admin/addSubscription',async (s
       return response.data;
   }
 );
+
+interface AddSubscriptionOfferPayload {
+  title: string;
+  description: string;
+  offerPercentage: number;
+  startsAt: string;
+  endsAt: string;
+}
+
+
+export const addSubscriptionOffer = createAsyncThunk('admin/addSubscriptionOffer',async (offerData: AddSubscriptionOfferPayload) => {
+      const response: AxiosResponse = await axios.post(
+          `${API_URL}/add-offers`,
+          offerData,
+          { withCredentials: true }
+      );
+      return response.data;
+  }
+);
+
+export const listSubscriptionOffers = createAsyncThunk("/api/admin/list-subscription-offers", async(count: number) => {
+  const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-subscription-offers/page?count=${count}`,{ withCredentials: true });
+
+  return response.data;
+});

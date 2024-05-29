@@ -1,0 +1,41 @@
+.banner{
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    min-height: 100vh;
+    width: 100vw;
+    background-image: url(../../../src/assets/images/view-love-friendly-sun-female.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media (max-width: 700px) {
+    .banner {
+        background-position: -600px 0;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1000px) {
+    .banner {
+        background-position: -300px 0;
+    }
+}
+
+@media (max-width: 1001px) and (min-width: 1399px) {
+    .banner {
+        background-position: 0 0;
+    }
+}
+
+
+@media (min-width: 1400px){
+    .banner {
+        background-position: 0 -10rem;
+    }
+}
+
+
+.banner-quote{
+    font-weight: 500px;
+}
+

@@ -16,6 +16,7 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
                 setActiveExpirationType(lastSubscription.type)
             }
         }
+        
     }, [userData]);
     
 
@@ -28,6 +29,7 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
 
     return (
         <>
+        
         {!userData?.[0].subscribed && (
             <div className="h-[100vh] w-full flex flex-col items-center pt-28">
                 <img src="/src/assets/images/11110.jpg" alt="" className="h-[50%] w-[50%]"/>
@@ -60,14 +62,24 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
                     {paymentData?.map((payment, index) => {
                         const expiresInDate = new Date(payment.expiresIn?.toString() || 0);
                         const isExpired = expiresInDate.getTime() < Date.now();
-                        const daysDifference = expiresInDate ? Math.ceil((expiresInDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
+                        const daysDifference : number|string|null = expiresInDate ? Math.ceil((expiresInDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
                         const status = isExpired ? "Expired" : "Active";
-                        const statusClass = isExpired ? "text-white bg-red-300" : "text-white bg-green-300";
-                        const daysLeftText = isExpired ? `${Math.abs(daysDifference || 1)} days ago` : `${daysDifference} days left`;
+                        const statusClass = isExpired ? "text-white bg-[#F6DCAC]" : "text-white bg-[#E7C68F]";
+                        
+                        let daysLeftText;
+
+                        if(daysDifference){
+                            daysLeftText = isExpired ? `${Math.abs(daysDifference)} days ago` : `${daysDifference} days left`;
+                        }else{
+                            daysLeftText = "today";
+                        }
 
                         return (
-                            <div className="shadow-lg rounded-lg overflow-hidden mb-10" key={index}>
-                                <div className={`flex items-center justify-between px-10 font-bold h-14 ${statusClass}`}>
+                            <div className={`rounded-lg overflow-hidden mb-10 mx-auto ${status === "Expired" ?  "opacity-[0.6]" : ""}`} key={index}>
+                                <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass}`}>
+                                   {
+                                       status == "Active" && <img src="../src/assets/images/new_891446.png" alt="" className="absolute top-0 right-0 h-10 w-10"/>
+                                   } 
                                     <p>
                                         {status} ({daysLeftText})
                                     </p>
@@ -75,9 +87,9 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
                                         {payment.pid}
                                     </p>
                                 </div>
-                                <div className="min-h-24 flex justify-between bg-[#0000000e] px-8 py-4">
+                                <div className="min-h-24 flex flex-col md:flex-row justify-center items-center md:justify-between bg-[#0000000e] px-10 py-4">
                                     <div>
-                                        <p className="text-[50px] font-bold text-gray-600">₹{payment.amount}</p>
+                                        <p className="text-[40px] font-bold text-gray-600">₹{payment.amount}</p>
                                         <p className="font-semibold text-gray-600">{payment.type} Subscription</p>
                                     </div>
                                     <div className="flex flex-col justify-center gap-5">
@@ -86,46 +98,9 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
                                     </div>
                                 </div>
                             </div>
+                            
                         );
                     })}
-                    {/* <table className="w-full overflow-hidden bg-white rounded-lg shadow-md min-h-[5rem] max-h-[20rem]">
-        <thead className="bg-gray-200">
-            <tr className="text-left">
-                <th className="p-2">Payment ID</th>
-                <th className="p-2">Amount</th>
-                <th className="p-2">Payment Type</th>
-                <th className="p-2">Paid At</th>
-                <th className="p-2">Expires At</th>
-                <th className="p-2">Status</th>
-            </tr>
-        </thead>
-        <tbody className="relative">
-            <img src="../src/assets/images/new_891446.png" className="h-10 w-10 absolute right-0 top-0" alt="" />
-            {paymentData?.map((payment) => {
-                 const expiresInDate = new Date(payment.expiresIn?.toString() || 0);
-                 const isExpired = expiresInDate.getTime() < Date.now();
-                 const daysDifference = expiresInDate ? Math.ceil((expiresInDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
-                 const status = isExpired ? "Expired" : "Active";
-                 const statusClass = isExpired ? "text-red-500" : "text-green-500";
-                const daysLeftText = isExpired ? `${Math.abs(daysDifference || 1)} days ago` : `${daysDifference} days left`;
-
-
-                return(
-                    
-                    <>
-                        <tr key={payment.pid} className="h-[80px]">
-                            <td className="p-2">{payment.pid}</td>
-                            <td className="p-2">{payment.amount}</td>
-                            <td className="p-2">{payment.type}</td>
-                            <td className="p-2">{formatDate(payment.createdAt?.toString() || "")}</td>
-                            <td className="p-2">{formatDate(payment.expiresIn?.toString() || "")}</td>
-                            <td className={`p-2 font-semibold ${statusClass}`}>{status} ({daysLeftText})</td>
-                        </tr>
-                    </>
-                )
-            })}
-        </tbody>
-    </table> */}
             </div>
         </div>
         )}

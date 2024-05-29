@@ -59,3 +59,14 @@ export interface Subscription{
     updatedAt?: Date;
 }
 
+export interface Offer {
+    offerId: string;
+    title: string;
+    description: string;
+    offerPercentage: number;
+    status: string;
+    startsAt: string;
+    endsAt: string;
+}
+
+

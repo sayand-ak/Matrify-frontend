@@ -10,7 +10,6 @@ export function PaymentSuccess(){
         <path d="M28.1799 0.341797L14.5095 14.0057L9.12654 8.62275L7.29993 10.4494L14.5095 17.6589L30 2.16841L28.1799 0.341797Z" fill="#D39316"/>
     </svg>
     
-
     return (
         <div className="h-[100vh] bg-[#F5F2EC] overflow-hidden flex items-center justify-center">
             <div className="h-[70vh] w-[50vw] bg-white flex flex-col items-center justify-center rounded-[50px] shadow-lg gap-5">
@@ -36,6 +35,7 @@ export function PaymentSuccess(){
                 </ul>
                 
                 <a href="/user/home" className="px-5 py-2 bg-[#e0b76f] text-white font-semibold rounded-lg shadow-sm">Home</a>
+            
             </div>
         </div>
     )

@@ -12,7 +12,7 @@ import "./Footer.css";
 
 export function Footer() {
     return (
-        <div className="w-[100vw] bg-black min-h-[50vh] flex items-center" >
+        <div className="bg-black min-h-[50vh] flex items-center" >
 
             <ul className="footer-container flex gap-12 flex-wrap">
                 <li className="w-[fit-content] flex items-center">

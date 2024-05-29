@@ -351,3 +351,14 @@ export const createSubscriptionSession = createAsyncThunk("/api/user/createSubsc
     return (error as Error).response?.data;
   }
 });
+
+export const findActiveOffer = createAsyncThunk("/api/user/findActiveOffer", async() => {
+  try {
+    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-active-offer`)    
+    return response.data;
+  } catch (error) {    
+    
+    return (error as Error).response?.data;
+  }
+});
+

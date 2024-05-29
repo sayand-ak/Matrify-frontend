@@ -7,11 +7,8 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
 import { IoIosVideocam } from "react-icons/io";
 import { motion } from 'framer-motion';
+import { containerVariants } from "../../../utils/animations/animation1";
 
-const containerVariants = {
-    hidden: { y: '100%', opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 1, ease: 'easeOut' }}
-  };
 
 export function Landing(){
     const verifyImg: LandingCardProps = {
@@ -32,7 +29,7 @@ export function Landing(){
     return(
         <>
             <Navbar page="landing"/>
-            <div className="banner h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#f4f4f490]">
+            <div className="banner-landing h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#f4f4f490]">
                 <div className="quotes flex-1 flex flex-col justify-center items-center">
                     <div className="px-5 md:px-16 min-h-[50vh]">
                         <h1 className="leading-tight pt-10 text-[40px] md:text-[60px]">Find your perfect partner and perfect family with 
@@ -141,7 +138,7 @@ export function Landing(){
 
             
             <div className="banner4-div font-quote relative h-[50vh] md:h-[90vh]">
-                <p className="font-semibold w-[50%] text-[#d2d0d0] text-[15px] absolute top-[50%] right-[10px] md:text-4xl">Join hearts, weave destinies - where love find its forever.</p>
+                <p className="font-semibold w-[60%] text-[#0000009d] text-[25px] absolute top-[40%] left-20 md:text-[50px]">Join hearts, weave destinies - where love find its forever.</p>
             </div>
                 
             <Footer/>

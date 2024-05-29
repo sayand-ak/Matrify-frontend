@@ -1,6 +1,6 @@
 import "./Table.css";
 import { CiCircleMore } from "react-icons/ci";
-import { Subscription, Users } from "../../typings/user/userTypes";
+import { Offer, Subscription, Users } from "../../typings/user/userTypes";
 
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
@@ -10,7 +10,7 @@ import { useState } from "react";
 
 interface TableProps {
     headers: string[];
-    data: (Users | Subscription)[]; 
+    data: (Users | Subscription | Offer)[]; 
     isLoading: boolean;
     handlePagination: (direction: string) => void;
     paginationCount: number;
@@ -67,6 +67,9 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                                 </td>
                             </tr>
                         ))}
+                        {
+                            data.length == 0 && (<p className="h-10 font-semibold flex items-center justify-center">No offers added Yet!</p>)
+                        }
                     </tbody>
                 }
 
@@ -86,19 +89,39 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                                 <td>{"amount" in data && data.amount?.yearly}</td>
                                
                                 <td>{"status" in data && data.status}</td>
-                               
-
                             </tr>
                         ))}
+                        {
+                            data.length == 0 && (<p className="h-10 font-semibold flex items-center justify-center">No offers added Yet!</p>)
+                        }
                     </tbody>
                 }
+
+                {type === "offer" && (
+                        <tbody>
+                            {data.length > 0 && data.map((offer, index) => (
+                                <tr className="text-center h-[60px]" key={index}>
+                                    <td className="truncate max-w-20">{"offerId" in offer && offer?.offerId}</td>
+                                    <td>{"title" in offer && offer?.title}</td>
+                                    <td className="max-w-20 truncate">{"description" in offer && offer?.description}</td>
+                                    <td>{"offerPercentage" in offer && offer.offerPercentage}</td>
+                                    <td>{"status" in offer && offer.status}</td>
+                                    <td>{new Date("startsAt" in offer && offer.startsAt || "").toISOString().split('T')[0]}</td>
+                                    <td>{new Date("endsAt" in offer && offer.endsAt || "").toISOString().split('T')[0]}</td>
+                                </tr>
+                            ))}
+                            {
+                                data.length == 0 && (<p className="h-10 font-semibold flex items-center justify-center">No offers added Yet!</p>)
+                            }
+                        </tbody>
+                    )}
                 </table>
             }
             <CustomModal  isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
                 <div>hello in modal</div>
             </CustomModal>
 
-            <div className="w-full flex items-center justify-end gap-5 py-4 px-5 bg-[#F3F6F7]">
+            <div className="w-full flex items-center justify-end gap-5 py-4 px-5 bg-[#f2eade] rounded-b-lg">
                     <p className="border px-3 rounded-md text-[18px] bg-white">{paginationCount}</p>
                     <p className="text-[15px] font-semibold"> of {Math.ceil(totalItemsCount / 6)} pages</p>
                     <IoIosArrowBack className="text-[18px] w-8 h-8 text-[#000] bg-white rounded-md border" onClick={() => handlePagination("left")} />

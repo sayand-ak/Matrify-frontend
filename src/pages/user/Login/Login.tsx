@@ -79,9 +79,7 @@ export function Login() {
           setPasswordError("Password must be at least 6 characters long");
         } else {
           const response = await dispatch(userLogin({data, password}));
-        console.log(response.payload);
-        
-          if(response.payload.success){
+          if(response.payload?.success){
             showToast("success", "Login successful", () => {
                 dispatch(setUserCredentials(response.payload.user));
                 localStorage.setItem("userAccess",response.payload.access);
@@ -108,7 +106,6 @@ export function Login() {
             const userData = decodeJwt(credentialResponse.credential);
             if (userData) {
                 const response = await dispatch(googleAuthLogin(userData));
-                console.log(response);
                 
                 if(response.payload.success){
                     showToast("success", "Login successful", () => {
