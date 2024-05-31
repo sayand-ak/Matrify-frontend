@@ -42,6 +42,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import ProfileSection from "../../../components/profileSection/ProfileSection";
 import { EditFormModal } from "../../../components/editFrom/EditForm";
 import { PaymentHistory } from "../PaymentHistory/PaymentHistory";
+import { EditFamilyFormModal } from "../../../components/editFrom/EditFamilyForm";
 
 
 
@@ -52,7 +53,11 @@ export function Profile() {
 
     const [selectedTab, setSelectedTab] = useState<string>("profile");
     
-    const [userData, setUserData] = useState<Array<UserProfile & UserFamily & UserProfession>>();
+    const [userData, setUserData] = useState<{ profile?: UserProfile; family?: UserFamily; profession?: UserProfession }>();
+
+    console.log("-----------------------",userData);
+    
+
 
 
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -101,17 +106,23 @@ export function Profile() {
 
     useEffect(() => {
         const fetchUserData = async() => {
-            if(userId){
+            if (userId) {
                 const response = await dispatch(userProfile(userId));
                 console.log(response);
                 
-                if(response.payload.success){
-                    setUserData(response.payload.data);
+                if (response.payload.success) {
+                    const data = response.payload.data;
+                    setUserData({
+                        profile: data[0],
+                        profession: data[1],
+                        family: data[2],
+                    });
                 }
             }
         }
         fetchUserData();
-    },[dispatch, userId]);
+    }, [dispatch, userId]);
+    
 
     const handleTabSelect = (tab: string, event:React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
@@ -216,7 +227,7 @@ export function Profile() {
                                         <div 
                                             className="rounded-full h-48 w-48 absolute top-[-100px] left-10 border-[5px] border-white z-0"
                                             style={{
-                                                backgroundImage: `url(${userData?.[0].image ?? "../../src/assets/images/profile.png"})`,
+                                                backgroundImage: `url(${userData?.profile?.image ?? "../../src/assets/images/profile.png"})`,
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center'
                                             }}
@@ -225,9 +236,9 @@ export function Profile() {
                                         <div className="w-full absolute top-[90px] left-16 flex flex-col justify-between overflow-x-auto">
                                             
                                             <div className="flex flex-col gap-2 ">
-                                                <h1 className="text-[20px] font-semibold pt-2">{userData?.[0].username} ({calculateAgeInYears(userData?.[0].dob || "")})</h1>
-                                                <h1 className="text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]">{userData?.[0].email}</h1>
-                                                <h1 className="flex items-center gap-2 text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"><SlCalender />Joined At: {formatDate(userData?.[0].createdAt || "")}</h1>
+                                                <h1 className="text-[20px] font-semibold pt-2">{userData?.profile?.username} ({calculateAgeInYears(userData?.profile?.dob || "")})</h1>
+                                                <h1 className="text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]">{userData?.profile?.email}</h1>
+                                                <h1 className="flex items-center gap-2 text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"><SlCalender />Joined At: {formatDate(userData?.profile?.createdAt || "")}</h1>
                                             </div>
                                         </div>
 
@@ -239,7 +250,24 @@ export function Profile() {
                                         </button>
 
                                         {/* Edit form modal */}
-                                        <EditFormModal userData={userData} isModalOpen={isModalOpen} setIsModalOpen={() => setIsModalOpen(false)}/>
+                                        {
+                                            selectedTab === "profile" && (
+                                                <EditFormModal
+                                                    userData={userData}
+                                                    isModalOpen={isModalOpen}
+                                                    setIsModalOpen={setIsModalOpen}
+                                                />
+                                            )
+                                        }
+                                        {
+                                            selectedTab === "family" && (
+                                                <EditFamilyFormModal
+                                                    userData={userData}
+                                                    isModalOpen={isModalOpen}
+                                                    setIsModalOpen={setIsModalOpen}
+                                                />
+                                            )
+                                        }
 
                                     </div>
 
@@ -291,11 +319,11 @@ export function Profile() {
                                             icons={[LiaBirthdayCakeSolid, PiGenderMale, CiLocationOn, CiLineHeight, LuLanguages]}
                                             headings={['Date of birth:', 'Gender:', 'Location:', 'Height:', 'Mother Tongue:']}
                                             data={[
-                                            `${formatDate(userData?.[0].dob || "")}`,
-                                            userData?.[0].gender || 'N/A',
-                                            `${userData?.[0].state || 'N/A'}, ${userData?.[0].district || 'N/A'}`,
-                                            `${userData?.[0].height || 'N/A'} cm`,
-                                            userData?.[0].motherTongue || 'N/A',
+                                            `${formatDate(userData?.profile?.dob || "")}`,
+                                            userData?.profile?.gender || 'N/A',
+                                            `${userData?.profile?.state || 'N/A'}, ${userData?.profile?.district || 'N/A'}`,
+                                            `${userData?.profile?.height || 'N/A'} cm`,
+                                            userData?.profile?.motherTongue || 'N/A',
                                             ]}
                                         />
                                         )}
@@ -305,10 +333,10 @@ export function Profile() {
                                             icons={[PiGraduationCapLight, MdEngineering, MdSensorOccupied, RiMoneyRupeeCircleLine, SlDocs]}
                                             headings={['Highest education:', 'Employee status:', 'Occupation:', 'Annual income:', 'Documents added:']}
                                             data={[
-                                            userData?.[1].education || 'N/A',
-                                            userData?.[1].empStatus || 'N/A',
-                                            userData?.[1].occupation || 'N/A',
-                                            userData?.[1].annualIncome || 'N/A',
+                                            userData?.profession?.education || 'N/A',
+                                            userData?.profession?.empStatus || 'N/A',
+                                            userData?.profession?.occupation || 'N/A',
+                                            userData?.profession?.annualIncome || 'N/A',
                                             <p className="flex gap-2 flex-col">
                                                 <a className="text-blue-500 flex items-center gap-3" target="_parent">
                                                 education doc <IoEyeOutline />
@@ -326,22 +354,22 @@ export function Profile() {
                                             icons={[MdFamilyRestroom, PiCrossLight, GiBigDiamondRing, TbDisabled, PiStarOfDavidLight]}
                                             headings={['Family:', 'Family Value:', 'Marital Status:', 'Disabilities:', 'Religious Details:']}
                                             data={[
-                                            `${userData?.[2].familyType || 'N/A'} and ${userData?.[2].familyStats || 'N/A'}`,
-                                            userData?.[2].familyValue || 'N/A',
-                                            userData?.[2].martialStatus || 'N/A',
-                                            `${userData?.[2].disabilities || 'N/A'}, (${userData?.[2].description || 'N/A'})`,
-                                            `${userData?.[2].religion || 'N/A'}, ${userData?.[2].cast || 'N/A'}`,
+                                            `${userData?.family?.familyType || 'N/A'} and ${userData?.family?.familyStats || 'N/A'}`,
+                                            userData?.family?.familyValue || 'N/A',
+                                            userData?.family?.martialStatus || 'N/A',
+                                            `${userData?.family?.disabilities || 'N/A'}, (${userData?.family?.description || 'N/A'})`,
+                                            `${userData?.family?.religion || 'N/A'}, ${userData?.family?.cast || 'N/A'}`,
                                             ]}
                                         />
                                         )}
 
                                         {selectedTab === 'preferences' &&
                                         (
-                                            userData?.[0].preferences.length || 0 > 0 ? 
+                                            userData?.profile?.preferences.length || 0 > 0 ? 
                                                 (<div className="w-full h-full flex flex-col gap-4 pl-16 pt-5">
-                                                    {(userData?.[0].preferences.length || 0) < 5 ? 
+                                                    {(userData?.profile?.preferences.length || 0) < 5 ? 
                                                         <h1 className="text-[20px] font-semibold w-[95%] flex items-center justify-between">
-                                                            You can add {5 - (userData?.[0].preferences.length || 0)} more preferences
+                                                            You can add {5 - (userData?.profile?.preferences.length || 0)} more preferences
                                                             <button className="px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-red-800 border-red-800 border-solid rounded-3xl hover:bg-red-800 hover:text-white">Delete</button>
                                                         </h1>
                                                         :
@@ -350,7 +378,7 @@ export function Profile() {
                                                             <button className="px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-red-800 border-red-800 border-solid rounded-3xl hover:bg-red-800 hover:text-white">Delete</button>
                                                         </h1>}
                                                     {
-                                                        userData?.[0].preferences?.map((preference, index) => (
+                                                        userData?.profile?.preferences?.map((preference, index) => (
                                                             <div className="flex gap-5">
                                                                 <span>{index + 1} ) </span>
                                                                 <p className="text-[17px]" key={index}>{preference}</p>
@@ -373,8 +401,8 @@ export function Profile() {
                                 <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-3 rounded-lg w-[90%]">
                                     <h1 className="text-[15px] md:text-[18px] text-center px-2 font-semibold">Complete your profile for exact matches...</h1>
                                     <CircularProgressbar
-                                        value={(userData?.[0].profileProgress || 0) } 
-                                        text={`${(userData?.[0].profileProgress || 0)}%`} 
+                                        value={(userData?.profile?.profileProgress || 0) } 
+                                        text={`${(userData?.profile?.profileProgress || 0)}%`} 
                                         className="h-[40%]" 
                                         styles={buildStyles({
                                             pathColor: "#EAC991",
@@ -385,7 +413,7 @@ export function Profile() {
 
                                 </div>
 
-                                { (userData?.[0].preferences.length || 0) < 5 && 
+                                { (userData?.profile?.preferences.length || 0) < 5 && 
                                     (<div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
                                         <h1 className="text-[15px] md:text-[18px] text-center font-semibold">Add your Preferences</h1>
                                         <button 

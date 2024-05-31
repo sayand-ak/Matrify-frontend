@@ -4,6 +4,8 @@ export interface UserData {
     _id: string;
     email?:string,
     phone?:string,
+    searchHistory: SearchHistory[];
+    image: string;
     payload: {
         data: {
             email: string;
@@ -34,6 +36,12 @@ export interface UserGoogleAuthData {
     phone?: string; 
 }
 
+export interface SearchHistory {
+    text: string,
+    date: Date,
+    searchResults: string[]
+}
+
 export interface Users{
     username: string;
     email?: string;
@@ -41,6 +49,8 @@ export interface Users{
     createdAt: string;
     otpVerified?: boolean;
     image?: string;
+    searchResult?: SearchHistory;
+    _id?: string 
 }
 
 export enum Status {

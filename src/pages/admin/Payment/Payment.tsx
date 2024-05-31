@@ -7,6 +7,7 @@ import { addSubscription, addSubscriptionOffer, listSubscription, listSubscripti
 import { Subscription } from "../../../typings/user/userTypes";
 import { CustomModal } from "../../../components/modal/CustomModal";
 import { validationSchema, validateSubscriptionOfferData } from "../../../utils/validations/validateSubsctiptionData";
+import { motion } from "framer-motion";
 
 export function AdminPayment() {
     const [activeTab, setActiveTab] = useState("PLANS");
@@ -186,7 +187,13 @@ export function AdminPayment() {
 
             {/* Add Plan Section */}
             {activeTab === "PLANS" && (
-                <>
+                <motion.div
+                key={activeTab ? activeTab : "empty"}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                >
                     <div className="flex justify-end p-5">
                         <button
                             className="font-bold px-5 py-2 rounded-lg bg-[#E7C68F] hover:bg-[#c2a169] text-white"
@@ -204,6 +211,8 @@ export function AdminPayment() {
                         totalItemsCount={totalItemsCount}
                         type={'subscription'}
                     />
+
+                    
                     <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
                         <form onSubmit={formik.handleSubmit} className="min-h-[25rem] min-w-[25rem] flex gap-8 flex-col items-center justify-center">
                             <h1 className="text-[25px] font-bold pt-10">Add Subscription Plan</h1>
@@ -266,12 +275,18 @@ export function AdminPayment() {
                             </div>
                         </form>
                     </CustomModal>
-                </>
+                </motion.div>
             )}
 
             {/* Add Offer Section */}
             {activeTab === "OFFERS" && (
-                <>
+                <motion.div
+                    key={activeTab ? activeTab : "empty"}
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <div className="flex justify-end p-5">
                         <button
                             className="font-bold px-5 py-2 rounded-lg  bg-[#E7C68F] hover:bg-[#c2a169] text-white"
@@ -385,7 +400,7 @@ export function AdminPayment() {
                             </div>
                         </form>
                     </CustomModal>
-                </>
+                </motion.div>
             )}
         </>
     );

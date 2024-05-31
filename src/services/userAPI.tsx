@@ -362,3 +362,34 @@ export const findActiveOffer = createAsyncThunk("/api/user/findActiveOffer", asy
   }
 });
 
+
+
+export const searchPartner = createAsyncThunk("/api/user/searchPartner", async(text: string) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/search-partner/${text}`)        
+    return response.data;
+  } catch (error) {    
+    
+    return (error as Error).response?.data;
+  }
+});
+
+export const saveSearchData = createAsyncThunk("/api/user/saveSearchData", async(searchData: {text: string, date: Date, searchResult: string[]}) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.post(`${API_URL}/add-search-data`, searchData, {withCredentials: true})        
+    return response.data;
+  } catch (error) {    
+    
+    return (error as Error).response?.data;
+  }
+});
+
+export const editFamilyData = createAsyncThunk("/api/user/editFamilyData", async(familyData: FamilyData) => {
+  try {
+    const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/edit-family-details`, familyData, {withCredentials: true})        
+    return response.data;
+  } catch (error) {    
+    
+    return (error as Error).response?.data;
+  }
+});

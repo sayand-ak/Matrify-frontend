@@ -12,9 +12,13 @@ import { UserFamily, UserProfession, UserProfile } from "../../typings/Profile/p
 
 
 interface EditModalProp {
-    userData: Array<UserProfile & UserFamily & UserProfession> | undefined;
+    userData?: {
+        profile?: UserProfile;
+        family?: UserFamily;
+        profession?: UserProfession;
+    };
     isModalOpen: boolean;
-    setIsModalOpen: (val:boolean) => void
+    setIsModalOpen: (val: boolean) => void;
 }
 
 export function EditFormModal({userData: userData, isModalOpen: isModalOpen, setIsModalOpen: setIsModalOpen}: EditModalProp) {
@@ -27,6 +31,9 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
 
     const [editStats, setEditStats] = useState<string>("");
     const [editMsg, setEditMsg] = useState<string>("");
+
+    const [isVisible, setIsVisible] = useState(true);
+
 
 
     const selector = useAppSelector((state) => state.user.user);
@@ -51,17 +58,32 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
     
         fetchData();
     }, [selectedState]);
+
+    useEffect(() => {
+        if (userData?.profile?.state) {
+            setSelectedState(userData.profile.state);
+        }
+
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+          }, 10000); 
+      
+          // Cleanup the timer on component unmount
+          return () => clearTimeout(timer);
+
+    }, [userData]);
     
 
     const formik = useFormik<ProfileEditFormData>({
+        enableReinitialize: true,
         initialValues: {
-            username: userData?.[0].username || '',
-            dob: userData?.[0].dob || '',
-            gender: userData?.[0].gender || '',
-            state: userData?.[0].state || '',
-            district: userData?.[0].district || '',
-            motherTongue: userData?.[0].motherTongue || '',
-            height: userData?.[0].height || 0,
+            username: userData?.profile?.username || '',
+            dob: userData?.profile?.dob || '',
+            gender: userData?.profile?.gender || '',
+            state: userData?.profile?.state || '',
+            district: userData?.profile?.district || '',
+            motherTongue: userData?.profile?.motherTongue || '',
+            height: userData?.profile?.height || 0,
           },
 
         validationSchema: editProfileSchema,
@@ -105,7 +127,7 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
                     className="relative rounded-full w-[230px] h-[230px] md:w-[400px] md:h-[360px] border-[1px] border-[#c4c1c1]"
                         style={{
                         backgroundImage: `url(${
-                            imageUrl ? imageUrl : userData?.[0].image
+                            imageUrl ? imageUrl : userData?.profile?.image
                         })`,
                         backgroundSize: "cover",
                         }}
@@ -340,13 +362,13 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
             </div>
 
             {
-                editStats == "success" && 
+                editStats == "success" && isVisible && 
                 <div className="showEditStatus h-[3.5rem] bg-green-400 flex items-center px-10 text-white" >
                     <p className="font-semibold">{editStats.toUpperCase()} : </p><p>{editMsg}</p>
                 </div>
             }
             {
-                editStats == "error" && 
+                editStats == "error" && isVisible &&
                 <div className="showEditStatus h-[3.5rem] bg-red-400 flex items-center px-10 text-white" >
                     <p className="font-semibold">{editStats.toUpperCase()} : </p><p>{editMsg}</p>
                 </div>

@@ -3,6 +3,7 @@ import { Users } from "../../../typings/user/userTypes";
 import { listUser } from "../../../services/adminAPI";
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export function ListUser({value}: {value: Array<Users>}) {
 
@@ -61,16 +62,23 @@ export function ListUser({value}: {value: Array<Users>}) {
 
 
     return (
-        <div className="table-container h-[fit-content] mt-5 flex rounded-[10px] overflow-x-auto">
-            <Table
-                headers={headers}
-                data={displayedData}
-                isLoading={isLoading}
-                handlePagination={handlePagination}
-                paginationCount={paginationCount}
-                totalItemsCount={totalItemsCount}
-                type={"user"}
-            />
-        </div>
+        <motion.div
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <div className="table-container h-[fit-content] mt-5 flex rounded-[10px] overflow-x-auto">
+                <Table
+                    headers={headers}
+                    data={displayedData}
+                    isLoading={isLoading}
+                    handlePagination={handlePagination}
+                    paginationCount={paginationCount}
+                    totalItemsCount={totalItemsCount}
+                    type={"user"}
+                />
+            </div>
+        </motion.div>
     );
 }

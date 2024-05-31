@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profile/professionDataType";
 
 
-export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFamily & UserProfession> | undefined}) {
+export function PaymentHistory ({userData}:{userData?: {
+    profile?: UserProfile;
+    family?: UserFamily;
+    profession?: UserProfession;
+}}) {
     const [activeExpirationDay, setActiveExpirationDay] = useState<number>(0);
     const [activeExpirationType, setActiveExpirationType] = useState<string>("");
 
 
     useEffect(() => {
-        if (userData?.[0]?.subscription) {
-            const lastSubscription = userData[0].subscription.slice(-1)[0];
+        if (userData?.profile?.subscription) {
+            const lastSubscription = userData.profile?.subscription.slice(-1)[0];
             if (lastSubscription?.expiresIn) {
                 const expiresInDate = new Date(lastSubscription.expiresIn);
                 setActiveExpirationDay(Math.ceil((expiresInDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
@@ -25,12 +29,12 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
         return new Date(dateString).toLocaleDateString('en-GB', options);
     };
 
-    const paymentData = userData?.[0].subscription?.slice().reverse();
+    const paymentData = userData?.profile?.subscription?.slice().reverse();
 
     return (
         <>
         
-        {!userData?.[0].subscribed && (
+        {!userData?.profile?.subscribed && (
             <div className="h-[100vh] w-full flex flex-col items-center pt-28">
                 <img src="/src/assets/images/11110.jpg" alt="" className="h-[50%] w-[50%]"/>
                 <p className="text-4xl font-custom font-bold text-[#817a7a81]">Not Subscribed Yet!</p>
@@ -38,7 +42,7 @@ export function PaymentHistory ({userData}:{userData:Array<UserProfile & UserFam
             </div>
         )}
 
-        {userData?.[0].subscribed && (
+        {userData?.profile?.subscribed && (
             <div className="w-full relative">
             {
                 (activeExpirationDay <= 5 && activeExpirationDay > 0) && 

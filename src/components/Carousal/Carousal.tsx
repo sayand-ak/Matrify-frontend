@@ -34,7 +34,7 @@ export function Carousal() {
     };
 
     return (
-        <div className="flex flex-col justify-center gap-5 min-h-[25rem] relative bg-[#F5F2EC] w-full">
+        <div className="flex flex-col justify-center gap-5 min-h-[25rem] relative bg-[#F5F2EC] w-full overflow-hidden">
             <div className="flex w-full items-center justify-between px-[5rem] h-10">
                 <h1 className="h-fit text-[20px] font-semibold">Category</h1>
                 <a href="#" className="flex items-center gap-2 text-[18px] font-semibold">

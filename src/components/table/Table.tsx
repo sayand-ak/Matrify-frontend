@@ -53,7 +53,11 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                                 <th className="flex justify-center">
                                     
                                     <a href={"image" in user && user.image || "#"} target="_parent">
-                                        <img src={"image" in user && user.image ? user.image : "../../src/assets/images/profile.png"} alt="" className="h-16 w-16 rounded-full" />
+                                        <img 
+                                            src={"image" in user && user.image ? user.image : "../../src/assets/images/profile.png"} 
+                                            alt="" 
+                                            className="h-16 w-16 rounded-full" 
+                                        />
                                     </a>
                                 </th>
                                 <td>{"phone" in user && user.phone ? user.phone : "nill"}</td>
