@@ -84,16 +84,17 @@ export function Login() {
                     ) : null}
 
                     {/* Your submit button */}
-                    <button type="submit" className="w-[350px] md:w-3/4 px-5 py-2  md:mt-2 rounded-md bg-[#004071] text-white font-semibold">
+                    <button type="submit" className="w-[350px] md:w-3/4 px-5 py-2  md:mt-2 rounded-md bg-[#370A5F] text-white font-semibold">
                         Login
                     </button>
                 </form>
             </div>
 
             <div 
-                className="image-div flex-1 h-full hidden md:block"
-                style={{ backgroundImage: `url(${"../src/assets/images/padlock-with-keyhole-icon.jpg"})`, backgroundSize: 'cover'}}
+                className="image-div flex-1 items-end py-20 h-full hidden md:flex"
+                style={{ backgroundImage: `url(${"../src/assets/images/665.jpg"})`, backgroundSize: 'cover', backgroundPosition: "center"}}
             >
+                {/* <h1 className="w-full h-fit bg-red-500 ">Unlock Your Power. Secure the Future.</h1> */}
             </div>
             <ToastContainer/>
 

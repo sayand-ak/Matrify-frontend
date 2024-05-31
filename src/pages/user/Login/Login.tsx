@@ -207,7 +207,7 @@ export function Login() {
 
 
                                 <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-                                    <div className="flex flex-col items-center mt-10 px-6 gap-10">
+                                    <div className="flex flex-col items-center my-10 px-6 gap-10">
                                         <img src="/src/assets/images/lock_2210233.png" alt="" height={"70rem"} width={"70rem"} />
                                         <h2 className="font-gillroy text-2xl font-semibold md:text-3xl">Forgot Password?</h2>
                                         <p className="text-lg">Please enter your registered email. After verification we will send a link in to the email. Reset your password with the link</p>

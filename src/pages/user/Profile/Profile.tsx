@@ -43,6 +43,8 @@ import ProfileSection from "../../../components/profileSection/ProfileSection";
 import { EditFormModal } from "../../../components/editFrom/EditForm";
 import { PaymentHistory } from "../PaymentHistory/PaymentHistory";
 import { EditFamilyFormModal } from "../../../components/editFrom/EditFamilyForm";
+import { userLogout } from "../../../redux/slices/userSlices";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -76,6 +78,7 @@ export function Profile() {
 
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const userId = useAppSelector((state) => state.user.user?._id);
     
     const items:Array<{name: string, icon: IconType}> = [
@@ -101,6 +104,12 @@ export function Profile() {
         }else{
             setShowPayment(false);
         }
+
+        if (itemName === "Logout") {
+            dispatch(userLogout());
+            navigate("/user/login")
+        }
+        
 
     };
 
@@ -229,7 +238,8 @@ export function Profile() {
                                             style={{
                                                 backgroundImage: `url(${userData?.profile?.image ?? "../../src/assets/images/profile.png"})`,
                                                 backgroundSize: 'cover',
-                                                backgroundPosition: 'center'
+                                                backgroundPosition: 'center',
+                                                backgroundColor: "#f4f4f4"
                                             }}
                                         ></div>
 

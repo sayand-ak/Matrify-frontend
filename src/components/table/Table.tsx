@@ -1,6 +1,6 @@
 import "./Table.css";
 import { CiCircleMore } from "react-icons/ci";
-import { Offer, Subscription, Users } from "../../typings/user/userTypes";
+import { Offer, PaymentHistory, Subscription, Users } from "../../typings/user/userTypes";
 
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
@@ -10,7 +10,7 @@ import { useState } from "react";
 
 interface TableProps {
     headers: string[];
-    data: (Users | Subscription | Offer)[]; 
+    data: (Users | Subscription | Offer | PaymentHistory)[]; 
     isLoading: boolean;
     handlePagination: (direction: string) => void;
     paginationCount: number;
@@ -119,6 +119,30 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                             }
                         </tbody>
                     )}
+
+                    {type === "history" && (
+                            <tbody>{
+                                        data.map((paymentHistory, index) => (
+                                            "subscription" in paymentHistory &&  paymentHistory.subscription.map((subscription, subIndex) => (
+                                            <tr className="text-center h-[60px]" key={`${index}-${subIndex}`}>
+                                                <td className="py-2 px-4 border-b">{subscription.subId}</td>
+                                                <td className="py-2 px-4 border-b">{paymentHistory.username}</td>
+                                                <td className="py-2 px-4 border-b">{subscription.amount}</td>
+                                                <td className="py-2 px-4 border-b">
+                                                {subscription.createdAt ? new Date(subscription.createdAt).toLocaleDateString() : 'N/A'}
+                                                </td>
+                                                <td className={`py-2 px-4 border-b`}>
+                                                {subscription.expiresIn ? new Date(subscription.expiresIn).toLocaleDateString() : 'N/A'}
+                                                </td>
+                                            </tr>
+                                            ))
+                                        ))
+                                    }
+                                {
+                                    data.length == 0 && (<p className="h-10 font-semibold flex items-center justify-center">No offers added Yet!</p>)
+                                }
+                            </tbody>
+                        )}
                 </table>
             }
             <CustomModal  isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>

@@ -70,6 +70,7 @@ export function Payment () {
             case "weekly" : {
                 if(subscriptionAmt?.amount.weekly){
                     const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount:subscriptionAmt?.amount.weekly, userId: userId}))
+                    
                     if(response.payload.data){
                         window.location.href = response.payload.data;
                     }

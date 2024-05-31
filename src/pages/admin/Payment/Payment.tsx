@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import "../../admin/Home/Home.css";
 import { Table } from "../../../components/table/Table";
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
-import { addSubscription, addSubscriptionOffer, listSubscription, listSubscriptionOffers } from "../../../services/adminAPI";
+import { addSubscription, addSubscriptionOffer, listPaymentHistory, listSubscription, listSubscriptionOffers } from "../../../services/adminAPI";
 import { Subscription } from "../../../typings/user/userTypes";
 import { CustomModal } from "../../../components/modal/CustomModal";
 import { validationSchema, validateSubscriptionOfferData } from "../../../utils/validations/validateSubsctiptionData";
@@ -18,6 +18,11 @@ export function AdminPayment() {
     const [messageType, setMessageType] = useState<"success" | "error" | string>("");
 
     const [offers, setOffers] = useState([]); // State to store offers
+    const [paymentHistory, setPaymentHistory] = useState([]); // State to store payment history
+    
+    const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+    const [paginationCount, setPaginationCount] = useState(1);
+    const [totalItemsCount, setTotalItemsCount] = useState(0);
 
     const headers = [
         "SL NO",
@@ -38,9 +43,14 @@ export function AdminPayment() {
         "Ends At"
     ];
 
-    const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-    const [paginationCount, setPaginationCount] = useState(1);
-    const [totalItemsCount, setTotalItemsCount] = useState(0);
+    const paymentHistoryHeaders = [
+        "Payment ID",
+        "Username",
+        "amount",
+        "Paid At",
+        "Expires At",
+    ];
+
 
     useEffect(() => {
         async function getSubscriptionData() {
@@ -67,10 +77,24 @@ export function AdminPayment() {
             }
         }
 
+        async function getPaymentHistoryData() {
+            setIsLoading(true);
+            const response = await dispatch(listPaymentHistory(paginationCount - 1));
+            setIsLoading(false);            
+            if (response.payload.data) {                
+                setPaymentHistory(response.payload.data);                
+                setTotalItemsCount(response.payload.totalPages);
+            } else {
+                alert(response.payload.message);
+            }
+        }
+
         if (activeTab === "PLANS") {
             getSubscriptionData();
         } else if (activeTab === "OFFERS") {
             getOffersData();
+        } else if (activeTab === "HISTORY") {
+            getPaymentHistoryData();
         }
     }, [activeTab, paginationCount, dispatch]);
 
@@ -402,6 +426,28 @@ export function AdminPayment() {
                     </CustomModal>
                 </motion.div>
             )}
+            {
+                activeTab == "HISTORY" && (
+                    <motion.div
+                        key={activeTab ? activeTab : "empty"}
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -10, opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="my-10"
+                    >
+                        <Table
+                            headers={paymentHistoryHeaders} 
+                            data={paymentHistory}
+                            isLoading={isLoading}
+                            handlePagination={handlePagination}
+                            paginationCount={paginationCount}
+                            totalItemsCount={totalItemsCount}
+                            type={'history'}
+                        />
+                    </motion.div>
+                )
+            }
         </>
     );
 }

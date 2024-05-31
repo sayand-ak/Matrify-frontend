@@ -348,7 +348,7 @@ export function SignUp() {
             <ToastContainer/>
 
             <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-                <div className="flex flex-col items-center mt-10 px-6 gap-10">
+                <div className="flex flex-col items-center my-10 px-6 gap-10">
                     <h2 className="font-gillroy text-2xl font-semibold md:text-3xl">Matrify OTP Verification</h2>
                     <p className="text-lg">Please enter the OTP (one time password) send to your registered phone number to complete the verification.</p>
                     <div className="h-[50px] w-full flex items-center justify-center">

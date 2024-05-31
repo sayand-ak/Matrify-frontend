@@ -136,3 +136,9 @@ export const listSubscriptionOffers = createAsyncThunk("/api/admin/list-subscrip
 
   return response.data;
 });
+
+export const listPaymentHistory = createAsyncThunk("/api/admin/list-payment-history", async(count: number) => {
+  const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-payment-history/page?count=${count}`,{ withCredentials: true });
+
+  return response.data;
+});

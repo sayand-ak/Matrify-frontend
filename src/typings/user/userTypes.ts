@@ -79,4 +79,19 @@ export interface Offer {
     endsAt: string;
 }
 
+interface SubscriptionArray {
+    pid?: string,
+    subId: string, 
+    type: string, 
+    amount: number, 
+    userId: string,
+    createdAt?: Date,
+    expiresIn?: Date
+}
+
+export interface PaymentHistory {
+    username: string;
+    subscription: Array<SubscriptionArray>
+}
+
 
