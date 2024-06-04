@@ -226,7 +226,7 @@ export default function Navbar({page}: NavbarProps){
                                 </form>
                             }
 
-                            <a href="/user/profile" className="opacity-[0.8] hover:opacity-[1]">
+                            <a href={`/user/profile/${selector?._id}/user`} className="opacity-[0.8] hover:opacity-[1]">
                                 <div 
                                     className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
                                     style={{ 

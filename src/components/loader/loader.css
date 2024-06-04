@@ -1,0 +1,17 @@
+.loader-text-div {
+	background: linear-gradient(-45deg, #373636, #b4b4b4, #5f6060, #a8aaaa);
+	background-size: 400% 400%;
+	animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}

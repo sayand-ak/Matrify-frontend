@@ -5,7 +5,6 @@ import { CiPercent } from "react-icons/ci";
 import { PiPhoneCallThin } from "react-icons/pi";
 import { HiOutlineCurrencyRupee } from "react-icons/hi2";
 import { CiChat1 } from "react-icons/ci";
-import { CiHeart } from "react-icons/ci";
 import { MdOutlineBlock } from "react-icons/md";
 import { IconType } from "react-icons";
 import { useEffect, useState } from "react";
@@ -13,7 +12,7 @@ import Navbar from "../../../components/navbar/Navbar";
 import { LuPlus } from "react-icons/lu";
 import { SlCalender } from "react-icons/sl";
 import "./Profile.css";
-import { addPreferences, userProfile } from "../../../services/userAPI";
+import { addPreferences, sendInterest, userProfile } from "../../../services/userAPI";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profile/professionDataType";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -37,6 +36,9 @@ import { GiBigDiamondRing } from "react-icons/gi";
 import { TbDisabled } from "react-icons/tb";
 import { PiStarOfDavidLight } from "react-icons/pi";
 import { CgMenuLeft } from "react-icons/cg";
+import { CiHeart } from "react-icons/ci";
+import { FaHeart } from "react-icons/fa";
+
 
 import 'react-circular-progressbar/dist/styles.css';
 import ProfileSection from "../../../components/profileSection/ProfileSection";
@@ -44,42 +46,47 @@ import { EditFormModal } from "../../../components/editFrom/EditForm";
 import { PaymentHistory } from "../PaymentHistory/PaymentHistory";
 import { EditFamilyFormModal } from "../../../components/editFrom/EditFamilyForm";
 import { userLogout } from "../../../redux/slices/userSlices";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { calculateAgeInYears } from "../../../utils/calculateAgeInYears";
+import { formatDate } from "../../../utils/formateDate";
+import { MoreOptionsBtn } from "../../../components/moreOptionsBtn/MoreOptionsBtn";
+import { InterestReceived, InterestSend } from "../../../typings/user/userTypes";
+import InterestLogs from "../InterestLogs/InterestLogs";
 
-
+interface RouteParams extends Record<string, string | undefined>  {
+    id: string; 
+    user: string
+}
 
 export function Profile() {
 
     const [showProfile, setShowProfile] = useState<boolean>(true);
     const [showPayment, setShowPayment] = useState<boolean>(false);
-
-    const [selectedTab, setSelectedTab] = useState<string>("profile");
-    
-    const [userData, setUserData] = useState<{ profile?: UserProfile; family?: UserFamily; profession?: UserProfession }>();
-
-    console.log("-----------------------",userData);
-    
-
-
-
+    const [showInterestLogs, setShowInterestLogs] = useState<boolean>(false);
     const [isFormVisible, setIsFormVisible] = useState(false);
 
+    const [userData, setUserData] = useState<{ profile?: UserProfile; family?: UserFamily; profession?: UserProfession }>();
     const [preferences, setPreferences] = useState<string>("");
     const [preferencesError, setPreferencesError] = useState("");
-    const [sidebarToggle, setSidebarToggle] = useState(true);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
     
-
-  const handleAddPreferencesClick = () => {
-    setIsFormVisible(!isFormVisible); 
-  };
-
+    const [sidebarToggle, setSidebarToggle] = useState(true);
+    const [selectedTab, setSelectedTab] = useState<string>("profile");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const userId = useAppSelector((state) => state.user.user?._id);
+
+    const [likeBtnColor, setLikeBtnColor] = useState<string>("00000039");
+
+    const { id, user } = useParams<RouteParams>();    
+    const userId = useAppSelector(state => state.user.user?._id);
+
+    const [sendInterestButtonLabel, setSendInterestButtonLabel] = useState<string>("Send interest");
+
+
+  const handleAddPreferencesClick = () => {
+    setIsFormVisible(!isFormVisible); 
+  };    
     
     const items:Array<{name: string, icon: IconType}> = [
         { name: "Profile", icon: CiUser },
@@ -105,69 +112,58 @@ export function Profile() {
             setShowPayment(false);
         }
 
+        if (itemName === "Interest Shared") {
+            setShowInterestLogs(true);
+        }else{
+            setShowInterestLogs(false);
+        }
+
+
+
         if (itemName === "Logout") {
             dispatch(userLogout());
             navigate("/user/login")
         }
-        
-
     };
 
     useEffect(() => {
         const fetchUserData = async() => {
-            if (userId) {
-                const response = await dispatch(userProfile(userId));
+            if (id) {
+                const response = await dispatch(userProfile(id));
                 console.log(response);
                 
                 if (response.payload.success) {
                     const data = response.payload.data;
+                    console.log(data);
+
                     setUserData({
                         profile: data[0],
                         profession: data[1],
                         family: data[2],
                     });
+
                 }
             }
         }
         fetchUserData();
-    }, [dispatch, userId]);
+
+    }, [dispatch, id]);
     
+    useEffect(() => {
+        if(userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === userId && interestData.status === "pending")){
+            setSendInterestButtonLabel("Waiting to accept...");
+        }else if(userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === userId && interestData.status === "accepted")){
+            setSendInterestButtonLabel("Interest Accepted...");
+        }
+        else if(userData?.profile && userData?.profile.interestSend.some((interestData: InterestSend) => interestData.sendTo === userId && interestData.status === "accepted")){
+            setSendInterestButtonLabel("Interest accepted...");
+        }
+    }, [userData?.profile, userId]);
 
     const handleTabSelect = (tab: string, event:React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
         setSelectedTab(tab);
     }
-
-
-    const formatDate = (dateString: string) => {
-        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: '2-digit' };
-        return new Date(dateString).toLocaleDateString('en-GB', options);
-    };
-
-    function calculateAgeInYears(dobString: string): number | null {
-
-        if (!dobString) {
-          return null; 
-        }
-      
-        try {
-          const dob = new Date(dobString);
-      
-          const today = new Date();
-      
-          let age = today.getFullYear() - dob.getFullYear();
-          const months = today.getMonth() - dob.getMonth();
-      
-          if (months < 0 || (months === 0 && today.getDate() < dob.getDate())) {
-            age--; 
-          }
-      
-          return age;
-        } catch (error) {
-          console.error("Error parsing date string:", error);
-          return null;
-        }
-      }
 
 
     const handleAddPreferences = async() => {
@@ -176,7 +172,6 @@ export function Profile() {
             const response = await dispatch(addPreferences(preferences));
 
             window.location.reload();
-
             console.log(response);
         } else {
             setPreferencesError("Please enter only characters.");
@@ -185,6 +180,16 @@ export function Profile() {
 
     function showSidebar() {
         setSidebarToggle(!sidebarToggle)
+    }
+
+    async function handleSendInterest() {
+        if (sendInterestButtonLabel == "Send interest" && userData?.profile?.subscribed) {
+            const response = await dispatch(sendInterest(id || ""));
+    
+            if (response.payload.success) {
+                setSendInterestButtonLabel("Waiting to Accept...");
+            } 
+        }
     }
 
     return (
@@ -196,7 +201,7 @@ export function Profile() {
             </div>
 
             {/* sidebar in mobile view */}
-            <div className={`bg-white transition-transform duration-300 ease-in-out ${sidebarToggle ? "fixed translate-x-0" : "fixed -translate-x-full"} md:hidden w-[70vw] h-[100vh] z-10`}>
+            <div className={`bg-white transition-transform duration-300 ease-in-out ${sidebarToggle && user === "user" ? "fixed translate-x-0" : "fixed -translate-x-full"} md:hidden w-[70vw] h-[100vh] z-10`}>
                 <CgMenuLeft className="text-2xl text-black ml-10 mt-5 block" onClick={showSidebar}/>
                 <Sidebar
                     role="user"
@@ -209,7 +214,7 @@ export function Profile() {
             <div className="flex">
 
                 {/* sidebar in normal view */}
-                <div className="hidden md:flex max-w-[20rem]">
+                <div className={`hidden max-w-[20rem] ${user == "user" ? "md:flex":""}`}>
                     <Sidebar 
                         role="user"
                         items={items}
@@ -225,11 +230,11 @@ export function Profile() {
 
                             <div className="w-full flex justify-center py-0 md:py-7">
 
-                                <div className="w-full md:w-[93%] min-h-[41.1rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden">
+                                <div className={`w-full ${user === "user" ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45.1rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
 
                                     {/* the cover image div */}
-                                    <div className="w-full bg-[#bfbdb9] h-[30%]" style={{backgroundImage: "url('../src/assets/images/bgprofile.jpg')", backgroundSize: "cover"}}>
-                                        <CgMenuLeft className="text-2xl rounded-full text-white ml-4 mt-5 block md:hidden" onClick={showSidebar}/>
+                                    <div className="w-full h-[30%]" style={{backgroundImage: "url('/src/assets/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center"}}>
+                                        <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${user === "user" ? "block" : "hidden"}`} onClick={showSidebar}/>
                                     </div>
 
                                     <div className="w-full h-[33%] relative">
@@ -246,18 +251,55 @@ export function Profile() {
                                         <div className="w-full absolute top-[90px] left-16 flex flex-col justify-between overflow-x-auto">
                                             
                                             <div className="flex flex-col gap-2 ">
-                                                <h1 className="text-[20px] font-semibold pt-2">{userData?.profile?.username} ({calculateAgeInYears(userData?.profile?.dob || "")})</h1>
-                                                <h1 className="text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]">{userData?.profile?.email}</h1>
-                                                <h1 className="flex items-center gap-2 text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"><SlCalender />Joined At: {formatDate(userData?.profile?.createdAt || "")}</h1>
+                                                <h1 className="text-[20px] font-semibold pt-2 flex items-center gap-5">
+                                                    {userData?.profile?.username} ({calculateAgeInYears(userData?.profile?.dob || "")})
+                                                    {
+                                                        user === "match" && (
+                                                            <FaHeart 
+                                                                className={`text-[26px] text-[#${likeBtnColor}]`}
+                                                                onClick={() => {setLikeBtnColor("FF0000")}}
+                                                            />
+                                                        )
+                                                    }
+                                                </h1>
+
+                                                <h1 
+                                                    className="text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"
+                                                >
+                                                    {userData?.profile?.email}
+                                                </h1>
+                                                
+                                                <h1 
+                                                    className="flex items-center gap-2 text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"
+                                                >
+                                                    <SlCalender />
+                                                    Joined At: {formatDate(userData?.profile?.createdAt || "")}
+                                                </h1>
                                             </div>
                                         </div>
 
-                                        <button 
-                                            className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#C2A170] border-[#C2A170] border-solid rounded-3xl hover:bg-[#C2A170] hover:text-white"
-                                            onClick={() => setIsModalOpen(true)}
-                                        >
-                                            Edit profile
-                                        </button>
+
+                                        {/* if the profile is for user show edit btn and if its for match show match options */}
+                                        {
+                                            user === "user" ? (
+                                                <button 
+                                                    className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#C2A170] border-[#C2A170] border-solid rounded-3xl hover:bg-[#C2A170] hover:text-white"
+                                                    onClick={() => setIsModalOpen(true)}
+                                                >
+                                                    Edit profile
+                                                </button>
+                                            ) : (
+                                                <div className="absolute flex items-center gap-5 right-4 md:right-10 top-5 font-semibold text-[#C2A170]">
+                                                    <button 
+                                                        className="border-[1px] text-[15px] h-10 rounded-lg px-3 border-[#c2a17085]"
+                                                        onClick={handleSendInterest}
+                                                    >
+                                                        {sendInterestButtonLabel}
+                                                    </button>
+                                                    <MoreOptionsBtn/>
+                                                </div>
+                                            )
+                                        }
 
                                         {/* Edit form modal */}
                                         {
@@ -397,7 +439,7 @@ export function Profile() {
                                                     }
                                                 </div>) : 
                                                 (<div className="w-full h-full flex flex-col justify-center items-center">
-                                                    <img src="../src/assets/images/empty.png" alt="" className="h-3/4 w-1/4 opacity-[0.7]" />
+                                                    <img src="/src/assets/images/empty.png" alt="" className="h-3/4 w-1/4 opacity-[0.7]" />
                                                 <p className="text-gray-400">No preferences added</p> 
                                                 </div>)
                                         )}
@@ -406,70 +448,73 @@ export function Profile() {
                                 </div>
                             </div>
 
-
-                            <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 items-start gap-3 md:gap-7 flex-row xl:flex-col flex py-5">
-                                <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-3 rounded-lg w-[90%]">
-                                    <h1 className="text-[15px] md:text-[18px] text-center px-2 font-semibold">Complete your profile for exact matches...</h1>
-                                    <CircularProgressbar
-                                        value={(userData?.profile?.profileProgress || 0) } 
-                                        text={`${(userData?.profile?.profileProgress || 0)}%`} 
-                                        className="h-[40%]" 
-                                        styles={buildStyles({
-                                            pathColor: "#EAC991",
-                                            textColor: "#E7B10A",
-                                            trailColor: "#d6d6d6",
-                                        })}
-                                    />
-
-                                </div>
-
-                                { (userData?.profile?.preferences.length || 0) < 5 && 
-                                    (<div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
-                                        <h1 className="text-[15px] md:text-[18px] text-center font-semibold">Add your Preferences</h1>
-                                        <button 
-                                            className={`border-[4px] border-[#EAC991] rounded-full ${
-                                                isFormVisible ? 'hidden' : ''}`}
-                                            onClick={handleAddPreferencesClick}
-                                        >
-                                            <LuPlus className="text-[70px] text-[#EAC991]"/>
-                                        </button>
-
-                                        <div className={`items-center justify-center flex-col gap-6 w-full ${
-                                            isFormVisible ? 'flex' : 'hidden'
-                                        }`}>
-                                            <input 
-                                                type="text" 
-                                                className="bg-[#f4f4f4] outline-none border-[1px] w-[90%] min-h-[40px] text-sm px-2 rounded-md" 
-                                                placeholder="Enter preferences"
-                                                value={preferences}
-                                                onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    if (value) {
-                                                        setPreferencesError("");
-                                                        setPreferences(value);
-                                                    } else {
-                                                        setPreferences("");
-                                                        setPreferencesError("Preferences cannot be empty"); // Set an error message when the input is empty
-                                                    }
-                                                }}
+                            {
+                                user == "user" && (
+                                    <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 items-start gap-3 md:gap-7 flex-row xl:flex-col flex py-5">
+                                        <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-3 rounded-lg w-[90%]">
+                                            <h1 className="text-[15px] md:text-[18px] text-center px-2 font-semibold">Complete your profile for exact matches...</h1>
+                                            <CircularProgressbar
+                                                value={(userData?.profile?.profileProgress || 0) } 
+                                                text={`${(userData?.profile?.profileProgress || 0)}%`} 
+                                                className="h-[40%]" 
+                                                styles={buildStyles({
+                                                    pathColor: "#EAC991",
+                                                    textColor: "#E7B10A",
+                                                    trailColor: "#d6d6d6",
+                                                })}
                                             />
-                                            {preferencesError && <div className="text-red-500 text-sm">{preferencesError}</div>}
-                                            <div className="flex justify-between w-[13rem]">
-                                                <button 
-                                                    className="font-semibold px-5 py-1 border-[1px] text-[#fff] border-solid rounded-3xl bg-[#EAC991]"
-                                                    onClick={handleAddPreferences}
-                                                >Add</button>
-                                                <button 
-                                                    className="font-semibold px-5 py-1 border-[1px] text-[#EAC991] border-[#EAC991] border-solid rounded-3xl" 
-                                                    onClick={handleAddPreferencesClick}
-                                                >Cancel</button>
-                                            </div>
-                                        </div>
-                                
-                                </div>)
-                            }
 
-                            </div>
+                                        </div>
+
+                                        { (userData?.profile?.preferences.length || 0) < 5 && 
+                                            (<div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
+                                                <h1 className="text-[15px] md:text-[18px] text-center font-semibold">Add your Preferences</h1>
+                                                <button 
+                                                    className={`border-[4px] border-[#EAC991] rounded-full ${
+                                                        isFormVisible ? 'hidden' : ''}`}
+                                                    onClick={handleAddPreferencesClick}
+                                                >
+                                                    <LuPlus className="text-[70px] text-[#EAC991]"/>
+                                                </button>
+
+                                                <div className={`items-center justify-center flex-col gap-6 w-full ${
+                                                    isFormVisible ? 'flex' : 'hidden'
+                                                }`}>
+                                                    <input 
+                                                        type="text" 
+                                                        className="bg-[#f4f4f4] outline-none border-[1px] w-[90%] min-h-[40px] text-sm px-2 rounded-md" 
+                                                        placeholder="Enter preferences"
+                                                        value={preferences}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            if (value) {
+                                                                setPreferencesError("");
+                                                                setPreferences(value);
+                                                            } else {
+                                                                setPreferences("");
+                                                                setPreferencesError("Preferences cannot be empty"); // Set an error message when the input is empty
+                                                            }
+                                                        }}
+                                                    />
+                                                    {preferencesError && <div className="text-red-500 text-sm">{preferencesError}</div>}
+                                                    <div className="flex justify-between w-[13rem]">
+                                                        <button 
+                                                            className="font-semibold px-5 py-1 border-[1px] text-[#fff] border-solid rounded-3xl bg-[#EAC991]"
+                                                            onClick={handleAddPreferences}
+                                                        >Add</button>
+                                                        <button 
+                                                            className="font-semibold px-5 py-1 border-[1px] text-[#EAC991] border-[#EAC991] border-solid rounded-3xl" 
+                                                            onClick={handleAddPreferencesClick}
+                                                        >Cancel</button>
+                                                    </div>
+                                                </div>
+                                        
+                                        </div>)
+                                    }
+
+                                    </div>
+                                )
+                            }
                         </div>
 
 
@@ -480,6 +525,13 @@ export function Profile() {
                     //if payment section is selected payment history page is displayed
                     showPayment && (
                         <PaymentHistory userData={userData}/>
+                    )
+                }
+
+                {
+                    //if interest log section is selected payment history page is displayed
+                    showInterestLogs && (
+                        <InterestLogs interestSend={userData?.profile?.interestSend || []} interestReceived={userData?.profile?.interestReceived || []}/>
                     )
                 }
             </div>

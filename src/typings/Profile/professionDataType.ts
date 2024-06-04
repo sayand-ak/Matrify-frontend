@@ -1,3 +1,4 @@
+import { InterestSend, InterestReceived } from './../user/userTypes';
 export interface ProfessionData {
   userId: string;
   education: string;
@@ -25,6 +26,7 @@ interface StripeReqDataType {
 
 
 export interface UserProfile {
+  _id: string,
   createdAt: string;
   district: string;
   dob: string;
@@ -42,6 +44,8 @@ export interface UserProfile {
   preferences: Array<string>;
   subscribed?: boolean,
   subscription?: Array<StripeReqDataType>
+  interestSend: Array<InterestSend>;
+  interestReceived: Array<InterestReceived>;
 }
 
 export interface UserProfession {

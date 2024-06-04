@@ -15,6 +15,7 @@ import { SpiritualityDetails } from '../../pages/user/SpiritualityDetails/Spirit
 import { Profile } from '../../pages/user/Profile/Profile';
 import { Payment } from '../../pages/user/Payment/Payment';
 import { PaymentSuccess } from '../../pages/user/PaymentSuccess/PaymentSuccess';
+import { Chat } from '../../pages/user/Chat/Chat';
 
 
 export function UserRoutes (){
@@ -38,13 +39,14 @@ export function UserRoutes (){
                 <Route path='collectDocs' element={<CollectDocs/>} />
             </Route>
 
-            <Route path='profile' element={<Profile/>} />
+            <Route path='profile/:id/:user' element={<Profile/>} />
             <Route path='payment' element={<Payment/>} />
             
             <Route path='paymentSuccess/:type' element={<PaymentSuccess/>} />
 
-
             <Route path='/resetPassword/:email/:token' element={<ResetPassword/>} />
+
+            <Route path='/chat/' element={<Chat/>}/>
         
         </Routes>
     )

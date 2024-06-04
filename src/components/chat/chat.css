@@ -1,0 +1,10 @@
+.message-send-message-container {
+    max-width: 400px;
+    overflow-wrap: break-word;
+}
+  
+.message-receive-message-container {
+    max-width: 400px;
+    overflow-wrap: break-word;
+}
+  

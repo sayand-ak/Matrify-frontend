@@ -3,20 +3,25 @@ import { UserRoutes } from './routes/userRoutes/UserRoutes';
 import { AdminRoutes } from './routes/adminRoutes/AdminRoutes';
 
 import "./App.css"
+import { SocketProvider } from './context/socketContext';
 
 
 function App() {
   
+  
 
 
   return (
+    
     <>
+    <SocketProvider>
       <Router>
           <Routes>
               <Route path='/user/*' element={<UserRoutes/>} />
               <Route path='/admin/*' element={<AdminRoutes/>} />
           </Routes>
       </Router>
+    </SocketProvider>
     </>
   )
 }

@@ -63,15 +63,14 @@ export function Home(){
             <div className="h-[89vh]">
                 <Banner/>
             </div>
-
-            <Carousal/>
-
-            <Carousal/>
+            
+            <Carousal matchBase="profession" matchKey="education" matchData="Bachelor's Degree"/>
+            <Carousal matchBase="profile" matchKey="motherTongue" matchData="Malayalam"/>
 
             <QuoteBanner/>
             
-            <Carousal/>
-            <Carousal/>
+            <Carousal matchBase="family" matchKey="martialStatus" matchData="Single"/>
+            <Carousal matchBase="profile" matchKey="state" matchData="Kerala"/>
 
             <Footer/>
 

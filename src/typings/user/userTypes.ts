@@ -4,6 +4,10 @@ export interface UserData {
     _id: string;
     email?:string,
     phone?:string,
+    username?:string,
+    dob?:string;
+    state?:string,
+    district?:string,
     searchHistory: SearchHistory[];
     image: string;
     payload: {
@@ -94,4 +98,14 @@ export interface PaymentHistory {
     subscription: Array<SubscriptionArray>
 }
 
+export interface InterestSend {
+    sendTo: string;
+    sendOn: Date;
+    status: string;
+}
+export interface InterestReceived {
+    sendBy: string;
+    receivedOn: Date;
+    status: string;
+}
 
