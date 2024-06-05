@@ -2,10 +2,15 @@ import { useState } from "react";
 import { ChatBoxHeader } from "./ChatBoxHeader";
 import { ChatInput } from "./ChatInput";
 import { MessageContainer } from "./MessageContainer";
+import { Message } from "../../typings/conversation/message";
 
+interface ChatBoxProps {
+    currentChat: Message
+}
 
+//stoped here
 
-export function ChatBox() {
+export function ChatBox({currentChat}: ChatBoxProps) {
     const [message, setMessage] = useState<string[]>([]); 
 
     function handleSendMessage(value: string) {
