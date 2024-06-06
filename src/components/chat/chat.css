@@ -2,9 +2,23 @@
     max-width: 400px;
     overflow-wrap: break-word;
 }
-  
+
+
 .message-receive-message-container {
     max-width: 400px;
     overflow-wrap: break-word;
 }
   
+.message-container {
+    background-image: url("https://github.com/sayand-ak/static_images/blob/main/MATRIFY-removebg-preview%20(1).png");
+    background-size: cover;
+    background-position: center;
+    background-color: #fbfaf8;
+    overflow-y: auto;
+    height: 80vh; /* Adjust as needed */
+    padding-bottom: 50rgba(227, 224, 218, 0.802)
+}
+
+.message-content {
+    transition: scroll-behavior 0.5s ease-in-out; /* Add a smooth scroll transition */
+}

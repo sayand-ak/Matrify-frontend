@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { useAppDispatch } from "../../../hooks/useTypedSelectors";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { updateInterestStatus, userProfile } from "../../../services/userAPI";
 import { UserProfile } from "../../../typings/Profile/professionDataType";
 import { formatDate } from "../../../utils/formateDate";
 import { LuSendHorizonal } from "react-icons/lu";
 import showToast from "../../../components/Toast/Toast";
+import { startConversation } from "../../../services/chatAPI";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 interface InterestSend {
     sendTo: string;
@@ -26,10 +29,15 @@ interface InterestListProps {
 export default function InterestLogs(interestData: InterestListProps) {
     const [selectedTab, setSelectedTab] = useState<string>("interestSend");
     const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
+
     const [userData, setUserData] = useState<{ interestSend: UserProfile[]; interestReceived: UserProfile[] }>({
         interestSend: [],
         interestReceived: [],
     });
+
+    const userId = useAppSelector(state => state.user.user?._id);
 
     useEffect(() => {
         async function fetchData() {
@@ -60,6 +68,15 @@ export default function InterestLogs(interestData: InterestListProps) {
             showToast("success", "Interest status updated successfully");
         }else{
             showToast("error", "Interest status updating failed");
+        }
+    }
+
+    async function handleStartChat(senderId: string, receiverId: string) {
+        const response = await dispatch(startConversation({senderId: senderId, receiverId: receiverId}));
+        if (response.payload.success) {
+            navigate("/user/chat");
+        }else{
+            showToast("error", "Chat starting failed");
         }
     }
 
@@ -103,7 +120,13 @@ export default function InterestLogs(interestData: InterestListProps) {
                                     </div>
                                     <div>
                                         {interestData.interestSend[index].status === "accepted" && (
-                                            <p className="text-[#E7C68F] font-semibold flex items-center gap-2">Chat <LuSendHorizonal className="text-xl" /> </p>
+                                            <button 
+                                                className="text-[#E7C68F] font-semibold flex items-center gap-2 cursor-pointer"
+                                                onClick={() => handleStartChat(userId || "", data._id)}
+                                            >
+                                                Chat 
+                                                <LuSendHorizonal className="text-xl" /> 
+                                            </button>
                                         )}
                                     </div>
                                 </div>
@@ -136,7 +159,13 @@ export default function InterestLogs(interestData: InterestListProps) {
                                     </div>
                                     <div>
                                         {interestData.interestReceived[index].status === "accepted" && (
-                                            <p className="text-[#E7C68F] font-semibold flex items-center gap-2">Chat <LuSendHorizonal className="text-xl" /> </p>
+                                            <p 
+                                                className="text-[#E7C68F] font-semibold flex items-center gap-2"
+                                                onClick={() => handleStartChat(userId || "", data._id)}
+                                            >
+                                                Chat 
+                                                <LuSendHorizonal className="text-xl" /> 
+                                            </p>
                                         )}
                                         {interestData.interestReceived[index].status === "pending" && (
                                             <div className="flex gap-4">
@@ -168,6 +197,7 @@ export default function InterestLogs(interestData: InterestListProps) {
                     </>
                 )}
             </div>
+            <ToastContainer/>
         </div>
     );
 }

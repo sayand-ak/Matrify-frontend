@@ -52,6 +52,10 @@ import { formatDate } from "../../../utils/formateDate";
 import { MoreOptionsBtn } from "../../../components/moreOptionsBtn/MoreOptionsBtn";
 import { InterestReceived, InterestSend } from "../../../typings/user/userTypes";
 import InterestLogs from "../InterestLogs/InterestLogs";
+import { MdReportGmailerrorred } from "react-icons/md";
+import { MdBlock } from "react-icons/md";
+import { IoMdArrowDropup } from "react-icons/io";
+
 
 interface RouteParams extends Record<string, string | undefined>  {
     id: string; 
@@ -83,10 +87,12 @@ export function Profile() {
 
     const [sendInterestButtonLabel, setSendInterestButtonLabel] = useState<string>("Send interest");
 
+    const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false);
 
-  const handleAddPreferencesClick = () => {
-    setIsFormVisible(!isFormVisible); 
-  };    
+
+    const handleAddPreferencesClick = () => {
+        setIsFormVisible(!isFormVisible); 
+    };    
     
     const items:Array<{name: string, icon: IconType}> = [
         { name: "Profile", icon: CiUser },
@@ -118,6 +124,9 @@ export function Profile() {
             setShowInterestLogs(false);
         }
 
+        if (itemName === "Chat") {
+            navigate("/user/chat")
+        }
 
 
         if (itemName === "Logout") {
@@ -289,6 +298,7 @@ export function Profile() {
                                                     Edit profile
                                                 </button>
                                             ) : (
+
                                                 <div className="absolute flex items-center gap-5 right-4 md:right-10 top-5 font-semibold text-[#C2A170]">
                                                     <button 
                                                         className="border-[1px] text-[15px] h-10 rounded-lg px-3 border-[#c2a17085]"
@@ -296,8 +306,33 @@ export function Profile() {
                                                     >
                                                         {sendInterestButtonLabel}
                                                     </button>
-                                                    <MoreOptionsBtn/>
+                                                    <button onClick={() => setShowMoreOptions(!showMoreOptions)}>
+                                                        <MoreOptionsBtn/>
+                                                    </button>
+                                                    {
+                                                        showMoreOptions &&
+                                                        <div className="w-56 rounded-md bg-[#f4f4f4] shadow-md min-h-20 absolute right-0 top-14 showMoreOptions-visible transition-opacity">
+                                                            <IoMdArrowDropup className="absolute top-[-21px] right-0 text-[35px] text-[#f4f4f4]"/>
+
+                                                            <ul className="pl-3 pt-2 flex flex-col gap-2 text-[#969393]">
+                                                                <li className="flex items-center gap-3 cursor-pointer">
+                                                                    <MdBlock className="text-[23px] text-[#969393ac]"/>
+                                                                    <p>
+                                                                        Block user
+                                                                    </p>
+                                                                </li>
+                                                                <li className="flex items-center gap-3 cursor-pointer">
+                                                                    <MdReportGmailerrorred className="text-[23px] text-[#969393a6]"/>
+                                                                    <p>
+                                                                        Report user
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+
                                                 </div>
+
                                             )
                                         }
 

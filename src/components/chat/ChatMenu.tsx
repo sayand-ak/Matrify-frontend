@@ -1,62 +1,44 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SearchBox } from "../searchbox/searchBox";
-import { ChatMenuItems } from "./ChatMenuItems";
-import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
-import { getConversations } from "../../services/chatAPI";
+import { ChatMenuItems } from "./ChatMenuItem";
 import { Conversation } from "../../typings/conversation/conversation";
+import { useAppSelector } from "../../hooks/useTypedSelectors";
 
 interface ChatMenuProps {
     handleMenuItemClick: (conversationId: string) => void;
+    conversations: Conversation[];
 }
 
-export function ChatMenu({handleMenuItemClick}: ChatMenuProps) {
+export function ChatMenu({ handleMenuItemClick, conversations }: ChatMenuProps) {
     const [search, setSearch] = useState("");
-    
-    const [conversation, setConversation] = useState<Conversation[]>([]);
 
-    const userId = useAppSelector(state => state.user.user?._id);
-    const dispatch = useAppDispatch();
+    const userId = useAppSelector(state => state.user.user?._id)
 
-    useEffect(() => {
-        //calling get conversation API
-        async function fetchConversations(){
-            const response = await dispatch(getConversations(userId? userId: ""));
-            if(response.payload?.success) {
-                setConversation(response.payload.data);
-            }else{
-                alert("Chat conversation api error!!!!!")
-            }
-            
-        }
-        fetchConversations();
-    },[dispatch, userId]);
-
-    function handleSearch(){
-
+    function handleSearch() {
+        // Implement search functionality if needed
     }
-    
+
     return (
-        <div className="chat-list w-[30%] bg-[#F5F2EC] overflow-scroll no-scrollbar">
-            <div className="sticky top-0 bg-[#F5F2EC] pb-5">
+        <div className="chat-list w-[30%] bg-[#efe1ca4f] overflow-scroll no-scrollbar">
+            <div className="sticky top-0 bg-[#efe1ca8e] pb-5 shadow-sm">
                 <h2 className="text-[25px] pl-10 font-bold py-5">Chat</h2>
                 <div className="w-full flex justify-center">
-                    <SearchBox handleSearch={handleSearch} search={search} setSearch={setSearch}/>  
+                    <SearchBox handleSearch={handleSearch} search={search} setSearch={setSearch} />
                 </div>
             </div>
-
             <div className="pt-5 flex flex-col gap-0 mb-40">
-                {
-                    conversation.length > 0 ? (conversation.map((conversation, index) => (
-                        <div 
-                        onClick={() => handleMenuItemClick(conversation._id || "")}
+                {conversations.length > 0 ? (
+                    conversations.map((conversation, index) => (
+                        <div
+                            onClick={() => handleMenuItemClick(conversation._id || "")}
                             key={index}
                         >
-                            <ChatMenuItems conversation={conversation} userId={userId || ""}/>
+                            <ChatMenuItems conversation={conversation} userId={userId || ""} />
                         </div>
-                    ))) : (
-                        <div className="w-full flex items-center justify-center text-[13px] text-gray-400">No Chat yet !</div>
-                    )
-                }
+                    ))
+                ) : (
+                    <div className="w-full flex items-center justify-center text-[13px] text-gray-400">No Chat yet!</div>
+                )}
             </div>
         </div>
     );

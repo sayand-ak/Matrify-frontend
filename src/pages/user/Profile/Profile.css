@@ -1,3 +1,15 @@
 .progress-card{
     box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
 }
+
+
+.transition-opacity {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.showMoreOptions-visible {
+    opacity: 1;
+    transform: scale(1);
+}

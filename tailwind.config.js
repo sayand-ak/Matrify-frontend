@@ -24,6 +24,14 @@ export default {
           display: 'none',  /* Safari and Chrome */
         },
       });
-    }
-  ],
+    },
+    
+    function({ addUtilities }) {
+      addUtilities({
+        '.text-shadow': {
+          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
+        },
+      });
+    },
+  ]
 }
