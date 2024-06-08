@@ -12,7 +12,7 @@ interface Error {
     }
 }
 
-const API_URL = "http://localhost:4000/api/user";
+const API_URL = "http://localhost:4000/api";
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
@@ -68,7 +68,7 @@ async function getNewAccessToken(refreshToken: string) {
 }
 
 
-export const signupUserAsync = createAsyncThunk("/api/user/signup", async (phone: string) => {
+export const signupUserAsync = createAsyncThunk("/api/signup", async (phone: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/signup`, {
             phone,
@@ -80,7 +80,7 @@ export const signupUserAsync = createAsyncThunk("/api/user/signup", async (phone
     }
 });
 
-export const otpVerify = createAsyncThunk("/api/user/otp-verify", async ({ username, phone, password, firebaseData }: UserSignupType) => {
+export const otpVerify = createAsyncThunk("/api/otp-verify", async ({ username, phone, password, firebaseData }: UserSignupType) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/otp-verify`, {
             username,
@@ -96,7 +96,7 @@ export const otpVerify = createAsyncThunk("/api/user/otp-verify", async ({ usern
 });
 
 
-export const googleAuthLogin = createAsyncThunk("/api/user/googleLogin", async (userData: UserGoogleAuthData) => {
+export const googleAuthLogin = createAsyncThunk("/api/googleLogin", async (userData: UserGoogleAuthData) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/google-login`, { userData }, { withCredentials: true });
 
@@ -106,7 +106,7 @@ export const googleAuthLogin = createAsyncThunk("/api/user/googleLogin", async (
     }
 });
 
-export const userLogin = createAsyncThunk("/api/user/login", async ({ data, password }: UserLoginType) => {
+export const userLogin = createAsyncThunk("/api/login", async ({ data, password }: UserLoginType) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/login`, {
             data: data,
@@ -119,7 +119,7 @@ export const userLogin = createAsyncThunk("/api/user/login", async ({ data, pass
     }
 });
 
-export const setProfile = createAsyncThunk("/api/user/setProfile", async (formData: FormData) => {
+export const setProfile = createAsyncThunk("/api/setProfile", async (formData: FormData) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(
             `${API_URL}/set-profile`,
@@ -138,7 +138,7 @@ export const setProfile = createAsyncThunk("/api/user/setProfile", async (formDa
     }
 });
 
-export const forgotPassword = createAsyncThunk("/api/user/forgotPassword", async (email: string) => {
+export const forgotPassword = createAsyncThunk("/api/forgotPassword", async (email: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/forgot-password`, {
             email
@@ -150,7 +150,7 @@ export const forgotPassword = createAsyncThunk("/api/user/forgotPassword", async
     }
 });
 
-export const validateToken = createAsyncThunk("/api/user/validateToken", async (token: string) => {
+export const validateToken = createAsyncThunk("/api/validateToken", async (token: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/validate-token`, {
             token
@@ -162,7 +162,7 @@ export const validateToken = createAsyncThunk("/api/user/validateToken", async (
     }
 });
 
-export const resetPassword = createAsyncThunk("/api/user/resetPassword", async ({ userId, newPassword }: { userId: string, newPassword: string }) => {
+export const resetPassword = createAsyncThunk("/api/resetPassword", async ({ userId, newPassword }: { userId: string, newPassword: string }) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/reset-password`, {
             userId,
@@ -175,7 +175,7 @@ export const resetPassword = createAsyncThunk("/api/user/resetPassword", async (
     }
 });
 
-export const setProfessionData = createAsyncThunk("/api/user/setProfessionData", async (professionData: ProfessionData) => {
+export const setProfessionData = createAsyncThunk("/api/setProfessionData", async (professionData: ProfessionData) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/set-profession`, {
             professionData
@@ -187,7 +187,7 @@ export const setProfessionData = createAsyncThunk("/api/user/setProfessionData",
     }
 });
 
-export const setFamilyData = createAsyncThunk("/api/user/setFamilyData", async (familyData: FamilyData) => {
+export const setFamilyData = createAsyncThunk("/api/setFamilyData", async (familyData: FamilyData) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/set-family-details`, {
             familyData
@@ -200,7 +200,7 @@ export const setFamilyData = createAsyncThunk("/api/user/setFamilyData", async (
 });
 
 
-export const addDocs = createAsyncThunk("/api/user/addDocs", async (formData: FormData) => {
+export const addDocs = createAsyncThunk("/api/addDocs", async (formData: FormData) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/add-docs `,
             formData,
@@ -218,7 +218,7 @@ export const addDocs = createAsyncThunk("/api/user/addDocs", async (formData: Fo
     }
 });
 
-export const addReligion = createAsyncThunk("/api/user/addReligion", async (religionData: ReligionData) => {
+export const addReligion = createAsyncThunk("/api/addReligion", async (religionData: ReligionData) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/add-religion `,
             religionData
@@ -291,7 +291,7 @@ export const getCitiesApi = async (accessToken: string, selectedState: string) =
     }
 }
 
-export const userProfile = createAsyncThunk("/api/user/users-profile", async (userId: string) => {
+export const userProfile = createAsyncThunk("/api/users-profile", async (userId: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/profile/${userId}`, { withCredentials: true });
 
@@ -302,7 +302,7 @@ export const userProfile = createAsyncThunk("/api/user/users-profile", async (us
     }
 });
 
-export const addPreferences = createAsyncThunk("/api/user/add-preferences", async (preference: string) => {
+export const addPreferences = createAsyncThunk("/api/add-preferences", async (preference: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/add-preferences`, { preference: preference }, { withCredentials: true });
 
@@ -314,7 +314,7 @@ export const addPreferences = createAsyncThunk("/api/user/add-preferences", asyn
 });
 
 
-export const editProfile = createAsyncThunk("/api/user/editProfile", async (formData: FormData) => {
+export const editProfile = createAsyncThunk("/api/editProfile", async (formData: FormData) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(
             `${API_URL}/edit-user-details`,
@@ -333,7 +333,7 @@ export const editProfile = createAsyncThunk("/api/user/editProfile", async (form
     }
 });
 
-export const getActiveSubscription = createAsyncThunk("/api/user/getActiveSubscription", async () => {
+export const getActiveSubscription = createAsyncThunk("/api/getActiveSubscription", async () => {
     try {
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-active-subscription`, { withCredentials: true });
         return response.data;
@@ -342,7 +342,7 @@ export const getActiveSubscription = createAsyncThunk("/api/user/getActiveSubscr
     }
 });
 
-export const createSubscriptionSession = createAsyncThunk("/api/user/createSubscriptionSession", async ({ subId, type, amount, userId }: { subId: string, type: string, amount: number, userId: string }) => {
+export const createSubscriptionSession = createAsyncThunk("/api/createSubscriptionSession", async ({ subId, type, amount, userId }: { subId: string, type: string, amount: number, userId: string }) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/create-checkout-session`, { subId: subId, type: type, amount: amount, userId: userId }, { withCredentials: true });
         return response.data;
@@ -352,7 +352,7 @@ export const createSubscriptionSession = createAsyncThunk("/api/user/createSubsc
     }
 });
 
-export const findActiveOffer = createAsyncThunk("/api/user/findActiveOffer", async () => {
+export const findActiveOffer = createAsyncThunk("/api/findActiveOffer", async () => {
     try {
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-active-offer`)
         return response.data;
@@ -364,7 +364,7 @@ export const findActiveOffer = createAsyncThunk("/api/user/findActiveOffer", asy
 
 
 
-export const searchPartner = createAsyncThunk("/api/user/searchPartner", async (text: string) => {
+export const searchPartner = createAsyncThunk("/api/searchPartner", async (text: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/search-partner/${text}`)
         return response.data;
@@ -374,7 +374,7 @@ export const searchPartner = createAsyncThunk("/api/user/searchPartner", async (
     }
 });
 
-export const saveSearchData = createAsyncThunk("/api/user/saveSearchData", async (searchData: { text: string, date: Date, searchResult: string[] }) => {
+export const saveSearchData = createAsyncThunk("/api/saveSearchData", async (searchData: { text: string, date: Date, searchResult: string[] }) => {
     try {
         const response: AxiosResponse = await axiosInstance.post(`${API_URL}/add-search-data`, searchData, { withCredentials: true })
         return response.data;
@@ -385,7 +385,7 @@ export const saveSearchData = createAsyncThunk("/api/user/saveSearchData", async
 });
 
 
-export const editFamilyData = createAsyncThunk("/api/user/editFamilyData", async (familyData: FamilyData) => {
+export const editFamilyData = createAsyncThunk("/api/editFamilyData", async (familyData: FamilyData) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/edit-family-details`, familyData, { withCredentials: true })
         return response.data;
@@ -395,7 +395,7 @@ export const editFamilyData = createAsyncThunk("/api/user/editFamilyData", async
     }
 });
 
-export const getMatches = createAsyncThunk("/api/user/getMatches", async ({ matchBase, matchKey, matchData }: { matchBase: string, matchKey: string, matchData: string }) => {
+export const getMatches = createAsyncThunk("/api/getMatches", async ({ matchBase, matchKey, matchData }: { matchBase: string, matchKey: string, matchData: string }) => {
     try {
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-matches?matchBase=${matchBase}&matchKey=${matchKey}&matchData=${matchData}`, { withCredentials: true })
         return response.data;
@@ -405,7 +405,7 @@ export const getMatches = createAsyncThunk("/api/user/getMatches", async ({ matc
     }
 });
 
-export const sendInterest = createAsyncThunk("/api/user/sendInterest", async (targetUserId: string) => {
+export const sendInterest = createAsyncThunk("/api/sendInterest", async (targetUserId: string) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/send-interest`, {targetUserId: targetUserId}, { withCredentials: true })
         return response.data;
@@ -414,9 +414,27 @@ export const sendInterest = createAsyncThunk("/api/user/sendInterest", async (ta
     }
 });
 
-export const updateInterestStatus = createAsyncThunk("/api/user/updateInterestStatus", async ({targetUserId, status}: {targetUserId: string, status: string}) => {
+export const updateInterestStatus = createAsyncThunk("/api/updateInterestStatus", async ({targetUserId, status}: {targetUserId: string, status: string}) => {
     try {
         const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/update-interest-status`, {targetUserId: targetUserId, status: status}, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+
+export const blockUser = createAsyncThunk("/api/blockUser", async (blockUserId: string) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/block-user`, {blockUserId: blockUserId}, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+
+export const unblockUser = createAsyncThunk("/api/unblockUser", async (blockUserId: string) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/unblock-user`, {blockUserId: blockUserId}, { withCredentials: true })
         return response.data;
     }catch(error) {
         return (error as Error).response?.data;

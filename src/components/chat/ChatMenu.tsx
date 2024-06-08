@@ -11,15 +11,16 @@ interface ChatMenuProps {
 
 export function ChatMenu({ handleMenuItemClick, conversations }: ChatMenuProps) {
     const [search, setSearch] = useState("");
+    
 
-    const userId = useAppSelector(state => state.user.user?._id)
+    const userId = useAppSelector(state => state.user.user?._id);
 
     function handleSearch() {
         // Implement search functionality if needed
     }
 
     return (
-        <div className="chat-list w-[30%] bg-[#efe1ca4f] overflow-scroll no-scrollbar">
+        <div className="chat-list w-full md:w-[30%] bg-[#efe1ca4f] overflow-scroll no-scrollbar">
             <div className="sticky top-0 bg-[#efe1ca8e] pb-5 shadow-sm">
                 <h2 className="text-[25px] pl-10 font-bold py-5">Chat</h2>
                 <div className="w-full flex justify-center">

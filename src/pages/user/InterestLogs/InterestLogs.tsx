@@ -74,7 +74,7 @@ export default function InterestLogs(interestData: InterestListProps) {
     async function handleStartChat(senderId: string, receiverId: string) {
         const response = await dispatch(startConversation({senderId: senderId, receiverId: receiverId}));
         if (response.payload.success) {
-            navigate("/user/chat");
+            navigate("/chat");
         }else{
             showToast("error", "Chat starting failed");
         }

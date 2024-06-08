@@ -1,5 +1,10 @@
 import { JwtPayload } from "jwt-decode";
 
+export interface BlockedUsers {
+    user: string,
+    blockedAt: Date,
+  }
+
 export interface UserData {
     _id: string;
     email?:string,
@@ -10,6 +15,7 @@ export interface UserData {
     district?:string,
     searchHistory: SearchHistory[];
     image: string;
+    blockedUsers?: Array<BlockedUsers>;
     payload: {
         data: {
             email: string;

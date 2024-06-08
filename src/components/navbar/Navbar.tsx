@@ -36,7 +36,7 @@ export default function Navbar({page}: NavbarProps){
         } else {
             setSearchUserIds([]);
         }
-      }, []);
+      }, [searchData]);
       
     
     const searchRef:LegacyRef<HTMLDivElement> = useRef(null);    
@@ -90,7 +90,6 @@ export default function Navbar({page}: NavbarProps){
                 const user = localStorage.getItem("user");
                 if (user && response.payload.data) {
                   const userData = JSON.parse(user);
-                  console.log(userData);
                   userData.searchHistory = response.payload.data;
                   localStorage.setItem("user", JSON.stringify(userData));
             }
@@ -132,11 +131,11 @@ export default function Navbar({page}: NavbarProps){
                 <div className="flex items-center gap-10 justify-end w-full">
                     { page == "landing" &&
                         <div className="flex items-center gap-5 justify-end w-full">
-                            <a href="/user/login" className="login-btn px-3 py-2 md:py-3 md:px-5">Log in</a>
+                            <a href="/login" className="login-btn px-3 py-2 md:py-3 md:px-5">Log in</a>
                             <button 
                                 className="px-3 py-2 md:py-3 md:px-5"
                                 onClick={() =>{
-                                    navigate("/user/register")
+                                    navigate("/register")
                                 }}>
                                 Sign up
                             </button>
@@ -205,10 +204,17 @@ export default function Navbar({page}: NavbarProps){
                                                     <div className="flex flex-col gap-2 w-full">
                                                         {value.length > 0 ? (
                                                             value.map(user => (
-                                                                <div key={user._id} className="flex gap-5 items-center hover:bg-[#ffffff3b] my-2 py-2 px-4">
-                                                                    <div className="rounded-full h-14 w-14 bg-red-500"></div>
-                                                                    <p>{user.username}</p>
-                                                                </div>
+                                                                <a href={`/profile/${user._id}`} key={user._id} >
+                                                                    <div 
+                                                                        className="flex gap-5 items-center hover:bg-[#ffffff3b] my-2 py-2 px-4"
+                                                                    >
+                                                                        <div 
+                                                                            className="rounded-full h-14 w-14"
+                                                                            style={{backgroundImage: `${user.image}`, backgroundSize: 'contain', backgroundPosition: "center"}}
+                                                                        ></div>
+                                                                        <p>{user.username}</p>
+                                                                    </div>
+                                                                </a>
                                                             ))
                                                         ) : (
                                                             <div className="h-full w-full flex items-center gap-4">
@@ -226,7 +232,7 @@ export default function Navbar({page}: NavbarProps){
                                 </form>
                             }
 
-                            <a href={`/user/profile/${selector?._id}/user`} className="opacity-[0.8] hover:opacity-[1]">
+                            <a href={`/profile/${selector?._id}`} className="opacity-[0.8] hover:opacity-[1]">
                                 <div 
                                     className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
                                     style={{ 

@@ -87,12 +87,12 @@ export function Login() {
                 localStorage.setItem("userAccess",response.payload.access);
                 localStorage.setItem("userRefresh",response.payload.refresh);
                 if(response.payload.user.profileProgress < 50){
-                    navigate("/user/setProfile");
+                    navigate("/setProfile");
                 }else{
                     if(response.payload.user.subscribed === true){
-                        navigate("/user/home");
+                        navigate("/home");
                     }else{
-                        navigate("/user/payment");
+                        navigate("/payment");
                     }
                 }
             });
@@ -117,12 +117,12 @@ export function Login() {
                         localStorage.setItem("userAccess",response.payload.access);
                         localStorage.setItem("userRefresh",response.payload.refresh);
                         if(response.payload.user.profileProgress < 50){
-                            navigate("/user/setProfile");
+                            navigate("/setProfile");
                         }else{
                             if(response.payload.user.subscribed === true){
-                                navigate("/user/home");
+                                navigate("/home");
                             }else{
-                                navigate("/user/payment");
+                                navigate("/payment");
                             }
                         }
                     });
@@ -137,7 +137,7 @@ export function Login() {
             const response = await dispatch(forgotPassword(forgotEmail));            
             if(response.payload.success){
                 showToast("success", "Password reset link sent to your email", () => {
-                    navigate("/user/login");
+                    navigate("/login");
                 });
             } else {
                 showToast("error", response.payload.message);
@@ -276,7 +276,7 @@ export function Login() {
                                 
                             <p className="text-black pt-3 text-sm font-gillroy block md:hidden">
                                 Don't have an account? 
-                                <a href="/user/signup">Sign up</a>
+                                <a href="/signup">Sign up</a>
                             </p>
                         </div>
 
@@ -288,7 +288,7 @@ export function Login() {
                         <h1 className="text-[#dfdede] text-3xl font-semibold font-gillroy md:pt-12">Welcome to Matrify</h1>
                         <p className="text-white text-sm font-gillroy hidden md:block">
                             Don't have an account? 
-                            <a href="/user/register"> Sign up</a>
+                            <a href="/register"> Sign up</a>
                         </p>
                     </div>
                 </div>                

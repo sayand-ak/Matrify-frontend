@@ -24,6 +24,7 @@ const showToast = (
   options?: ToastOptions
 ) => {
   toast[type](message, {
+    position: 'top-center',
     ...options, 
     onClose: () => {
       if (callback) {

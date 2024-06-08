@@ -36,9 +36,9 @@ export function PaymentHistory ({userData}:{userData?: {
         
         {!userData?.profile?.subscribed && (
             <div className="h-[100vh] w-full flex flex-col items-center pt-28">
-                <img src="/src/assets/images/11110.jpg" alt="" className="h-[50%] w-[50%]"/>
+                <img src="../src/assets/images/11110.jpg" alt="" className="h-[50%] w-[50%]"/>
                 <p className="text-4xl font-custom font-bold text-[#817a7a81]">Not Subscribed Yet!</p>
-                <a href="/user/payment" className="bg-[#E7C68F] text-white font-bold px-5 py-2 rounded-lg shadow-md mt-10">SUBSCRIBE</a>
+                <a href="/payment" className="bg-[#E7C68F] text-white font-bold px-5 py-2 rounded-lg shadow-md mt-10">SUBSCRIBE</a>
             </div>
         )}
 
@@ -46,22 +46,28 @@ export function PaymentHistory ({userData}:{userData?: {
             <div className="w-full relative">
             {
                 (activeExpirationDay <= 5 && activeExpirationDay > 0) && 
-                <div className="flex bg-red-400 items-center justify-between w-full px-14 min-h-20">
-                    <p className="text-[18px] font-semibold text-white">
+                <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
+                    <p className="text-[16px] font-semibold">
                         Your {activeExpirationType} subscription expires in {activeExpirationDay} days
                     </p>
-                    <a href="/user/payment" className="bg-[#E7C68F] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
+                    <a href="/payment" className="bg-[#c9ac7a] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
                 </div>
+
             }
             {
-                (activeExpirationDay < 0) && 
-                <div className="flex bg-red-400 items-center justify-between w-full px-14 min-h-20">
-                    <p className="text-[18px] font-semibold text-white">
-                        Your {activeExpirationType} subscription expired {Math.abs(activeExpirationDay)} before
-                    </p>
-                    <a href="/user/payment" className="bg-[#E7C68F] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
-                </div>
+                activeExpirationDay <= 0 && (
+                    <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
+                        <p className="text-[18px] font-semibold text-red-700 ">
+                            {activeExpirationDay === 0
+                                ? `Your ${activeExpirationType} subscription expired today`
+                                : `Your ${activeExpirationType} subscription expired ${Math.abs(activeExpirationDay)} day(s) ago`
+                            }
+                        </p>
+                        <a href="/payment" className="bg-[#c9ac7a] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
+                    </div>
+                )
             }
+
             <div className="w-full p-12 h-[90vh] overflow-scroll">
                     {paymentData?.map((payment, index) => {
                         const expiresInDate = new Date(payment.expiresIn?.toString() || 0);
@@ -82,7 +88,7 @@ export function PaymentHistory ({userData}:{userData?: {
                             <div className={`rounded-lg overflow-hidden mb-10 mx-auto ${status === "Expired" ?  "opacity-[0.6]" : ""}`} key={index}>
                                 <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass}`}>
                                    {
-                                       status == "Active" && <img src="../src/assets/images/new_891446.png" alt="" className="absolute top-0 right-0 h-10 w-10"/>
+                                       status == "Active" && <img src="/src/assets/images/new_891446.png" alt="" className="absolute top-0 right-0 h-10 w-10"/>
                                    } 
                                     <p>
                                         {status} ({daysLeftText})

@@ -32,7 +32,7 @@ export function ResetPassword() {
         const response = await dispatch(resetPassword({userId: userId, newPassword: newPassword}));
         if(response.payload.success){
             showToast('success', 'Password reset successful!', () => {
-                navigate('/user/login');
+                navigate('/login');
             });
             
         }else{
@@ -78,7 +78,7 @@ export function ResetPassword() {
                         </div>
                         <div className="py-2 flex items-center justify-center w-full">
                         <button type="submit" className="w-[200px] px-5 py-2 rounded-md bg-[#1b2931] text-white font-semibold" disabled={isSubmitting}>
-                            {isSubmitting ? <Loader/> : 'Reset'}
+                            {isSubmitting ? <Loader dimension={0}/> : 'Reset'}
                         </button>
                         </div>
                     </Form>

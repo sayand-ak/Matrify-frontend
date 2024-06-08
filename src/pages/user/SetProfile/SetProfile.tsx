@@ -89,12 +89,12 @@ export function SetProfile() {
            if(response.payload.success){
                 setLoading(false);
                 showToast("success", "Profile updated successfully", () => {
-                    navigate("/user/setProfession");
+                    navigate("/setProfession");
                 });
             }else{
                 setLoading(false);
                 showToast("error", "Something went wrong", () => {
-                    navigate("/user/setProfile");
+                    navigate("/setProfile");
                 });
            }
         },

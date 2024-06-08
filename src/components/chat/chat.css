@@ -22,3 +22,26 @@
 .message-content {
     transition: scroll-behavior 0.5s ease-in-out; /* Add a smooth scroll transition */
 }
+
+
+@keyframes zoomInOut {
+    0%, 100% {
+      transform: scale(1);
+      border-color: #f4f2efe7;
+    }
+    50% {
+      transform: scale(1.1);
+      border-color: #c6ad8c24;
+    }
+  }
+  
+  .audio-button-click-animate{
+    border-width: 5px;
+    animation: zoomInOut 1s infinite;
+    background-color: #c2a175bd;
+    color: white;
+  }
+
+.message-input{
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}

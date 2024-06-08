@@ -12,7 +12,7 @@ import Navbar from "../../../components/navbar/Navbar";
 import { LuPlus } from "react-icons/lu";
 import { SlCalender } from "react-icons/sl";
 import "./Profile.css";
-import { addPreferences, sendInterest, userProfile } from "../../../services/userAPI";
+import { addPreferences, blockUser, sendInterest, unblockUser, userProfile } from "../../../services/userAPI";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profile/professionDataType";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -45,7 +45,7 @@ import ProfileSection from "../../../components/profileSection/ProfileSection";
 import { EditFormModal } from "../../../components/editFrom/EditForm";
 import { PaymentHistory } from "../PaymentHistory/PaymentHistory";
 import { EditFamilyFormModal } from "../../../components/editFrom/EditFamilyForm";
-import { userLogout } from "../../../redux/slices/userSlices";
+import { setUserCredentials, userLogout } from "../../../redux/slices/userSlices";
 import { useNavigate, useParams } from "react-router-dom";
 import { calculateAgeInYears } from "../../../utils/calculateAgeInYears";
 import { formatDate } from "../../../utils/formateDate";
@@ -55,6 +55,11 @@ import InterestLogs from "../InterestLogs/InterestLogs";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { MdBlock } from "react-icons/md";
 import { IoMdArrowDropup } from "react-icons/io";
+import showToast from "../../../components/Toast/Toast";
+import { ToastContainer } from "react-toastify";
+import { CgUnblock } from "react-icons/cg";
+import { BlockedUsers } from "../BlockedUsers/BlockedUsers";
+
 
 
 interface RouteParams extends Record<string, string | undefined>  {
@@ -68,6 +73,7 @@ export function Profile() {
     const [showPayment, setShowPayment] = useState<boolean>(false);
     const [showInterestLogs, setShowInterestLogs] = useState<boolean>(false);
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [showBlockedUsers, setShowBlockedUsers] = useState<boolean>(false);
 
     const [userData, setUserData] = useState<{ profile?: UserProfile; family?: UserFamily; profession?: UserProfession }>();
     const [preferences, setPreferences] = useState<string>("");
@@ -82,12 +88,14 @@ export function Profile() {
 
     const [likeBtnColor, setLikeBtnColor] = useState<string>("00000039");
 
-    const { id, user } = useParams<RouteParams>();    
-    const userId = useAppSelector(state => state.user.user?._id);
+    const { id } = useParams<RouteParams>();    
+    const curUser = useAppSelector(state => state.user.user);
 
     const [sendInterestButtonLabel, setSendInterestButtonLabel] = useState<string>("Send interest");
 
     const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false);
+
+    const [isLoggedUser, setIsLoggedUser] = useState<boolean>(true);
 
 
     const handleAddPreferencesClick = () => {
@@ -105,7 +113,6 @@ export function Profile() {
     ];
 
     const handleSidebarItemClick = (itemName: string) => {
-    
         if (itemName === "Profile") {
             setShowProfile(true)
         } else {
@@ -125,13 +132,18 @@ export function Profile() {
         }
 
         if (itemName === "Chat") {
-            navigate("/user/chat")
+            navigate("/chat")
         }
-
+        
+        if (itemName === "Blocked") {
+            setShowBlockedUsers(true);
+        }else{
+            setShowBlockedUsers(false);
+        }
 
         if (itemName === "Logout") {
             dispatch(userLogout());
-            navigate("/user/login")
+            navigate("/login")
         }
     };
 
@@ -139,7 +151,6 @@ export function Profile() {
         const fetchUserData = async() => {
             if (id) {
                 const response = await dispatch(userProfile(id));
-                console.log(response);
                 
                 if (response.payload.success) {
                     const data = response.payload.data;
@@ -151,29 +162,37 @@ export function Profile() {
                         family: data[2],
                     });
 
+                    if(userData?.profile?._id === curUser?._id) {
+                        setIsLoggedUser(true);
+                    }else{
+                        setIsLoggedUser(false);
+                    }
+
+                } else {
+                    alert("profile api calling error")
                 }
             }
         }
         fetchUserData();
 
-    }, [dispatch, id]);
+    }, [curUser?._id, dispatch, id, userData?.profile?._id]);
     
     useEffect(() => {
-        if(userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === userId && interestData.status === "pending")){
+        if(userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === curUser?._id && interestData.status === "pending")){
             setSendInterestButtonLabel("Waiting to accept...");
-        }else if(userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === userId && interestData.status === "accepted")){
+        }else if(userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === curUser?._id && interestData.status === "accepted")){
             setSendInterestButtonLabel("Interest Accepted...");
         }
-        else if(userData?.profile && userData?.profile.interestSend.some((interestData: InterestSend) => interestData.sendTo === userId && interestData.status === "accepted")){
+        else if(userData?.profile && userData?.profile.interestSend.some((interestData: InterestSend) => interestData.sendTo === curUser?._id && interestData.status === "accepted")){
             setSendInterestButtonLabel("Interest accepted...");
         }
-    }, [userData?.profile, userId]);
+    }, [userData?.profile, curUser?._id]);
 
     const handleTabSelect = (tab: string, event:React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
         setSelectedTab(tab);
     }
-
+    
 
     const handleAddPreferences = async() => {
         if (/^[a-zA-Z\s]+$/.test(preferences)) {
@@ -198,8 +217,40 @@ export function Profile() {
             if (response.payload.success) {
                 setSendInterestButtonLabel("Waiting to Accept...");
             } 
+        } else {
+            showToast("error", "You are not subscribed , please subscribe to send interest")
         }
     }
+
+    async function handleBlockUser() {
+        if(userData?.profile?._id){
+            const response = await dispatch(blockUser(userData?.profile?._id))
+            if(response.payload.success){
+                console.log("block response",response.payload.data);
+                
+                dispatch(setUserCredentials(response.payload.data))                
+                showToast('success', 'User blocked successfully')
+            } else {
+                showToast('error', 'Something went wrong', )
+            }
+        }
+    }
+
+    async function handleUnblockUser() {
+        if(userData?.profile?._id){
+            const response = await dispatch(unblockUser(userData?.profile?._id))
+            if(response.payload.success){
+                console.log("unblock response",response.payload.data)
+                dispatch(setUserCredentials(response.payload.data))  
+                showToast('success', 'User unblocked successfully')
+            } else {
+                showToast('error', 'Something went wrong', () => {
+                    window.location.reload()
+                }
+            )}
+        }
+    }
+        
 
     return (
         <div className="flex flex-col w-full overflow-hidden relative">
@@ -210,7 +261,7 @@ export function Profile() {
             </div>
 
             {/* sidebar in mobile view */}
-            <div className={`bg-white transition-transform duration-300 ease-in-out ${sidebarToggle && user === "user" ? "fixed translate-x-0" : "fixed -translate-x-full"} md:hidden w-[70vw] h-[100vh] z-10`}>
+            <div className={`bg-white transition-transform duration-300 ease-in-out ${sidebarToggle && isLoggedUser ? "fixed translate-x-0" : "fixed -translate-x-full"} md:hidden w-[70vw] h-[100vh] z-10`}>
                 <CgMenuLeft className="text-2xl text-black ml-10 mt-5 block" onClick={showSidebar}/>
                 <Sidebar
                     role="user"
@@ -223,7 +274,7 @@ export function Profile() {
             <div className="flex">
 
                 {/* sidebar in normal view */}
-                <div className={`hidden max-w-[20rem] ${user == "user" ? "md:flex":""}`}>
+                <div className={`hidden max-w-[20rem] ${isLoggedUser ? "md:flex":""}`}>
                     <Sidebar 
                         role="user"
                         items={items}
@@ -239,11 +290,11 @@ export function Profile() {
 
                             <div className="w-full flex justify-center py-0 md:py-7">
 
-                                <div className={`w-full ${user === "user" ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45.1rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
+                                <div className={`w-full ${isLoggedUser ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45.1rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
 
                                     {/* the cover image div */}
                                     <div className="w-full h-[30%]" style={{backgroundImage: "url('/src/assets/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center"}}>
-                                        <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${user === "user" ? "block" : "hidden"}`} onClick={showSidebar}/>
+                                        <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${isLoggedUser ? "block" : "hidden"}`} onClick={showSidebar}/>
                                     </div>
 
                                     <div className="w-full h-[33%] relative">
@@ -263,7 +314,7 @@ export function Profile() {
                                                 <h1 className="text-[20px] font-semibold pt-2 flex items-center gap-5">
                                                     {userData?.profile?.username} ({calculateAgeInYears(userData?.profile?.dob || "")})
                                                     {
-                                                        user === "match" && (
+                                                        ! isLoggedUser && (
                                                             <FaHeart 
                                                                 className={`text-[26px] text-[#${likeBtnColor}]`}
                                                                 onClick={() => {setLikeBtnColor("FF0000")}}
@@ -290,7 +341,7 @@ export function Profile() {
 
                                         {/* if the profile is for user show edit btn and if its for match show match options */}
                                         {
-                                            user === "user" ? (
+                                            isLoggedUser ? (
                                                 <button 
                                                     className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#C2A170] border-[#C2A170] border-solid rounded-3xl hover:bg-[#C2A170] hover:text-white"
                                                     onClick={() => setIsModalOpen(true)}
@@ -314,18 +365,30 @@ export function Profile() {
                                                         <div className="w-56 rounded-md bg-[#f4f4f4] shadow-md min-h-20 absolute right-0 top-14 showMoreOptions-visible transition-opacity">
                                                             <IoMdArrowDropup className="absolute top-[-21px] right-0 text-[35px] text-[#f4f4f4]"/>
 
-                                                            <ul className="pl-3 pt-2 flex flex-col gap-2 text-[#969393]">
-                                                                <li className="flex items-center gap-3 cursor-pointer">
-                                                                    <MdBlock className="text-[23px] text-[#969393ac]"/>
-                                                                    <p>
-                                                                        Block user
-                                                                    </p>
-                                                                </li>
-                                                                <li className="flex items-center gap-3 cursor-pointer">
-                                                                    <MdReportGmailerrorred className="text-[23px] text-[#969393a6]"/>
-                                                                    <p>
+                                                            
+                                                            <ul className="pl-3 pt-2 flex flex-col gap-4 text-[#969393]">
+                                                                {
+                                                                    curUser?.blockedUsers?.some((data) => data.user === userData?.profile?._id) ?
+                                                                    (<li className="flex items-center gap-3 cursor-pointer hover:text-green-500">
+                                                                        <CgUnblock className="text-[23px]"/>
+                                                                        <button onClick={handleUnblockUser}>
+                                                                            Unblock user
+                                                                        </button>
+                                                                    </li>
+                                                                    ) : (
+                                                                        <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
+                                                                        <MdBlock className="text-[23px]"/>
+                                                                        <button onClick={handleBlockUser}>
+                                                                            Block user
+                                                                        </button>
+                                                                    </li>
+                                                                    )
+                                                                }
+                                                                <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
+                                                                    <MdReportGmailerrorred className="text-[23px]"/>
+                                                                    <button>
                                                                         Report user
-                                                                    </p>
+                                                                    </button>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -484,7 +547,7 @@ export function Profile() {
                             </div>
 
                             {
-                                user == "user" && (
+                                isLoggedUser && (
                                     <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 items-start gap-3 md:gap-7 flex-row xl:flex-col flex py-5">
                                         <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-3 rounded-lg w-[90%]">
                                             <h1 className="text-[15px] md:text-[18px] text-center px-2 font-semibold">Complete your profile for exact matches...</h1>
@@ -569,7 +632,14 @@ export function Profile() {
                         <InterestLogs interestSend={userData?.profile?.interestSend || []} interestReceived={userData?.profile?.interestReceived || []}/>
                     )
                 }
+
+                {
+                    showBlockedUsers && (
+                        <BlockedUsers/>
+                    )
+                }
             </div>
+            <ToastContainer/>
 
         </div>
     )

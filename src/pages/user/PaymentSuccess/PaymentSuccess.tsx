@@ -34,7 +34,7 @@ export function PaymentSuccess(){
                     </li>
                 </ul>
                 
-                <a href="/user/home" className="px-5 py-2 bg-[#e0b76f] text-white font-semibold rounded-lg shadow-sm">Home</a>
+                <a href="/home" className="px-5 py-2 bg-[#e0b76f] text-white font-semibold rounded-lg shadow-sm">Home</a>
             
             </div>
         </div>

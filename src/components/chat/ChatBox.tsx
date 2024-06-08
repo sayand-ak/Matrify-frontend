@@ -74,7 +74,7 @@ export function ChatBox({ currentChat, isChatSelected, handleSendMessage }: Chat
 
 
     return (
-        <div className="chat-box w-[70%]">
+        <div className="chat-box w-[70%] hidden md:block">
             {isChatSelected ? (
                 <div className="chat-box-header">
                     <div className="border-b-[1px] px-5 py-[5px] flex items-center gap-5 bg-[#EFE2CB]">
@@ -91,12 +91,12 @@ export function ChatBox({ currentChat, isChatSelected, handleSendMessage }: Chat
                     <div className="w-full min-h-[70vh] overflow-hidden">
                         <MessageContainer currentChat={currentChat} />
                     </div>
-                    <ChatInput handleSendMessage={handleSendMessageAndSetMessage} />
+                    <ChatInput handleSendMessage={handleSendMessageAndSetMessage} receiverId={user?._id || ""}/>
                 </div>
             ) : (
                 <div
-                    className="h-full opacity-80 flex flex-col justify-end pb-[3rem] gap-4 items-center"
-                    style={{ backgroundImage: "url('../src/assets/images/2193.jpg')", backgroundSize: "contain", backgroundPosition: 'center', boxShadow: "" }}
+                    className="h-full opacity-80 flex-col justify-end pb-[3rem] gap-4 items-center hidden md:flex bg-[#f0ece5]"
+                    style={{ backgroundImage: "url('../src/assets/images/2193-removebg.png')", backgroundSize: "contain", backgroundPosition: 'center', boxShadow: "" }}
                 >
                     <p className="text-4xl items-center font-gillroy text-[#000000b2]">Know each other, and love each other</p>
                     <p className="text-[#0000007e] text-lg flex items-center gap-2">

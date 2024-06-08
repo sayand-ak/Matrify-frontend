@@ -40,7 +40,7 @@ export function ProfessionDetails() {
 
             if(response.payload.success){
                 showToast("success", "Profession Details Updated Successfully", () => {
-                    navigate("/user/setFamilyDetails")
+                    navigate("/setFamilyDetails")
                 })
             }else{
                 showToast("error", response.payload.message)

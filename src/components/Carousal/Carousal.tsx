@@ -5,11 +5,12 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { IoMdArrowDroprightCircle, IoMdArrowDropleftCircle } from "react-icons/io";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { UserData } from "../../typings/user/userTypes";
-import { useAppDispatch } from "../../hooks/useTypedSelectors";
+import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { getMatches } from "../../services/userAPI";
 import { ContentLoader } from "../loader/ContentLoader";
 import { motion } from "framer-motion";
 import { containerVariants } from "../../utils/animations/animation1";
+import { UserProfile } from "../../typings/Profile/professionDataType";
 
 
 interface HomeProp {
@@ -27,8 +28,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const dispatch = useAppDispatch();
-
-    console.log(data, "00000000000");
+    const curUser = useAppSelector(state => state.user.user);
     
 
 
@@ -60,15 +60,20 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
         if (!isLoaded) {
             try {
                 const response = await dispatch(getMatches({matchBase, matchKey, matchData}));
-                setData(response.payload.data);
+                const allData = response.payload.data;
+                const filteredData = allData.filter((user: UserProfile) => 
+                    !curUser?.blockedUsers?.some(blockedUser => blockedUser.user === user._id)
+                );
+                setData(filteredData);
                 setIsLoaded(true);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-    }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
+    }, [dispatch, matchBase, matchData, matchKey, isLoaded, curUser]);
+    
 
-
+    
     const ref = useIntersectionObserver(fetchData, { threshold: 0.5 });
 
     return (
@@ -94,6 +99,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                     >
                         {
                             data.map((user) => (
+                                
                                 <motion.div
                                     variants={containerVariants}
                                     initial="hidden"
@@ -102,6 +108,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                                 >   
                                     <CarousalItems data={user}/>
                                 </motion.div>
+                                
                             ))
                         }
                     </div>

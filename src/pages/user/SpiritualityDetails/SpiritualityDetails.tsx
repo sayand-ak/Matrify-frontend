@@ -31,7 +31,7 @@ export function SpiritualityDetails() {
             const response = await dispatch(addReligion(religionData));
             if (response.payload.success) {
                 showToast("success", "Religion added successfully", () => {
-                    navigate("/user/collectDocs");
+                    navigate("/collectDocs");
                 })
             }else{
                 showToast("error", "Something went wrong")

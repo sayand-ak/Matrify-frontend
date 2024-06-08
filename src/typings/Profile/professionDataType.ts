@@ -24,6 +24,10 @@ interface StripeReqDataType {
   expiresIn?: Date
 }
 
+export interface BlockedUsers {
+  user: string,
+  blockedAt: Date,
+}
 
 export interface UserProfile {
   _id: string,
@@ -46,6 +50,7 @@ export interface UserProfile {
   subscription?: Array<StripeReqDataType>
   interestSend: Array<InterestSend>;
   interestReceived: Array<InterestReceived>;
+  blockedUsers?: Array<BlockedUsers>;
 }
 
 export interface UserProfession {

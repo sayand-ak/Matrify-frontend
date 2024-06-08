@@ -4,6 +4,6 @@ import { RootState } from "../../redux/app/store";
 
 export function UserPrivateRoute(){
     const { user } = useSelector((state:RootState) => state.user);
-    return user ?<Outlet/> :  <Navigate to="/user/login" replace />
+    return user ?<Outlet/> :  <Navigate to="/login" replace />
 }
 

@@ -161,7 +161,7 @@ export function SignUp() {
 
                     if(response.payload.success){
                         showToast("success", response.payload.message, () => {
-                            navigate("/user/login");
+                            navigate("/login");
                         });
                         
                     }else{
@@ -326,7 +326,7 @@ export function SignUp() {
 
                             <p className="text-black text-sm font-gillroy py-3 block md:hidden">
                                 Already have an account?
-                                <a href="/user/login"> Login</a>
+                                <a href="/login"> Login</a>
                             </p>
 
                         </div>
@@ -339,7 +339,7 @@ export function SignUp() {
                         <h1 className="text-white text-2xl font-semibold font-gillroy md:text-3xl">Get Start with MATRIFY</h1>
                         <p className="text-white text-sm font-gillroy hidden md:block">
                             Already have an account?
-                            <a href="/user/login"> Login</a>
+                            <a href="/login"> Login</a>
                         </p>
                     </div>
                 </div>                

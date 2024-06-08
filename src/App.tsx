@@ -17,7 +17,7 @@ function App() {
     <SocketProvider>
       <Router>
           <Routes>
-              <Route path='/user/*' element={<UserRoutes/>} />
+              <Route path='/*' element={<UserRoutes/>} />
               <Route path='/admin/*' element={<AdminRoutes/>} />
           </Routes>
       </Router>

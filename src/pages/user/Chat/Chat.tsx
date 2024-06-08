@@ -29,7 +29,6 @@ export function Chat() {
         }
         fetchConversations();
 
-
         // Listen for incoming messages
         socket?.on("getMessage", (data: Message) => {
             
@@ -93,6 +92,8 @@ export function Chat() {
             alert("Failed to send message");
         }
     }
+    console.log(currentChat);
+    
 
     return (
         <div className="h-[100vh] w-[100vw] flex overflow-hidden">

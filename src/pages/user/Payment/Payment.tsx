@@ -105,7 +105,7 @@ export function Payment () {
     return (
         <div className="min-h-[100vh] font-gillroy">
 
-            <a href="/user/home" className="absolute top-5 right-5 flex gap-2 text-[15px] text-[#9a9797] cursor-pointer">
+            <a href="/home" className="absolute top-5 right-5 flex gap-2 text-[15px] text-[#9a9797] cursor-pointer">
                 SKIP
                 <BsSkipBackward className="text-[20px]"/>
             </a>

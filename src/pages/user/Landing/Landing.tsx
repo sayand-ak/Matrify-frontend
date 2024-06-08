@@ -38,7 +38,7 @@ export function Landing(){
                         <button 
                             className="bg-[#EDF0F2] text-[#454545] font-semibold w-[fit-content] py-4 px-5 rounded-[30px] mt-10"
                             onClick={() => {
-                                window.location.href = "/user/login";
+                                window.location.href = "/login";
                             }}
                         >CREATE ACCOUNT</button>
                     </div>

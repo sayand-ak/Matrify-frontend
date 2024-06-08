@@ -34,7 +34,7 @@ export function CarousalItems({data}: CarousalItemsProps) {
 
 
     return(
-      <a href={`/user/profile/${data._id}/match`}
+      <a href={`/profile/${data._id}`}
       >
         <div 
             className="relative h-[280px] w-[250px] bg-[#ebe3d48d] rounded-lg overflow-hidden"

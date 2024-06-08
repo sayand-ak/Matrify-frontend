@@ -25,6 +25,7 @@
     "indian_address": "^1.0.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
+    "react-audio-voice-recorder": "^2.2.0",
     "react-bootstrap": "^2.10.2",
     "react-circular-progressbar": "^2.1.0",
     "react-cropper": "^2.3.3",

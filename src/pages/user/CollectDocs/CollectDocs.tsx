@@ -58,7 +58,7 @@ export function CollectDocs() {
 
             if(response.payload.success){
                 showToast("success", "Documents added successfully", () => {
-                    navigate("/user/home");
+                    navigate("/home");
                 })
             }else{
                 showToast("error", "Failed to add documents");
