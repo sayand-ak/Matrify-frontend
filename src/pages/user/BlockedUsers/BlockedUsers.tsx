@@ -27,7 +27,7 @@ export function BlockedUsers() {
     }, [curUser, dispatch]);
 
     function navigateToUserProfile(userId: string) {
-        window.location.href = `/profile/${userId}/match`
+        window.location.href = `/profile/${userId}`
     }
 
     return (

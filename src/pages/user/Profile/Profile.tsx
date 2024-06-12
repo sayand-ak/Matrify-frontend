@@ -386,9 +386,9 @@ export function Profile() {
                                                                 }
                                                                 <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
                                                                     <MdReportGmailerrorred className="text-[23px]"/>
-                                                                    <button>
+                                                                    <a href={`/reportUser/${userData?.profile?._id}`}>
                                                                         Report user
-                                                                    </button>
+                                                                    </a>
                                                                 </li>
                                                             </ul>
                                                         </div>

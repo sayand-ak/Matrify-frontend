@@ -18,6 +18,7 @@ import { PaymentSuccess } from '../../pages/user/PaymentSuccess/PaymentSuccess';
 import { Chat } from '../../pages/user/Chat/Chat';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/app/store';
+import { ReportUser } from '../../pages/user/ReportUser/ReportUser';
 
 
 export function UserRoutes (){
@@ -45,7 +46,7 @@ export function UserRoutes (){
                 <Route path='chat' element={<Chat/>}/>
                 <Route path='payment' element={<Payment/>} />
                 <Route path='paymentSuccess/:type' element={<PaymentSuccess/>} />
-                <Route path='report-user' element={<PaymentSuccess/>} />
+                <Route path='reportUser/:id' element={<ReportUser/>} />
 
             </Route>
 

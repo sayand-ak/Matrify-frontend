@@ -10,7 +10,6 @@ import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { MdOutlinePayments } from 'react-icons/md';
 import { MdOutlineFeedback } from 'react-icons/md';
 import { GiVerticalBanner } from 'react-icons/gi';
-import { MdOutlineLocalOffer } from 'react-icons/md';
 import { CgMenuLeft } from "react-icons/cg";
 
 import { useDebounce } from 'use-debounce';
@@ -24,6 +23,7 @@ import { Users } from "../../../typings/user/userTypes";
 import { SearchBox } from "../../../components/searchbox/searchBox";
 import { AdminPayment } from "../Payment/Payment";
 import { ListUser } from "../ListUsers/ListUsers";
+import { ReportUser } from "../ReportUser/ReportUser";
 
 
 
@@ -31,6 +31,7 @@ export function Home() {
     const [showTable, setShowTable] = useState(false);
     const [showDashboard, setShowDashboard] = useState(true);
     const [showAdminPayment, setShowAdminPayment] = useState(false);
+    const [showReportUser, setShowReportUser] = useState(false);
 
     const [search, setSearch] = useState("");
     const [searchUserData, setSearchUserData] = useState<Users[]>([]);
@@ -52,7 +53,6 @@ export function Home() {
         { name: "Payment", icon: MdOutlinePayments  },
         { name: "Feedback", icon: MdOutlineFeedback  },
         { name: "Banner", icon: GiVerticalBanner  },
-        { name: "Offers", icon: MdOutlineLocalOffer  },
     ];
 
     const handleSidebarItemClick = (itemName: string) => {
@@ -73,6 +73,12 @@ export function Home() {
             setShowAdminPayment(true);
         } else {
             setShowAdminPayment(false);
+        }
+
+        if (itemName === "Report Request") {
+            setShowReportUser(true);
+        } else {
+            setShowReportUser(false);
         }
     };
 
@@ -150,6 +156,10 @@ export function Home() {
                         {
                             showAdminPayment && 
                             <AdminPayment/>
+                        }
+                        {
+                            showReportUser && 
+                            <ReportUser value={value}/>
                         }
 
                     </div>

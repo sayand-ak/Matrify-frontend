@@ -32,7 +32,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
             </div>}
 
             <div className="options">
-                <ul className={`flex flex-col gap-4 pt-${role === 'user' ? 10 : 0}`}>
+                <ul className={`flex flex-col gap-6 pt-${role === 'user' ? 10 : 0}`}>
                     {items.map((item, index) => (
 
                         <span key={index}>

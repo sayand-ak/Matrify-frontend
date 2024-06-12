@@ -19,8 +19,9 @@ const axiosInstance = axios.create({
 });
 
 //request interceptor
-axiosInstance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use(async(config) => {
 
+    
     const token = localStorage.getItem("userAccess");
     console.log('log from request user api', token);
 
@@ -70,7 +71,7 @@ async function getNewAccessToken(refreshToken: string) {
 
 export const signupUserAsync = createAsyncThunk("/api/signup", async (phone: string) => {
     try {
-        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/signup`, {
+        const response: AxiosResponse = await axios.post(`${API_URL}/signup`, {
             phone,
         }, { withCredentials: true });
 
@@ -82,7 +83,7 @@ export const signupUserAsync = createAsyncThunk("/api/signup", async (phone: str
 
 export const otpVerify = createAsyncThunk("/api/otp-verify", async ({ username, phone, password, firebaseData }: UserSignupType) => {
     try {
-        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/otp-verify`, {
+        const response: AxiosResponse = await axios.post(`${API_URL}/otp-verify`, {
             username,
             phone,
             password,
@@ -98,7 +99,7 @@ export const otpVerify = createAsyncThunk("/api/otp-verify", async ({ username, 
 
 export const googleAuthLogin = createAsyncThunk("/api/googleLogin", async (userData: UserGoogleAuthData) => {
     try {
-        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/google-login`, { userData }, { withCredentials: true });
+        const response: AxiosResponse = await axios.post(`${API_URL}/google-login`, { userData }, { withCredentials: true });
 
         return response.data;
     } catch (error) {
@@ -108,7 +109,7 @@ export const googleAuthLogin = createAsyncThunk("/api/googleLogin", async (userD
 
 export const userLogin = createAsyncThunk("/api/login", async ({ data, password }: UserLoginType) => {
     try {
-        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/login`, {
+        const response: AxiosResponse = await axios.post(`${API_URL}/login`, {
             data: data,
             password: password
         }, { withCredentials: true });
@@ -140,7 +141,7 @@ export const setProfile = createAsyncThunk("/api/setProfile", async (formData: F
 
 export const forgotPassword = createAsyncThunk("/api/forgotPassword", async (email: string) => {
     try {
-        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/forgot-password`, {
+        const response: AxiosResponse = await axios.post(`${API_URL}/forgot-password`, {
             email
         }, { withCredentials: true });
 
@@ -152,7 +153,7 @@ export const forgotPassword = createAsyncThunk("/api/forgotPassword", async (ema
 
 export const validateToken = createAsyncThunk("/api/validateToken", async (token: string) => {
     try {
-        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/validate-token`, {
+        const response: AxiosResponse = await axios.post(`${API_URL}/validate-token`, {
             token
         }, { withCredentials: true });
 
@@ -397,6 +398,8 @@ export const editFamilyData = createAsyncThunk("/api/editFamilyData", async (fam
 
 export const getMatches = createAsyncThunk("/api/getMatches", async ({ matchBase, matchKey, matchData }: { matchBase: string, matchKey: string, matchData: string }) => {
     try {
+        console.log(matchBase, matchKey, matchData);
+        
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-matches?matchBase=${matchBase}&matchKey=${matchKey}&matchData=${matchData}`, { withCredentials: true })
         return response.data;
     } catch (error) {
@@ -440,3 +443,24 @@ export const unblockUser = createAsyncThunk("/api/unblockUser", async (blockUser
         return (error as Error).response?.data;
     }
 });
+
+export const reportUser = createAsyncThunk("/api/reportUser", async(reportData: FormData) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.post(`${API_URL}/report-user`, reportData, { withCredentials: true })
+        return response.data;
+    } catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+
+// export const checkReportUser = createAsyncThunk("/api/checkReportUser", async() => {
+//     try {
+//         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/check-report-user`, { withCredentials: true })
+//         return response.data;
+//     } catch(error) {
+//         return (error as Error).response?.data;
+//     }
+// });
+
+
+

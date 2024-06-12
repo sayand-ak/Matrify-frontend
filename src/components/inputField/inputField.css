@@ -1,0 +1,11 @@
+/* inputField.css */
+.tooltip {
+    top: -17px;
+    left: 19rem;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+

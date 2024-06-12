@@ -5,12 +5,11 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { IoMdArrowDroprightCircle, IoMdArrowDropleftCircle } from "react-icons/io";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { UserData } from "../../typings/user/userTypes";
-import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
+import { useAppDispatch } from "../../hooks/useTypedSelectors";
 import { getMatches } from "../../services/userAPI";
 import { ContentLoader } from "../loader/ContentLoader";
 import { motion } from "framer-motion";
 import { containerVariants } from "../../utils/animations/animation1";
-import { UserProfile } from "../../typings/Profile/professionDataType";
 
 
 interface HomeProp {
@@ -28,7 +27,6 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const dispatch = useAppDispatch();
-    const curUser = useAppSelector(state => state.user.user);
     
 
 
@@ -59,18 +57,17 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     const fetchData = useCallback(async () => {
         if (!isLoaded) {
             try {
+                console.log(matchBase, matchKey, matchData);
+                
                 const response = await dispatch(getMatches({matchBase, matchKey, matchData}));
-                const allData = response.payload.data;
-                const filteredData = allData.filter((user: UserProfile) => 
-                    !curUser?.blockedUsers?.some(blockedUser => blockedUser.user === user._id)
-                );
-                setData(filteredData);
+                const data = response.payload.data;
+                setData(data);
                 setIsLoaded(true);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-    }, [dispatch, matchBase, matchData, matchKey, isLoaded, curUser]);
+    }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
     
 
     
@@ -98,9 +95,10 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                         ref={carousalRef}
                     >
                         {
-                            data.map((user) => (
+                            data.map((user, index) => (
                                 
                                 <motion.div
+                                    key={index}
                                     variants={containerVariants}
                                     initial="hidden"
                                     whileInView="visible"

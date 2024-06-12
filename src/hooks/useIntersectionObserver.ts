@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 const useIntersectionObserver = (callback: () => void, options?: IntersectionObserverInit) => {
     const [isIntersecting, setIsIntersecting] = useState(false);
-    console.log(isIntersecting);
+    console.log(isIntersecting, "intersection");
     
     const ref = useRef<HTMLDivElement | null>(null);
 
@@ -25,7 +25,7 @@ const useIntersectionObserver = (callback: () => void, options?: IntersectionObs
 
         return () => {
             if (ref.current) {
-                observer.unobserve(ref.current);
+                observer.unobserve(ref.current );
             }
         };
     }, [callback, options]);

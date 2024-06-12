@@ -1,24 +1,26 @@
 import "./Table.css";
 import { CiCircleMore } from "react-icons/ci";
 import { Offer, PaymentHistory, Subscription, Users } from "../../typings/user/userTypes";
-
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { Loader } from "../loader/Loader";
 import { CustomModal } from "../modal/CustomModal";
 import { useState } from "react";
+import { ReportUserType } from "../../typings/reportUser/reportUser";
+
 
 interface TableProps {
     headers: string[];
-    data: (Users | Subscription | Offer | PaymentHistory)[]; 
+    data: (Users | Subscription | Offer | PaymentHistory | ReportUserType)[]; 
     isLoading: boolean;
     handlePagination: (direction: string) => void;
     paginationCount: number;
     totalItemsCount: number;
     type: string;
+    handleUpdateReportStatus?: ((reportId: string) => void) 
 }
 
-export function Table({ headers, data, isLoading, handlePagination, paginationCount, totalItemsCount, type }: TableProps) {
+export function Table({ headers, data, isLoading, handlePagination, paginationCount, totalItemsCount, type, handleUpdateReportStatus }: TableProps) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,8 +28,6 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
     const handleModalOpen = () => {
         setIsModalOpen(true);
     }
-
-
 
     return (
         <div className="flex flex-col justify-between w-full items-center">
@@ -143,6 +143,43 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                                 }
                             </tbody>
                         )}
+
+                        {
+                            type === "report-user" && (
+                                <tbody>{
+                                    data.map((reportData, index) => (
+                                        <tr className="text-center h-[60px]" key={`${index}`}>
+                                            <td className="py-2 px-4 border-b">{"reportingUserId" in reportData && reportData.reportingUserId}</td>
+                                            <td className="py-2 px-4 border-b">{"reportedUserId" in reportData && reportData.reportedUserId}</td>
+                                            <td className="py-2 px-4 border-b">{"reason" in reportData && reportData.reason}</td>
+                                            <td className="py-2 px-4 border-b">{"narrative" in reportData && reportData.narrative}</td>
+                                            
+                                            <td className="py-2 px-4 border-b">
+                                                <a href={`${"screenshot" in reportData && reportData.screenshot}`} className="gap-1 h-full text-[17px] italic text-blue-600">
+                                                    view
+                                                </a>
+                                            </td>
+
+                                            <td className="py-2 px-4 border-b">
+                                                {"reportingUserId" in reportData && reportData.createdAt ? new Date(reportData.createdAt).toLocaleDateString() : 'N/A'}
+                                            </td>
+                                            <td className="py-2 px-4 border-b">
+                                                <button 
+                                                    className={`font-bold border-[1px] p-2 rounded-lg ${"access" in reportData && reportData.access === "blocked" ? "text-red-700" : "text-green-700"}`}
+                                                    onClick={() => handleUpdateReportStatus && handleUpdateReportStatus("_id" in reportData && reportData._id || "")}
+                                                >
+                                                    {"access" in reportData && reportData.access}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            {
+                                data.length == 0 && (<p className="h-10 font-semibold flex items-center justify-center">No offers added Yet!</p>)
+                            }
+                        </tbody>
+                            )
+                        }
                 </table>
             }
             <CustomModal  isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>

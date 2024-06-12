@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { navVariants } from "../../../utils/animations/animation2";
 import { useEffect, useState } from "react";
 
-export function Home(){
+export function Home() {
     const [showNavbar, setShowNavbar] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0)
     // const dispatch = useAppDispatch();
@@ -23,25 +23,25 @@ export function Home(){
 
     useEffect(() => {
         const handleScroll = () => {
-          const currentScrollY = window.scrollY;
-    
-          if (currentScrollY < 90) {
-            setShowNavbar(true);
-          } else {
-            setShowNavbar(false);
-          }
-    
-          setLastScrollY(currentScrollY);
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY < 90) {
+                setShowNavbar(true);
+            } else {
+                setShowNavbar(false);
+            }
+
+            setLastScrollY(currentScrollY);
         };
-    
+
         window.addEventListener("scroll", handleScroll);
         // Cleanup function
         return () => {
-          window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("scroll", handleScroll);
         };
-      }, [lastScrollY]);
+    }, [lastScrollY]);
 
-    return ( 
+    return (
         <div className="home-container">
 
             <motion.nav
@@ -49,30 +49,30 @@ export function Home(){
                 initial="hidden"
                 animate={"visible"}
                 style={{
-                    position: 'sticky',  
+                    position: 'sticky',
                     top: 0,
                     width: '100%',
-                    zIndex: 1000, 
-                    opacity: showNavbar ? '1': '0',
+                    zIndex: 1000,
+                    opacity: showNavbar ? '1' : '0',
                     transition: 'background-color 0.5s ease-in-out',
                 }}
             >
-                <Navbar page="home"/>
+                <Navbar page="home" />
             </motion.nav>
-            
+
             <div className="h-[89vh]">
-                <Banner/>
+                <Banner />
             </div>
-            
-            <Carousal matchBase="profession" matchKey="education" matchData="Bachelor's Degree"/>
-            <Carousal matchBase="profile" matchKey="motherTongue" matchData="Malayalam"/>
 
-            <QuoteBanner/>
-            
-            <Carousal matchBase="family" matchKey="martialStatus" matchData="Single"/>
-            <Carousal matchBase="profile" matchKey="state" matchData="Kerala"/>
+            <Carousal matchBase="profession" matchKey="education" matchData="Bachelor's Degree" />
+            <Carousal matchBase="profile" matchKey="motherTongue" matchData="Malayalam" />
 
-            <Footer/>
+            <QuoteBanner />
+
+            <Carousal matchBase="family" matchKey="martialStatus" matchData="Single" />
+            <Carousal matchBase="profile" matchKey="state" matchData="Kerala" />
+
+            <Footer />
 
             {/* <button onClick={handleLogout}>logout</button> */}
         </div>
