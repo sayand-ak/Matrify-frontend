@@ -154,7 +154,6 @@ export function Profile() {
                 
                 if (response.payload.success) {
                     const data = response.payload.data;
-                    console.log(data);
 
                     setUserData({
                         profile: data[0],

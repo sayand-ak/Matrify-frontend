@@ -3,6 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserGoogleAuthData, UserLoginType, UserSignupType } from "../typings/user/userTypes";
 import { ProfessionData } from "../typings/Profile/professionDataType";
 import { FamilyData, ReligionData } from "../typings/Profile/familyDataTypes";
+import { checkIfUserIsBlocked } from "./checkIfUserIsBlocked";
 
 interface Error {
     response?: {
@@ -20,8 +21,15 @@ const axiosInstance = axios.create({
 
 //request interceptor
 axiosInstance.interceptors.request.use(async(config) => {
+    const isUserAllowed = await checkIfUserIsBlocked();
 
-    
+    if (!isUserAllowed) {
+        
+        alert("user is blocked.....");
+        window.location.href = "/"
+        return Promise.reject("user is blocked");
+    }
+
     const token = localStorage.getItem("userAccess");
     console.log('log from request user api', token);
 
@@ -57,7 +65,7 @@ axiosInstance.interceptors.response.use((response) => {
         }
         console.log("user error response interceptor");
         return Promise.reject(error);
-    });
+});
 
 async function getNewAccessToken(refreshToken: string) {
     // Implement your logic to fetch a new access token using the refresh token
