@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ChatInput } from "./ChatInput";
 import { MessageContainer } from "./MessageContainer";
 import { Message } from "../../typings/conversation/message";
@@ -26,39 +26,49 @@ export function ChatBox({ currentChat, isChatSelected, handleSendMessage }: Chat
     const [message, setMessage] = useState<string[]>([]);
     const [friendId, setFriendId] = useState<string | null>(null);
     const [lastReceivedTime, setLastReceivedTime] = useState("first chat");
-    const [user, setUser] = useState<UserData | null>(null);
+    const [user, setUser] = useState<UserData | null>(null);    
 
     const userId = useAppSelector(state => state.user.user?._id);
     const dispatch = useAppDispatch();
 
     const { usersOnline } = useContext(SocketContext);
-    
 
-    useEffect(() => {
+    //getting the friend id 
+    const getFriendId = useCallback(() => {
         const id = currentChat.find(msg => msg.sender !== userId);
-        setFriendId(id?.sender || "");
-
-        if (currentChat.length > 0) {
-            const lastReceivedMessage = currentChat[currentChat.length - 1];
-            const receivedTime = formatReceivedTime(lastReceivedMessage.createdAt?.toString() || "");
-            setLastReceivedTime(receivedTime);
-        }
-    }, [currentChat, userId]);
-
-
-    useEffect(() => {
-        async function fetchUserData(friendId: string) {
-            if (friendId) {
-                const response = await dispatch(userProfile(friendId));
-                setUser(response.payload.data[0]);
-            }
-        }
-        if (friendId) {
-            fetchUserData(friendId);
-        }
-
-    }, [friendId, dispatch]);
+        return id?.sender || "";
+      }, [currentChat, userId]);
     
+      //formatting the last received date
+      const getLastReceivedTime = useCallback(() => {
+        if (currentChat.length > 0) {
+          const lastReceivedMessage = currentChat[currentChat.length - 1];
+          return formatReceivedTime(lastReceivedMessage.createdAt?.toString() || "");
+        }
+        return "first chat";
+      }, [currentChat]);
+    
+      //fetching userData
+      const fetchUserData = useCallback(async (friendId: string) => {
+        if (friendId) {
+          const response = await dispatch(userProfile(friendId));
+          setUser(response.payload.data[0]);
+        }
+      }, [dispatch]);
+
+    
+
+      useEffect(() => {
+        const newFriendId = getFriendId();
+        setFriendId(newFriendId);
+    
+        const receivedTime = getLastReceivedTime();
+        setLastReceivedTime(receivedTime);
+    
+        if (newFriendId) {
+          fetchUserData(newFriendId);
+        }
+      }, [getFriendId, getLastReceivedTime, fetchUserData]);
 
 
 
