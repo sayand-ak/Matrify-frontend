@@ -5,7 +5,8 @@ import { formatDate } from "../../utils/formateDate";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { userProfile } from "../../services/userAPI";
 import { MdBlock } from "react-icons/md";
-import { SocketContext } from "../../context/socketContext";
+import { SocketContext } from "../../context/SocketContext";
+import "./chat.css"
 
 
 interface ChatMenuItemsProps {
@@ -41,19 +42,19 @@ export function ChatMenuItems({ conversation, userId }: ChatMenuItemsProps) {
                 className="h-[4rem] w-[5rem] rounded-full"
                 style={{ backgroundImage: `url(${user?.image ? user.image : '../src/assets/images/profile.png'})`, backgroundSize: "cover" }}
             ></div>
-            <div className="flex justify-between w-full items-center border-b-[1px] h-full">
+            <div className="menu-item flex justify-between w-full items-center h-full">
                 <div>
                     <h1 className="text-[15px] font-[500]">{user?.username}</h1>
                     <p>
                         {
                             isUserOnline() ? (
-                                <p className="text-gray-500 text-[10px]">
+                                <span className="text-gray-500 text-[10px]">
                                     Online
-                                </p>
+                                </span>
                             ) : (
-                                <p className="text-gray-500 text-[10px]">
+                                <span className="text-gray-500 text-[10px]">
                                     Offline
-                                </p>
+                                </span>
                             )
                         }
                         {curUser?.blockedUsers?.some((data) => data.user === user?._id) && (

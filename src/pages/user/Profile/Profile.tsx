@@ -12,7 +12,7 @@ import Navbar from "../../../components/navbar/Navbar";
 import { LuPlus } from "react-icons/lu";
 import { SlCalender } from "react-icons/sl";
 import "./Profile.css";
-import { addPreferences, blockUser, sendInterest, unblockUser, userProfile } from "../../../services/userAPI";
+import { addPreferences, blockUser, likeUser, sendInterest, unblockUser, userProfile } from "../../../services/userAPI";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profile/professionDataType";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -59,6 +59,7 @@ import showToast from "../../../components/Toast/Toast";
 import { ToastContainer } from "react-toastify";
 import { CgUnblock } from "react-icons/cg";
 import { BlockedUsers } from "../BlockedUsers/BlockedUsers";
+import { LikedUsers } from "../LikeLogs/LikeLogs";
 
 
 
@@ -72,6 +73,8 @@ export function Profile() {
     const [showProfile, setShowProfile] = useState<boolean>(true);
     const [showPayment, setShowPayment] = useState<boolean>(false);
     const [showInterestLogs, setShowInterestLogs] = useState<boolean>(false);
+    const [showLikedUsers, setShowLikedUsers] = useState<boolean>(false);
+
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [showBlockedUsers, setShowBlockedUsers] = useState<boolean>(false);
 
@@ -86,7 +89,8 @@ export function Profile() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const [likeBtnColor, setLikeBtnColor] = useState<string>("00000039");
+    const [likeBtnColor, setLikeBtnColor] = useState<string>("");
+    const [isPinging, setIsPinging] = useState(false);
 
     const { id } = useParams<RouteParams>();
     const curUser = useAppSelector(state => state.user.user);
@@ -141,6 +145,14 @@ export function Profile() {
             setShowBlockedUsers(false);
         }
 
+        if (itemName === "Likes") {
+            setShowLikedUsers(true);
+        } else {
+            setShowLikedUsers(false);
+        }
+
+
+
         if (itemName === "Logout") {
             dispatch(userLogout());
             navigate("/login")
@@ -188,6 +200,16 @@ export function Profile() {
         }
     }, [userData?.profile, curUser?._id]);
 
+    useEffect(() => {
+        if(curUser?._id != userData?.profile?._id ) {
+            if(curUser?.likedProfiles && userData?.profile && curUser?.likedProfiles.includes(userData?.profile?._id)) {
+                setLikeBtnColor("#FF0000");
+            } else {
+                setLikeBtnColor("#F1E5D1");
+            }
+        } 
+    }, [])
+
     const handleTabSelect = (tab: string, event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
         setSelectedTab(tab);
@@ -211,7 +233,7 @@ export function Profile() {
     }
 
     async function handleSendInterest() {
-        if (sendInterestButtonLabel == "Send interest" && userData?.profile?.subscribed) {
+        if (sendInterestButtonLabel == "Send interest" && curUser?.subscribed) {
             const response = await dispatch(sendInterest(id || ""));
 
             if (response.payload.success) {
@@ -248,6 +270,28 @@ export function Profile() {
                     window.location.reload()
                 }
                 )
+            }
+        }
+    }
+
+    async function handleLikeUser() {
+        if (userData?.profile?._id) {
+            const response = await dispatch(likeUser(userData?.profile?._id));
+            if(response) {
+                const user = localStorage.getItem('user');
+                if(user) {
+                    const parsedData = JSON.parse(user);
+
+                    if (parsedData) {
+                        parsedData.likedProfiles = response.payload.data; 
+                    }
+    
+                    localStorage.setItem('user', JSON.stringify(parsedData));
+                }
+
+                setLikeBtnColor(prevColor => (prevColor === "#F1E5D1" ? "#FF0000" : "#F1E5D1"));
+                setIsPinging(true);
+                setTimeout(() => setIsPinging(false), 500);
             }
         }
     }
@@ -317,8 +361,9 @@ export function Profile() {
                                                     {
                                                         !isLoggedUser && (
                                                             <FaHeart
-                                                                className={`text-[26px] text-[#${likeBtnColor}]`}
-                                                                onClick={() => { setLikeBtnColor("FF0000") }}
+                                                                className={`text-[26px] ${isPinging ? 'animate-ping' : 'animate-none'}`}
+                                                                style={{ color: likeBtnColor }}
+                                                                    onClick={handleLikeUser}
                                                             />
                                                         )
                                                     }
@@ -358,9 +403,11 @@ export function Profile() {
                                                     >
                                                         {sendInterestButtonLabel}
                                                     </button>
+
                                                     <button onClick={() => setShowMoreOptions(!showMoreOptions)}>
                                                         <MoreOptionsBtn />
                                                     </button>
+                                                    
                                                     {
                                                         showMoreOptions &&
                                                         <div className="w-56 rounded-md bg-[#f4f4f4] shadow-md min-h-20 absolute right-0 top-14 showMoreOptions-visible transition-opacity">
@@ -599,6 +646,7 @@ export function Profile() {
                                                             className="font-semibold px-5 py-1 border-[1px] text-[#fff] border-solid rounded-3xl bg-[#EAC991]"
                                                             onClick={handleAddPreferences}
                                                         >Add</button>
+                                                        
                                                         <button
                                                             className="font-semibold px-5 py-1 border-[1px] text-[#EAC991] border-[#EAC991] border-solid rounded-3xl"
                                                             onClick={handleAddPreferencesClick}
@@ -635,6 +683,12 @@ export function Profile() {
                 {
                     showBlockedUsers && (
                         <BlockedUsers />
+                    )
+                }
+
+                {
+                    showLikedUsers && (
+                        <LikedUsers/>
                     )
                 }
             </div>

@@ -25,13 +25,18 @@ export function MessageContainer({ currentChat }: MessageContainerProps) {
     };
 
     return (
-        <div className="message-container py-20" ref={messageContainerRef}>
+        <div className="message-container py-20 no-scrollbar" ref={messageContainerRef}>
             <div className="message-content flex flex-col gap-7 pt-20">
                 {currentChat.map((message, index) => (
                     message.sender === userId ? (
-                        <div key={index}><MessageSend message={message.text} createdAt={message.createdAt?.toString() || ""} /></div>
+                        <div key={index}>
+                            <MessageSend 
+                                message={message.data} 
+                                createdAt={message.createdAt?.toString() || ""} 
+                            />
+                        </div>
                     ) : (
-                        <div key={index}><MessageReceived message={message.text} createdAt={message.createdAt?.toString() || ""} /></div>
+                        <div key={index}><MessageReceived message={message.data} createdAt={message.createdAt?.toString() || ""} /></div>
                     )
                 ))}
             </div>

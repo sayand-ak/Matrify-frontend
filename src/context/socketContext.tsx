@@ -10,16 +10,12 @@ interface SocketContextType {
     usersOnline: SocketUserType[];
 }
 
-
 interface SocketUserType {
     userId: string;
     socketId: string;
 }
 
-
-// Create the SocketContext with a default value of undefined
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const SocketContext = createContext<SocketContextType>({socket, isConnected: false, usersOnline: []});
+export const SocketContext = createContext<SocketContextType>({} as SocketContextType);
 
 
 // SocketProvider component
@@ -28,11 +24,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     const [usersOnline, setUsersOnline] = useState<SocketUserType[]>([]);
 
     const userId = useAppSelector(state => state.user.user?._id);
-
-    console.log(socket);
-
-
-
 
     useEffect(() => {
 
@@ -52,7 +43,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
         const handleGetUsers = (users: SocketUserType[]) => {
             setUsersOnline(users);
-            console.log(users,"weifunewioughfwiouhgiuhrguoherwgtuherdfugheurbngejnrgkjenrjughenrgfojrfhgerfjh");
         };
 
 

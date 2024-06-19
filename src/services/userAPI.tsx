@@ -470,5 +470,14 @@ export const reportUser = createAsyncThunk("/api/reportUser", async(reportData: 
 //     }
 // });
 
+export const likeUser = createAsyncThunk("/api/likeUser", async(targetUserId: string) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/like-user`, {targetUserId: targetUserId}, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+
 
 

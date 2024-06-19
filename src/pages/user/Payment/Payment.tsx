@@ -73,6 +73,8 @@ export function Payment () {
                     
                     if(response.payload.data){
                         window.location.href = response.payload.data;
+                    } else {
+                        alert("payment error");
                     }
                 }
                 break;
@@ -82,6 +84,8 @@ export function Payment () {
                     const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount: subscriptionAmt?.amount.monthly , userId: userId}))
                     if(response.payload.data){
                         window.location.href = response.payload.data;
+                    } else {
+                        alert("payment error");
                     }
                 }
                 break;
@@ -90,9 +94,9 @@ export function Payment () {
                 if(subscriptionAmt?.amount.yearly){
                     const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount: subscriptionAmt?.amount.yearly , userId: userId}))
                     if(response.payload.data){
-                        console.log(response);
-                        
                         window.location.href = response.payload.data;
+                    } else{
+                        alert("payment error");
                     }
                 }
                 break;

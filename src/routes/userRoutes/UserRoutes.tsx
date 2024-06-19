@@ -19,6 +19,7 @@ import { Chat } from '../../pages/user/Chat/Chat';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/app/store';
 import { ReportUser } from '../../pages/user/ReportUser/ReportUser';
+import { Room } from '../../pages/user/Room/Room';
 
 
 export function UserRoutes (){
@@ -47,6 +48,7 @@ export function UserRoutes (){
                 <Route path='payment' element={<Payment/>} />
                 <Route path='paymentSuccess/:type' element={<PaymentSuccess/>} />
                 <Route path='reportUser/:id' element={<ReportUser/>} />
+                <Route path="room/:id" element={<Room />} />
 
             </Route>
 

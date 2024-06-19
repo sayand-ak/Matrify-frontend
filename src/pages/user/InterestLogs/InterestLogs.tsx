@@ -38,6 +38,7 @@ export default function InterestLogs(interestData: InterestListProps) {
     });
 
     const userId = useAppSelector(state => state.user.user?._id);
+    const user = useAppSelector(state => state.user.user);
 
     useEffect(() => {
         async function fetchData() {
@@ -63,11 +64,15 @@ export default function InterestLogs(interestData: InterestListProps) {
     }, [selectedTab, interestData, dispatch]);
 
     async function handleStatusChange(userId: string, status: string) {
-        const response = await dispatch(updateInterestStatus({targetUserId: userId.toString(), status: status}));
-        if (response.payload.success) {
-            showToast("success", "Interest status updated successfully");
-        }else{
-            showToast("error", "Interest status updating failed");
+        if(user?.subscribed){
+            const response = await dispatch(updateInterestStatus({targetUserId: userId.toString(), status: status}));
+            if (response.payload.success) {
+                showToast("success", "Interest status updated successfully");
+            }else{
+                showToast("error", "Interest status updating failed");
+            }
+        } else {
+            showToast("error", "Please subscribe to use this feature")
         }
     }
 

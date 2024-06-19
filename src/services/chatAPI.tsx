@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { Message } from "yup";
 
 const CONVERSATION_API_URL = "http://localhost:4000/api/conversation";
 const MESSAGE_API_URL = "http://localhost:4000/api/message";
@@ -26,9 +25,11 @@ export const getMessages = createAsyncThunk("/api/message/getMessages", async (c
     }
 });
 
-export const sendMessages = createAsyncThunk("/api/message/getMessages", async (messageData: Message) => {
+export const sendMessages = createAsyncThunk("/api/message/getMessages", async (messageData: FormData) => {
     try {
-        const response: AxiosResponse = await axios.post(`${MESSAGE_API_URL}/send-message`, {messageData},{ withCredentials: true });
+        console.log(messageData, "{{{{{{[[[[[[[[[[[]]]]]]]]]]]}}}}}}");
+        
+        const response: AxiosResponse = await axios.post(`${MESSAGE_API_URL}/send-message`, messageData,{ withCredentials: true });
         console.log("Message response--------",response);
         return response.data;
     } catch (error) {

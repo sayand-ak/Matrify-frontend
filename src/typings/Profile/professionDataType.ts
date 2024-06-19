@@ -51,6 +51,7 @@ export interface UserProfile {
   interestSend: Array<InterestSend>;
   interestReceived: Array<InterestReceived>;
   blockedUsers?: Array<BlockedUsers>;
+  likeUser: Array<string>;
 }
 
 export interface UserProfession {

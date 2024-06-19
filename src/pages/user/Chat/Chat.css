@@ -1,0 +1,35 @@
+.call-notifier {
+    position: absolute;
+    width: 40%;
+    height: 80px;
+    color: white;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-size: 100% 200%;
+    background-color: #0000009d;
+    transition: background 1s;
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    transition: bottom 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+
+/* Show notifier */
+.call-notifier.show {
+    bottom: 0; 
+    opacity: 1;
+}
+
+
+.bounce2 {
+    animation: bounce2 2s ease infinite;
+  }
+  @keyframes bounce2 {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-25px);}
+      60% {transform: translateY(-15px);}
+  }

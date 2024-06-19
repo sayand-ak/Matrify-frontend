@@ -107,7 +107,7 @@ export default function Navbar({page}: NavbarProps){
     const navigate = useNavigate();
     return (
            
-            <div className="nav w-full items-center justify-between px-5 flex md:px-14 bg-transparent">
+            <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent">
                 <div className="flex">
                     <a href="#">
                         <div className="logo-div h-14 w-16 ">
@@ -116,7 +116,7 @@ export default function Navbar({page}: NavbarProps){
                     </a>
 
                     { page!="landing"&&
-                        <ul className={`lg:flex hidden gap-14 items-center bg w-[fit-content] pl-10 font-semibold ${page == "home" ? "text-[#ffffff73]" : "text-[#000]" } text-[16px]`}>
+                        <ul className={`lg:flex hidden gap-14 items-center w-[fit-content] pl-10 font-semibold ${page == "home" ? "text-[#ffffff73]" : "text-[#000]" } text-[16px]`}>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>Home</li>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>About</li>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>Blog</li>
@@ -143,7 +143,7 @@ export default function Navbar({page}: NavbarProps){
                     }
 
                     {  page!="landing" &&  
-                        <div className={`flex items-center gap-10 justify-end w-full`}>
+                        <div className={`flex items-center gap-10 justify-end`}>
                             {
                                 page == "home" && 
                                 <form 
@@ -232,7 +232,7 @@ export default function Navbar({page}: NavbarProps){
                                 </form>
                             }
 
-                            <a href={`/profile/${selector?._id}`} className="opacity-[0.8] hover:opacity-[1]">
+                            <a href={`/profile/${selector?._id}`}>
                                 <div 
                                     className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
                                     style={{ 

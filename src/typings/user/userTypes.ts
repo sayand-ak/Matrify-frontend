@@ -16,6 +16,8 @@ export interface UserData {
     searchHistory: SearchHistory[];
     image: string;
     blockedUsers?: Array<BlockedUsers>;
+    subscribed?: boolean
+    likedProfiles: Array<string>;
     payload: {
         data: {
             email: string;

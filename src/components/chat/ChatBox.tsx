@@ -1,13 +1,20 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { ChatInput } from "./ChatInput";
 import { MessageContainer } from "./MessageContainer";
-import { Message } from "../../typings/conversation/message";
+import { Message, MessageData } from "../../typings/conversation/message";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { UserData } from "../../typings/user/userTypes";
 import { formatReceivedTime } from "../../utils/formateReceivedTime";
 import { userProfile } from "../../services/userAPI";
-import { SocketContext } from "../../context/socketContext";
+import { Conversation } from "../../typings/conversation/conversation";
+import { IoVideocamOutline } from "react-icons/io5";
+import { VideoCallData } from "../../typings/videoCall/videoCall";
+import { newCall } from "../../services/videoCallApi";
+import { socket } from "../../services/socket";
+import { SocketContext } from "../../context/SocketContext";
+import { useNavigate } from "react-router-dom";
+
 
 // interface SocketUserType {
 //     userId: string;
@@ -18,26 +25,22 @@ import { SocketContext } from "../../context/socketContext";
 interface ChatBoxProps {
     currentChat: Message[],
     isChatSelected: boolean,
-    handleSendMessage: (value: string) => void,
+    handleSendMessage: (data: MessageData) => void;
+    conversations: Conversation;
 }
 
 
-export function ChatBox({ currentChat, isChatSelected, handleSendMessage }: ChatBoxProps) {
+export function ChatBox({ currentChat, isChatSelected, handleSendMessage, conversations }: ChatBoxProps) {
     const [message, setMessage] = useState<string[]>([]);
-    const [friendId, setFriendId] = useState<string | null>(null);
     const [lastReceivedTime, setLastReceivedTime] = useState("first chat");
     const [user, setUser] = useState<UserData | null>(null);    
 
-    const userId = useAppSelector(state => state.user.user?._id);
     const dispatch = useAppDispatch();
-
     const { usersOnline } = useContext(SocketContext);
+    
+    const curUser = useAppSelector(state => state.user.user);
 
-    //getting the friend id 
-    const getFriendId = useCallback(() => {
-        const id = currentChat.find(msg => msg.sender !== userId);
-        return id?.sender || "";
-      }, [currentChat, userId]);
+    const navigate = useNavigate();
     
       //formatting the last received date
       const getLastReceivedTime = useCallback(() => {
@@ -46,62 +49,118 @@ export function ChatBox({ currentChat, isChatSelected, handleSendMessage }: Chat
           return formatReceivedTime(lastReceivedMessage.createdAt?.toString() || "");
         }
         return "first chat";
-      }, [currentChat]);
+    }, [currentChat]);
     
-      //fetching userData
-      const fetchUserData = useCallback(async (friendId: string) => {
+    // Fetching user data
+    const fetchUserData = useCallback(async (friendId: string) => {
         if (friendId) {
           const response = await dispatch(userProfile(friendId));
           setUser(response.payload.data[0]);
         }
-      }, [dispatch]);
+    }, [dispatch]);
 
-    
-
-      useEffect(() => {
-        const newFriendId = getFriendId();
-        setFriendId(newFriendId);
-    
+    const findUserDataFromConversation = useCallback(() => {
+        if (conversations && conversations.members) {
+            const friendId = conversations.members.find(member => member !== curUser?._id);
+            if (friendId) {
+                fetchUserData(friendId);
+            }
+        }
+    }, [conversations, curUser?._id, fetchUserData]);
+      
+    useEffect(() => {
         const receivedTime = getLastReceivedTime();
         setLastReceivedTime(receivedTime);
+        findUserDataFromConversation();
+        
+    }, [getLastReceivedTime, conversations, currentChat, findUserDataFromConversation]);
+
+
     
-        if (newFriendId) {
-          fetchUserData(newFriendId);
+    async function handleSendMessageAndSetMessage(data: MessageData) {        
+        if(data.type == "text") {
+            handleSendMessage({type: "text", value: data.value});
+        } else if(data.type == "audio") {
+            handleSendMessage({type: "audio", file: data.file});
+        } else if(data.type == "image") {
+            handleSendMessage({type: "image", file: data.file});
         }
-      }, [getFriendId, getLastReceivedTime, fetchUserData]);
-
-
-
-    async function handleSendMessageAndSetMessage(value: string) {
-        handleSendMessage(value);
-        setMessage([...message, value]);
+        setMessage([...message, 'value' in data ? data.value : '']);
     }
 
-    function isUserOnline(): boolean{
-        return usersOnline.some((user) => user.userId === friendId);
+    function isUserOnline(): boolean {
+        return usersOnline.some((user) => user.userId === conversations.members.find(member => member !== curUser?._id));
     }
-    
+
+    async function handleVideoCall () {
+        if (curUser?._id && user?._id) {
+            const videoCallData: VideoCallData = {
+                caller: curUser?._id,
+                receiver: user?._id,
+            }
+            const newVideoCall = await dispatch(newCall(videoCallData));
+            if(newVideoCall.payload.success) {
+                const callData = newVideoCall.payload.data;
+
+                socket.emit('join-room', {callerId: callData.caller, receiverId: callData.receiver, roomId: callData.roomId});
+                
+            } else {
+                alert("video call backend error...")
+            }
+        } else {
+            alert ("sender or receiver not found....")
+        }
+    }
+
+    useEffect(() => {
+        socket.on("joined-room", ({ roomId }) => {
+           navigate(`/room/${roomId}`);
+        });
+        
+        return () => {
+            socket.off("joined-room");
+        }
+    }, [navigate, socket]);
+
 
 
     return (
         <div className="chat-box w-[70%] hidden md:block">
             {isChatSelected ? (
                 <div className="chat-box-header">
-                    <div className="border-b-[1px] px-5 py-[5px] flex items-center gap-5 bg-[#EFE2CB]">
-                        <div
-                            className="h-[4rem] w-[4rem] rounded-full"
-                            style={{ backgroundImage: `url(${user?.image ? user.image : "../src/assets/images/businesswoman-posing.jpg"})`, backgroundSize: "cover" }}
-                        ></div>
-                        <div>
-                            <h1 className="text-[20px] font-semibold">{user?.username}</h1>
-                            <p className="text-[10px]">{lastReceivedTime}</p>
-                            <p className="text-[10px]">{isUserOnline() ? "Online" : "Offline"}</p>
+                    <div className="flex justify-between bg-[#EFE2CB] px-10">
+                        <div className="border-b-[1px] py-[10px] flex items-center gap-5">
+                            <div
+                                className="h-[4rem] w-[4rem] rounded-full"
+                                style={{ backgroundImage: `url(${user?.image ? user.image : "../src/assets/images/businesswoman-posing.jpg"})`, backgroundSize: "cover" }}
+                            ></div>
+                            <div>
+                                <h1 className="text-[20px] font-semibold">{user?.username}</h1>
+                                <p className="text-[10px]">{lastReceivedTime}</p>
+                                <p className="text-[10px]">{isUserOnline() ? "Online" : "Offline"}</p>
+                            </div>
                         </div>
+
+                        {/* video call button */}
+                        <div className="flex items-center">
+                            <button onClick={handleVideoCall}>
+                                <IoVideocamOutline className="text-[26px]"/>
+                            </button>
+                        </div>
+
                     </div>
+
                     <div className="w-full min-h-[70vh] overflow-hidden">
-                        <MessageContainer currentChat={currentChat} />
+                        <MessageContainer 
+                            currentChat={currentChat} 
+                        />
                     </div>
-                    <ChatInput handleSendMessage={handleSendMessageAndSetMessage} receiverId={user?._id || ""}/>
+
+                    <ChatInput 
+                        handleSendMessage={handleSendMessageAndSetMessage} 
+                        receiverId={user?._id || ""} 
+                    />
+
                 </div>
             ) : (
                 <div

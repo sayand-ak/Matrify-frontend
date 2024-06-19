@@ -20,8 +20,8 @@ export function ChatMenu({ handleMenuItemClick, conversations }: ChatMenuProps) 
     }
 
     return (
-        <div className="chat-list w-full md:w-[30%] bg-[#efe1ca4f] overflow-scroll no-scrollbar">
-            <div className="sticky top-0 bg-[#efe1ca8e] pb-5 shadow-sm">
+        <div className="chat-list w-full md:w-[30%] bg-[#efcf9718] overflow-scroll no-scrollbar">
+            <div className="chat-menu-header sticky top-0 pb-5 bg-[#EFCE97]">
                 <h2 className="text-[25px] pl-10 font-bold py-5">Chat</h2>
                 <div className="w-full flex justify-center">
                     <SearchBox handleSearch={handleSearch} search={search} setSearch={setSearch} />
@@ -31,7 +31,9 @@ export function ChatMenu({ handleMenuItemClick, conversations }: ChatMenuProps) 
                 {conversations.length > 0 ? (
                     conversations.map((conversation, index) => (
                         <div
-                            onClick={() => handleMenuItemClick(conversation._id || "")}
+                            onClick={() => {
+                                handleMenuItemClick(conversation._id || "");
+                            }}
                             key={index}
                         >
                             <ChatMenuItems conversation={conversation} userId={userId || ""} />

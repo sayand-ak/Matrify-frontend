@@ -1,17 +1,24 @@
-import { useState } from 'react';
 import { AudioRecorder } from 'react-audio-voice-recorder';
-import { AudioResult } from './AudioResult';
+
+interface AudioElementProps {
+  setAudioFile: (audioFile: File) => void;
+}
 
 
-export function AudioElement() {
-  const [audioUrl, setAudioUrl] = useState<string | null>(null); // State to hold the URL of the recorded audio
+
+export function AudioElement({setAudioFile}: AudioElementProps) {
 
   // Function to handle the recording completion and update the audio URL state
     const handleRecordingComplete = (blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-        console.log(url);
+              
+        const audioFile = new File([blob], 'recording.webm', {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        setAudioFile(audioFile); 
         
-        setAudioUrl(url); 
+        console.log("from audio element",audioFile);
+        
     };
 
   return (
@@ -28,9 +35,6 @@ export function AudioElement() {
         />
         <br />
 
-        {/* Pass the audio URL as a prop to the AudioResult component */}
-        <AudioResult audioUrl={audioUrl} />
-      
     </div>
   );
 }
