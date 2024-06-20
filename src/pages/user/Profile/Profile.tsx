@@ -151,8 +151,6 @@ export function Profile() {
             setShowLikedUsers(false);
         }
 
-
-
         if (itemName === "Logout") {
             dispatch(userLogout());
             navigate("/login")
@@ -200,15 +198,6 @@ export function Profile() {
         }
     }, [userData?.profile, curUser?._id]);
 
-    useEffect(() => {
-        if(curUser?._id != userData?.profile?._id ) {
-            if(curUser?.likedProfiles && userData?.profile && curUser?.likedProfiles.includes(userData?.profile?._id)) {
-                setLikeBtnColor("#FF0000");
-            } else {
-                setLikeBtnColor("#F1E5D1");
-            }
-        } 
-    }, [])
 
     const handleTabSelect = (tab: string, event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault();
@@ -274,6 +263,16 @@ export function Profile() {
         }
     }
 
+    useEffect(() => {
+        if(curUser?._id != userData?.profile?._id ) {
+            if(curUser?.likedProfiles && userData?.profile && curUser?.likedProfiles.includes(userData?.profile?._id)) {
+                setLikeBtnColor("#FF0000");
+            } else {
+                setLikeBtnColor("#F1E5D1");
+            }
+        } 
+    }, [userData, curUser])
+
     async function handleLikeUser() {
         if (userData?.profile?._id) {
             const response = await dispatch(likeUser(userData?.profile?._id));
@@ -285,9 +284,10 @@ export function Profile() {
                     if (parsedData) {
                         parsedData.likedProfiles = response.payload.data; 
                     }
-    
+                    
+                    console.log(parsedData)
                     localStorage.setItem('user', JSON.stringify(parsedData));
-                }
+                }                
 
                 setLikeBtnColor(prevColor => (prevColor === "#F1E5D1" ? "#FF0000" : "#F1E5D1"));
                 setIsPinging(true);

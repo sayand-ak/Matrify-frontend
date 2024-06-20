@@ -22,7 +22,9 @@ export function Room() {
     const roomId = useParams();
 
     const handleNewUserJoined = useCallback(async ({ callerId }: { callerId: string }) => {
-        try {          
+        try {         
+            console.log(callerId, "{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
+             
             const offer = await createOffer();
             socket.emit('call-user', { callerId, offer });
             setRemoteUserId(callerId);
@@ -93,7 +95,7 @@ export function Room() {
             socket.off("incoming-call", handleIncomingCall);
             socket.off("call-accepted", handleCallAccepted);
         }
-    }, [handleCallAccepted, handleIncomingCall, handleNewUserJoined, socket]);
+    }, [handleNewUserJoined, handleCallAccepted, handleIncomingCall, socket]);
 
     useEffect(() => {
         getUserMediaStream();

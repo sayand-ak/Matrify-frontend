@@ -31,7 +31,7 @@ export function BlockedUsers() {
     }
 
     return (
-        <div className="w-full">
+        <div className="w-full max-h-[85vh] overflow-y-scroll no-scrollbar">
             <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
                 <p className="font-bold">Warning</p>
                 <p>The users listed below have been blocked by you. Blocking a user prevents them from contacting you or seeing your profile.</p>

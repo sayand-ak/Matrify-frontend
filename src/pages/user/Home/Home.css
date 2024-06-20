@@ -2,3 +2,7 @@
 .home-container::-webkit-scrollbar{
     display: none;
 }
+.subscription-alert-heading{
+    text-shadow: 2px 2px 4px rgba(139, 136, 136, 0.504), 4px 4px 8px rgba(135, 134, 134, 0.5);
+
+}

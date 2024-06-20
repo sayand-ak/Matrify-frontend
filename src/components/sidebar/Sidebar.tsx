@@ -6,6 +6,12 @@ import { useAppDispatch } from '../../hooks/useTypedSelectors';
 import { adminLogout } from '../../redux/slices/adminSlices';
 import { useNavigate } from 'react-router-dom';
 import { SidebarProps } from '../../typings/sidebar/sidebarPropTypes';
+import { AiOutlineDelete } from "react-icons/ai";
+import { deleteUser } from '../../services/userAPI';
+import { userLogout } from '../../redux/slices/userSlices';
+import showToast from '../Toast/Toast';
+import { ToastContainer } from 'react-toastify';
+
 
 export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
     const [selected, setSelected] = useState<string>(items[0].name);
@@ -21,6 +27,17 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
             navigate("/admin/login");
         }
        
+        if(itemName === "Delete Account" && role === "user"){
+            const response = await dispatch(deleteUser());
+            if(response.payload.success) {
+                showToast("success", "Account deleted successfully", () => {
+                    navigate("/login");
+                    dispatch(userLogout());
+                });
+            } else {
+                alert("account deletion failed");
+            }
+        }
     };
 
     return (
@@ -32,7 +49,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
             </div>}
 
             <div className="options">
-                <ul className={`flex flex-col gap-6 pt-${role === 'user' ? 10 : 0}`}>
+                <ul className={`flex flex-col gap-5 pt-${role === 'user' ? 10 : 0}`}>
                     {items.map((item, index) => (
 
                         <span key={index}>
@@ -49,7 +66,16 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
                     <li className="lg:px-10">
                         <hr />
                     </li>
-                    
+                    {
+                        role === "user" && 
+                            <SidebarItem
+                                icon={AiOutlineDelete}
+                                text="Delete Account"
+                                className="text-red-700 flex"
+                                onClick={() => handleItemClick("Delete Account", role)}
+                                selected={selected === "Delete Account"} 
+                            />
+                    }
                     <SidebarItem
                         icon={IoLogOutOutline}
                         text="Logout"
@@ -58,6 +84,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
                         selected={selected === "Logout"} 
                     />
                 </ul>
+                <ToastContainer/>
             </div>
         </div>
     );

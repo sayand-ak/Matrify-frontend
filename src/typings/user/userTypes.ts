@@ -18,6 +18,7 @@ export interface UserData {
     blockedUsers?: Array<BlockedUsers>;
     subscribed?: boolean
     likedProfiles: Array<string>;
+    deleted: boolean;
     payload: {
         data: {
             email: string;

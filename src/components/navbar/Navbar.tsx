@@ -10,10 +10,6 @@ import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
 
 
-
-
-
-
 interface NavbarProps {
     page: string;
 }
@@ -143,7 +139,7 @@ export default function Navbar({page}: NavbarProps){
                     }
 
                     {  page!="landing" &&  
-                        <div className={`flex items-center gap-10 justify-end`}>
+                        <div className={`md:flex items-center gap-10 justify-end hidden`}>
                             {
                                 page == "home" && 
                                 <form 

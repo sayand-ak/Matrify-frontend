@@ -47,6 +47,7 @@ export function Chat() {
 
         socket?.on('notify-receiver', async(data) => {
             if (data.receiverId == userId) {
+                
                 const userData = await dispatch(userProfile(data.callerId));
                 if(userData.payload?.success){
                     setCallingUser(userData.payload.data[0]);

@@ -479,5 +479,12 @@ export const likeUser = createAsyncThunk("/api/likeUser", async(targetUserId: st
     }
 });
 
-
+export const deleteUser = createAsyncThunk("/api/deleteUser", async() => {
+    try {
+        const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/delete-account`, {}, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
 

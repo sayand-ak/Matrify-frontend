@@ -86,7 +86,7 @@ export default function InterestLogs(interestData: InterestListProps) {
     }
 
     return (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full flex flex-col items-center max-h-[85vh] overflow-y-scroll no-scrollbar">
             <div className="flex justify-around items-center border-b-[1px] border-b-[#dfdfdf] text-[18px] h-[80px] w-full">
                 <div className="h-full flex-1 flex justify-center hover:bg-[#f4f4f4]">
                     <button
