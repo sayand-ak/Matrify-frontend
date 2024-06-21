@@ -45,7 +45,7 @@ export function Chat() {
 
         });
 
-        socket?.on('notify-receiver', async(data) => {
+        socket.on('notify-receiver', async(data) => {
             if (data.receiverId == userId) {
                 
                 const userData = await dispatch(userProfile(data.callerId));
@@ -71,7 +71,19 @@ export function Chat() {
             socket?.off("getMessage");
             socket?.off("notify-receiver'");
         };
-    }, [conversationId, userId, dispatch]);        
+    }, [conversationId, userId, dispatch]);      
+
+    useEffect(() => {
+        socket.on("joined-room", ({ roomId }) => {
+           navigate(`/room/${roomId}`);
+        });
+        
+        return () => {
+            socket.off("joined-room");
+        }
+    }, [navigate, socket]);
+    
+    
 
     async function handleMenuItemClick(conversationId: string) {
         setActiveConversationId(conversationId)
@@ -127,10 +139,12 @@ export function Chat() {
             alert("Failed to send message");
         }
     }
+    console.log(callingUser, userId, roomId);
+    
 
     function handleAcceptCall(){
         if(roomId) {
-            navigate(`/room/${roomId}`);
+            socket.emit('join-room', {callerId: userId , receiverId:  callingUser._id, roomId: roomId});
         } else {
             alert("Failed to join room");
         }
@@ -141,10 +155,12 @@ export function Chat() {
             <ChatMenu 
                 handleMenuItemClick={handleMenuItemClick}
                 conversations={conversations}
+                isChatSelected={isChatSelected}
             />
             <ChatBox 
                 currentChat={currentChat} 
                 isChatSelected={isChatSelected} 
+                setIsChatSelected={setIsChatSelected}
                 handleSendMessage={handleSendMessage}
                 conversations={conversations.find(conversation => conversation._id === activeConversationId)|| {} as Conversation}
             />

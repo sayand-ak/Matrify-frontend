@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Landing } from '../../pages/user/Landing/Landing';
 import {  Login } from '../../pages/user/Login/Login';
 import { SignUp } from '../../pages/user/SignUp/SignUp';
@@ -16,14 +16,12 @@ import { Profile } from '../../pages/user/Profile/Profile';
 import { Payment } from '../../pages/user/Payment/Payment';
 import { PaymentSuccess } from '../../pages/user/PaymentSuccess/PaymentSuccess';
 import { Chat } from '../../pages/user/Chat/Chat';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/app/store';
 import { ReportUser } from '../../pages/user/ReportUser/ReportUser';
 import { Room } from '../../pages/user/Room/Room';
+import { ViewAllMatches } from '../../pages/user/ViewAllMatches.ts/ViewAllMatches';
 
 
 export function UserRoutes (){
-    const { user } = useSelector((state:RootState) => state.user);
     useEffect(() => {
         document.title = "Matrify - User";
     });
@@ -31,7 +29,7 @@ export function UserRoutes (){
     return(
         <Routes>
             <Route path='/' element={<Landing/>} />
-            <Route path="/login" element={user ? <Navigate to="/home" /> : <Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path='/register' element={<SignUp/>} />
             <Route path='/setProfile' element={<SetProfile/>} />
 
@@ -49,6 +47,7 @@ export function UserRoutes (){
                 <Route path='paymentSuccess/:type' element={<PaymentSuccess/>} />
                 <Route path='reportUser/:id' element={<ReportUser/>} />
                 <Route path="room/:id" element={<Room />} />
+                <Route path='viewAllMatches/:matchBase/:matchKey/:matchData' element={<ViewAllMatches/>} />
 
             </Route>
 

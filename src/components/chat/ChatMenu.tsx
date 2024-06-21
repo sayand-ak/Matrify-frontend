@@ -7,9 +7,10 @@ import { useAppSelector } from "../../hooks/useTypedSelectors";
 interface ChatMenuProps {
     handleMenuItemClick: (conversationId: string) => void;
     conversations: Conversation[];
+    isChatSelected: boolean;
 }
 
-export function ChatMenu({ handleMenuItemClick, conversations }: ChatMenuProps) {
+export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected}: ChatMenuProps) {
     const [search, setSearch] = useState("");
     
 
@@ -20,7 +21,7 @@ export function ChatMenu({ handleMenuItemClick, conversations }: ChatMenuProps) 
     }
 
     return (
-        <div className="chat-list w-full md:w-[30%] bg-[#efcf9718] overflow-scroll no-scrollbar">
+            <div className={`chat-list bg-[#efcf9718] overflow-scroll no-scrollbar ${isChatSelected ? 'hidden sm:block' : 'w-full'} md:w-[50%] lg:w-[30%]`}>            
             <div className="chat-menu-header sticky top-0 pb-5 bg-[#EFCE97]">
                 <h2 className="text-[25px] pl-10 font-bold py-5">Chat</h2>
                 <div className="w-full flex justify-center">

@@ -14,6 +14,7 @@ import { newCall } from "../../services/videoCallApi";
 import { socket } from "../../services/socket";
 import { SocketContext } from "../../context/SocketContext";
 import { useNavigate } from "react-router-dom";
+import { IoMdArrowBack } from "react-icons/io";
 
 
 // interface SocketUserType {
@@ -25,12 +26,13 @@ import { useNavigate } from "react-router-dom";
 interface ChatBoxProps {
     currentChat: Message[],
     isChatSelected: boolean,
+    setIsChatSelected: (isChatSelected: boolean) => void,
     handleSendMessage: (data: MessageData) => void;
     conversations: Conversation;
 }
 
 
-export function ChatBox({ currentChat, isChatSelected, handleSendMessage, conversations }: ChatBoxProps) {
+export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handleSendMessage, conversations }: ChatBoxProps) {
     const [message, setMessage] = useState<string[]>([]);
     const [lastReceivedTime, setLastReceivedTime] = useState("first chat");
     const [user, setUser] = useState<UserData | null>(null);    
@@ -125,11 +127,16 @@ export function ChatBox({ currentChat, isChatSelected, handleSendMessage, conver
 
 
     return (
-        <div className="chat-box w-[70%] hidden md:block">
+        <div className={`chat-box md:w-[50%] lg:w-[70%] ${isChatSelected ? "w-full md:block" : "hidden md:block"}`}>
             {isChatSelected ? (
                 <div className="chat-box-header">
-                    <div className="flex justify-between bg-[#EFE2CB] px-10">
+                    <div className="flex justify-between bg-[#EFE2CB] px-5 md:px-10">
                         <div className="border-b-[1px] py-[10px] flex items-center gap-5">
+                            <IoMdArrowBack 
+                                className="text-[20px] block md:hidden"
+                                onClick={() => setIsChatSelected(false)}
+                            />
+
                             <div
                                 className="h-[4rem] w-[4rem] rounded-full"
                                 style={{ backgroundImage: `url(${user?.image ? user.image : "../src/assets/images/businesswoman-posing.jpg"})`, backgroundSize: "cover" }}
@@ -164,10 +171,10 @@ export function ChatBox({ currentChat, isChatSelected, handleSendMessage, conver
                 </div>
             ) : (
                 <div
-                    className="h-full opacity-80 flex-col justify-end pb-[3rem] gap-4 items-center hidden md:flex bg-[#f0ece5]"
-                    style={{ backgroundImage: "url('../src/assets/images/2193-removebg.png')", backgroundSize: "contain", backgroundPosition: 'center', boxShadow: "" }}
+                    className="h-full opacity-80 flex-col justify-end md:pb-[5rem] lg:pb-[3rem] gap-4 items-center hidden md:flex bg-[#f0ece5]"
+                    style={{ backgroundImage: "url('../src/assets/images/2193-removebg.png')", backgroundSize: "contain", backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
                 >
-                    <p className="text-4xl items-center font-gillroy text-[#000000b2]">Know each other, and love each other</p>
+                    <p className="text-2xl lg:text-4xl items-center font-gillroy text-[#000000b2]">Know each other, and love each other</p>
                     <p className="text-[#0000007e] text-lg flex items-center gap-2">
                         <IoShieldCheckmark className="text-shadow" />
                         Your chat will be safe with us

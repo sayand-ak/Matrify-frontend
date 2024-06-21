@@ -68,7 +68,7 @@ export function ChatInput({ handleSendMessage, receiverId }: ChatInputProps) {
     }
 
     return (
-        <div className="absolute bottom-0 w-[70%] h-24 bg-[#efe3cb]  flex gap-4 items-center px-10">
+        <div className="absolute bottom-0 w-[100%] md:w-[50%] lg:w-[70%] h-24 bg-[#efe3cb] flex gap-4 items-center px-10">
 
             {/* user selected image preview */}
             {
@@ -157,12 +157,12 @@ export function ChatInput({ handleSendMessage, receiverId }: ChatInputProps) {
                     </div>
                     {
                         inputData !== "" || sendImage ? (
-                            <button onClick={handleSendClick} className="absolute right-10">
+                            <button onClick={handleSendClick} className="absolute md:right-3 lg:right-10">
                                 <IoSendSharp className="text-3xl text-[#A58964]" />
                             </button>
 
                         ): (
-                            <div className={`absolute right-9 flex`}>
+                            <div className={`absolute right-3 lg:right-9 flex`}>
                                 {/* recording component */}
                                 <AudioElement setAudioFile={setAudioFile}/>
                             </div>

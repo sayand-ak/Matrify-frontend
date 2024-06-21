@@ -110,9 +110,9 @@ export function Room() {
 
     return (
         <div className="max-h-[100vh] bg-[#000] overflow-hidden">
-            <div className="header text-[#fff] w-full sticky top-0 bg-[#041E49] h-[10vh] pl-10 font-semibold text-xl drop-shadow-lg flex gap-3 items-center">
+            <div className="header text-[#fff] w-full sticky top-0 bg-[#24292e] h-[10vh] pl-10 font-semibold text-xl drop-shadow-lg flex gap-3 items-center">
                 <IoVideocam className="text-[30px]" />
-                <p>Matrify caller</p>
+                <p>Matrify</p>
             </div>
 
             {
@@ -151,8 +151,8 @@ export function Room() {
             </div>
 
             <div className="relative min-h-[10vh] bg-[#24292E] flex items-center justify-center gap-6 text-white">
-                <span className="absolute left-10 top-8 font-bold flex items-center gap-3">
-                    <SiGoogleclassroom className="text-[25px]" />
+                <span className="absolute hidden md:flex md:left-10 top-8 font-bold items-center gap-3 text-[15px] md:text-[15px]">
+                    <SiGoogleclassroom className="text-[25px]"/>
                     Room: {roomId.id}
                 </span>
                 <button 
@@ -177,6 +177,8 @@ export function Room() {
                 >
                     <ImPhoneHangUp className="text-[30px]" />
                 </button>
+
+                <img src="../src/assets/images/logo.png" alt="" className="h-14 absolute right-0 md:right-10" />
 
             </div>
         </div>

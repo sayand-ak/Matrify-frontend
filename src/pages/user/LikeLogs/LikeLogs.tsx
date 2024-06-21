@@ -72,8 +72,8 @@ export function LikedUsers() {
                 </div>
             ) : (
                 <div 
-                    className="h-full bg-gray-500 w-full opacity-60 text-[30px] font-gillroy flex justify-center items-end font-semibold text-[#a18356]"
-                    style={{backgroundImage: "url('/src/assets/images/28530.jpg')", backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
+                    className="h-full w-full opacity-60 text-[30px] font-gillroy flex justify-center items-end pb-[5rem] font-semibold text-[#a18356]"
+                    style={{backgroundImage: "url('/src/assets/images/28530.jpg')", backgroundSize: '40rem', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
                 >
                     No Likes yet
                 </div>

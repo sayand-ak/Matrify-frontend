@@ -488,3 +488,11 @@ export const deleteUser = createAsyncThunk("/api/deleteUser", async() => {
     }
 });
 
+export const getPossibleFilterValues = createAsyncThunk("/api/getPossibleFilterValues", async(filterKey: string) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/filter-values/${filterKey}`, )
+        return response.data;
+        }catch(error) {
+        return (error as Error).response?.data;
+    }
+});

@@ -78,15 +78,15 @@ export function Login() {
         } else if (!validatePassword(password)) {
           setPasswordError("Password must be at least 6 characters long");
         } else {
-          const response = await dispatch(userLogin({data, password}));
-          console.log(response);
-          
+          const response = await dispatch(userLogin({data, password}));          
           if(response.payload?.success){
             showToast("success", "Login successful", () => {
                 dispatch(setUserCredentials(response.payload.user));
+                
                 localStorage.setItem("userAccess",response.payload.access);
                 localStorage.setItem("userRefresh",response.payload.refresh);
-                if(response.payload.user.profileProgress < 50){
+
+                if(response.payload.user.profileProgress <= 50){
                     navigate("/setProfile");
                 }else{
                     if(response.payload.user.subscribed === true){

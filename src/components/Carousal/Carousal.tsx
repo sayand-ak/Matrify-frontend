@@ -80,7 +80,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
         >
             <div className="flex w-full items-center justify-between px-[5rem] h-10">
                 <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
-                <a href="#" className="flex items-center gap-2 text-[18px] font-semibold">
+                <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
                     view all <MdKeyboardDoubleArrowRight />
                 </a>
             </div>

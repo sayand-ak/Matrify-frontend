@@ -17,7 +17,7 @@ export function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [showNavbar, setShowNavbar] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0)
+    const [lastScrollY, setLastScrollY] = useState(0);
   
     const userData = useAppSelector(state => state.user.user);
 
@@ -84,8 +84,6 @@ export function Home() {
             <Carousal matchBase="profile" matchKey="state" matchData="Kerala" />
 
             <Footer />
-
-            {/* <button onClick={handleLogout}>logout</button> */}
 
         <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
             <div 
