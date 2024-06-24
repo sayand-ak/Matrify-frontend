@@ -9,6 +9,10 @@ import { FaVideoSlash } from "react-icons/fa";
 import { FaVideo } from "react-icons/fa";
 import { useSocket } from "../../../hooks/useSocket";
 import { usePeer } from "../../../hooks/usePeer";
+import { useAppDispatch } from "../../../hooks/useTypedSelectors";
+import { getCallStatus } from "../../../services/videoCallApi";
+import showToast from "../../../components/Toast/Toast";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -20,14 +24,14 @@ export function Room() {
     const [isVideoEnable, setIsVideoEnable] = useState(true);
     const navigate = useNavigate();
     const roomId = useParams();
+    const dispatch = useAppDispatch();    
 
     const handleNewUserJoined = useCallback(async ({ callerId }: { callerId: string }) => {
-        try {         
-            console.log(callerId, "{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}");
-             
-            const offer = await createOffer();
+        try {                      
+            const offer = await createOffer();            
             socket.emit('call-user', { callerId, offer });
             setRemoteUserId(callerId);
+
         } catch (error) {
             console.error("Error handling new user joined:", error);
         }
@@ -39,7 +43,6 @@ export function Room() {
 
             const { from, offer } = data;
             const ans = await createAnswer(offer);
-            console.log(ans);
             
             if (ans) {
                 socket.emit('call-accepted', { from, ans });
@@ -55,8 +58,7 @@ export function Room() {
 
 
     const handleCallAccepted = useCallback(async ({ ans }: {ans: RTCSessionDescriptionInit}) => {
-        try {
-            console.log("Call accepted with answer:", ans);
+        try {            
             if (peer.signalingState === "have-local-offer") {
                 await setRemoteAns(ans);
             } else {
@@ -73,16 +75,17 @@ export function Room() {
                 audio: true,
                 video: true
             });
+            
             setMyStream(stream);
             sendStream(stream);
         } catch (error) {
-            console.log(error, "-==-------------------------");
+            console.log(error, "--------------------------");
         }
     }, [sendStream]);
 
     const handleNegotiation = useCallback(async () => {
         const offer = await createOffer();
-        socket.emit("call-user", { userId: remoteUserId, offer });
+        socket.emit("call-user", { callerId: remoteUserId, offer });
     }, [createOffer, remoteUserId, socket]);
 
     useEffect(() => {        
@@ -96,6 +99,7 @@ export function Room() {
             socket.off("call-accepted", handleCallAccepted);
         }
     }, [handleNewUserJoined, handleCallAccepted, handleIncomingCall, socket]);
+    
 
     useEffect(() => {
         getUserMediaStream();
@@ -107,6 +111,25 @@ export function Room() {
             peer.removeEventListener("negotiationneeded", handleNegotiation);
         }
     }, [handleNegotiation, peer]);
+    
+    const handleRejectCall = useCallback(async() => {
+        const response = await dispatch(getCallStatus(roomId.id || ""));
+        console.log("response",response.payload.data.status);
+        
+        if (response.payload.data.status == "rejected"){
+            showToast("info", "Call rejected", () => {
+                navigate("/chat");
+            });
+        } else if(response.payload.data.status == "ended") {
+            showToast("info", "Call ended", () => {
+                navigate("/chat");
+            });
+        }
+    }, []);
+    
+    useEffect(() => {
+        handleRejectCall();
+    }, [handleRejectCall])
 
     return (
         <div className="max-h-[100vh] bg-[#000] overflow-hidden">
@@ -171,7 +194,7 @@ export function Room() {
                 <button
                     className="bg-red-500 rounded-3xl font-semibold text-[20px] px-4 py-2"
                     onClick={() => {
-                        hangUp();
+                        hangUp(roomId.id || "");
                         navigate("/chat")
                     }}
                 >
@@ -181,6 +204,7 @@ export function Room() {
                 <img src="../src/assets/images/logo.png" alt="" className="h-14 absolute right-0 md:right-10" />
 
             </div>
+            <ToastContainer/>
         </div>
     )
 }

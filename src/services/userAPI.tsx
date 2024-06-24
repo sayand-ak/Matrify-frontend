@@ -24,14 +24,12 @@ axiosInstance.interceptors.request.use(async(config) => {
     const isUserAllowed = await checkIfUserIsBlocked();
 
     if (!isUserAllowed) {
-        
-        alert("user is blocked.....");
         window.location.href = "/"
         return Promise.reject("user is blocked");
     }
 
     const token = localStorage.getItem("userAccess");
-    console.log('log from request user api', token);
+    // console.log('log from request user api', token);
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -46,15 +44,15 @@ axiosInstance.interceptors.response.use((response) => {
     async (error) => {
         const originalRequest = error.config;
         const refreshToken = localStorage.getItem("userRefresh");
-        console.log(error.response.status, "----------", originalRequest, "--------", refreshToken);
+        // console.log(error.response.status, "----------", originalRequest, "--------", refreshToken);
 
         if (error.response.status === 401 && !originalRequest._retry && refreshToken) {
-            console.log("from user axios.........");
+            // console.log("from user axios.........");
 
             originalRequest._retry = true;
             try {
                 const newAccessToken = await getNewAccessToken(refreshToken);
-                console.log(newAccessToken, "new access token from user axios");
+                // console.log(newAccessToken, "new access token from user axios");
 
                 localStorage.setItem('userAccess', newAccessToken);
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -63,7 +61,7 @@ axiosInstance.interceptors.response.use((response) => {
                 return Promise.reject(error);
             }
         }
-        console.log("user error response interceptor");
+        // console.log("user error response interceptor");
         return Promise.reject(error);
 });
 
@@ -71,7 +69,7 @@ async function getNewAccessToken(refreshToken: string) {
     // Implement your logic to fetch a new access token using the refresh token
     // send a POST request to your backend API with the refresh token
     const response = await axiosInstance.post(`${API_URL}/refresh-token`, { refreshToken }, { withCredentials: true });
-    console.log("response from refresh token route--------------------", response);
+    // console.log("response from refresh token route--------------------", response);
 
     return response.data.accessToken;
 }

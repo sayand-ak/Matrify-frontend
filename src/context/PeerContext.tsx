@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "react";
+import { useAppDispatch } from "../hooks/useTypedSelectors";
+import { changeCallStatus } from "../services/videoCallApi";
 
 interface PeerContextType {
     peer: RTCPeerConnection;
@@ -7,7 +9,7 @@ interface PeerContextType {
     setRemoteAns: (ans: RTCSessionDescriptionInit) => Promise<void>;
     sendStream: (stream: MediaStream | null) => void;
     remoteStream: MediaStream | null;
-    hangUp: () => void;
+    hangUp: (roomId: string) => void;
 }
 
 interface PeerProviderProps {
@@ -19,6 +21,8 @@ export const PeerContext = React.createContext<PeerContextType>({} as PeerContex
 export function PeerProvider({ children }: PeerProviderProps) {
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
+    const dispatch = useAppDispatch();
+
     const peer = useMemo(() => {
         const pc = new RTCPeerConnection({
             iceServers: [
@@ -28,7 +32,7 @@ export function PeerProvider({ children }: PeerProviderProps) {
             ],
         });
 
-        pc.addEventListener("track", (event: RTCTrackEvent) => {
+        pc.addEventListener("track", (event) => {
             setRemoteStream(event.streams[0]);
         });
 
@@ -43,9 +47,9 @@ export function PeerProvider({ children }: PeerProviderProps) {
     };
 
     const createAnswer = async (offer: RTCSessionDescriptionInit): Promise<RTCSessionDescriptionInit> => {
-        await peer.setRemoteDescription(new RTCSessionDescription(offer));
+        await peer.setRemoteDescription(offer);
         const answer = await peer.createAnswer();
-        await peer.setLocalDescription(new RTCSessionDescription(answer));
+        await peer.setLocalDescription(new RTCSessionDescription(answer));        
         return answer;
     };
 
@@ -58,6 +62,8 @@ export function PeerProvider({ children }: PeerProviderProps) {
     };
 
     const sendStream = (stream: MediaStream | null): void => {
+        console.log("stream in context", stream);
+        
         if (stream) {
             stream.getTracks().forEach((track) => {
                 peer.addTrack(track, stream);
@@ -71,22 +77,34 @@ export function PeerProvider({ children }: PeerProviderProps) {
         try {
             const stream = event.streams[0];
             setRemoteStream(stream);
+            
         } catch (error) {
             console.log(error, "handleTrackEvent");
         }
     }, []);
 
     useEffect(() => {
+        console.log("from use effect");
         peer.addEventListener("track", handleTrackEvent);
         return () => {
             peer.removeEventListener("track", handleTrackEvent);
         };
     }, [handleTrackEvent, peer]);
 
-    const hangUp = (): void => {
-        peer.close();
-        setRemoteStream(null);
+    
+
+    const hangUp = async(roomId: string) => {
+        const response = await dispatch(changeCallStatus({roomId: roomId, status: "ended"}));
+        if(response.payload.success) {
+            peer.close();
+            setRemoteStream(null);
+        } else {
+            alert("something went wrong")
+        }
     };
+
+    console.log(remoteStream, "remoteStream");
+    
 
     return (
         <PeerContext.Provider value={{ peer, createOffer, createAnswer, setRemoteAns, sendStream, remoteStream, hangUp }}>

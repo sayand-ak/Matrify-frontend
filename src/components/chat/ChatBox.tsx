@@ -13,7 +13,7 @@ import { VideoCallData } from "../../typings/videoCall/videoCall";
 import { newCall } from "../../services/videoCallApi";
 import { socket } from "../../services/socket";
 import { SocketContext } from "../../context/SocketContext";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 
 
@@ -42,7 +42,7 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
     
     const curUser = useAppSelector(state => state.user.user);
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     
       //formatting the last received date
       const getLastReceivedTime = useCallback(() => {
@@ -103,7 +103,6 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
             const newVideoCall = await dispatch(newCall(videoCallData));
             if(newVideoCall.payload.success) {
                 const callData = newVideoCall.payload.data;
-
                 socket.emit('join-room', {callerId: callData.caller, receiverId: callData.receiver, roomId: callData.roomId});
                 
             } else {
@@ -114,23 +113,11 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
         }
     }
 
-    useEffect(() => {
-        socket.on("joined-room", ({ roomId }) => {
-           navigate(`/room/${roomId}`);
-        });
-        
-        return () => {
-            socket.off("joined-room");
-        }
-    }, [navigate, socket]);
-
-
-
     return (
         <div className={`chat-box md:w-[50%] lg:w-[70%] ${isChatSelected ? "w-full md:block" : "hidden md:block"}`}>
             {isChatSelected ? (
                 <div className="chat-box-header">
-                    <div className="flex justify-between bg-[#EFE2CB] px-5 md:px-10">
+                    <div className="relative flex justify-between bg-[#EFE2CB] px-5 md:px-10">
                         <div className="border-b-[1px] py-[10px] flex items-center gap-5">
                             <IoMdArrowBack 
                                 className="text-[20px] block md:hidden"

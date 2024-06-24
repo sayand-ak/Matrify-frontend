@@ -7,11 +7,13 @@ import { Loader } from "../loader/Loader";
 import { CustomModal } from "../modal/CustomModal";
 import { useState } from "react";
 import { ReportUserType } from "../../typings/reportUser/reportUser";
+import { FeedbackResponse } from "../../typings/feedback/feedback";
+import { formatDate } from "../../utils/formateDate";
 
 
 interface TableProps {
     headers: string[];
-    data: (Users | Subscription | Offer | PaymentHistory | ReportUserType)[]; 
+    data: (Users | Subscription | Offer | PaymentHistory | ReportUserType | FeedbackResponse)[]; 
     isLoading: boolean;
     handlePagination: (direction: string) => void;
     paginationCount: number;
@@ -122,21 +124,21 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
 
                     {type === "history" && (
                             <tbody>{
-                                        data.map((paymentHistory, index) => (
-                                            "subscription" in paymentHistory &&  paymentHistory.subscription.map((subscription, subIndex) => (
-                                            <tr className="text-center h-[60px]" key={`${index}-${subIndex}`}>
-                                                <td className="py-2 px-4 border-b">{subscription.subId}</td>
-                                                <td className="py-2 px-4 border-b">{paymentHistory.username}</td>
-                                                <td className="py-2 px-4 border-b">{subscription.amount}</td>
-                                                <td className="py-2 px-4 border-b">
-                                                {subscription.createdAt ? new Date(subscription.createdAt).toLocaleDateString() : 'N/A'}
-                                                </td>
-                                                <td className={`py-2 px-4 border-b`}>
-                                                {subscription.expiresIn ? new Date(subscription.expiresIn).toLocaleDateString() : 'N/A'}
-                                                </td>
-                                            </tr>
-                                            ))
+                                    data.map((paymentHistory, index) => (
+                                        "subscription" in paymentHistory &&  paymentHistory.subscription.map((subscription, subIndex) => (
+                                        <tr className="text-center h-[60px]" key={`${index}-${subIndex}`}>
+                                            <td className="py-2 px-4 border-b">{subscription.subId}</td>
+                                            <td className="py-2 px-4 border-b">{paymentHistory.username}</td>
+                                            <td className="py-2 px-4 border-b">{subscription.amount}</td>
+                                            <td className="py-2 px-4 border-b">
+                                            {subscription.createdAt ? new Date(subscription.createdAt).toLocaleDateString() : 'N/A'}
+                                            </td>
+                                            <td className={`py-2 px-4 border-b`}>
+                                            {subscription.expiresIn ? new Date(subscription.expiresIn).toLocaleDateString() : 'N/A'}
+                                            </td>
+                                        </tr>
                                         ))
+                                    ))
                                     }
                                 {
                                     data.length == 0 && (<p className="h-10 font-semibold flex items-center justify-center">No offers added Yet!</p>)
@@ -180,6 +182,35 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                         </tbody>
                             )
                         }
+
+                        {
+                            type === "feedback" && (
+                                <tbody>
+                                    {(data as FeedbackResponse[]).length > 0 && data.map((feedback, index) => (
+                                        <tr className="text-center h-[60px]" key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{"userId" in feedback && feedback.userId.username}</td>
+                                            <td>{"partnerId" in feedback && feedback.partnerId.username}</td>
+                                            <td className="truncate max-w-52">{"story" in feedback && feedback.story}</td>
+                                            <td>
+                                                <div 
+                                                    className="w-16 h-16 rounded-full bg-cover bg-center bg-no-repeat" 
+                                                    style={{ backgroundImage: `url(${"image" in feedback && feedback.image})` }} 
+                                                />
+                                            </td>
+                                            <td>{formatDate("createdAt" in feedback && feedback.createdAt ? feedback.createdAt.toString() : "")}</td>
+                                        </tr>
+                                    ))}
+                                    {data.length === 0 && (
+                                        <tr>
+                                            <td colSpan={6} className="h-10 font-semibold flex items-center justify-center">No feedbacks added yet!</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            )
+                        }
+
+
                 </table>
             }
             <CustomModal  isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>

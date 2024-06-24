@@ -60,6 +60,10 @@ import { ToastContainer } from "react-toastify";
 import { CgUnblock } from "react-icons/cg";
 import { BlockedUsers } from "../BlockedUsers/BlockedUsers";
 import { LikedUsers } from "../LikeLogs/LikeLogs";
+import { CallHistory } from "../CallHistory/CallHistory";
+import { FeedbackDiv } from "../../../components/feedbackDiv/FeedbackDiv";
+import { getFeedback } from "../../../services/feedbackAPI";
+import { FeedbackResponse } from "../../../typings/feedback/feedback";
 
 
 
@@ -74,6 +78,7 @@ export function Profile() {
     const [showPayment, setShowPayment] = useState<boolean>(false);
     const [showInterestLogs, setShowInterestLogs] = useState<boolean>(false);
     const [showLikedUsers, setShowLikedUsers] = useState<boolean>(false);
+    const [showCallHistory, setShowCallHistory] = useState<boolean>(false);
 
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [showBlockedUsers, setShowBlockedUsers] = useState<boolean>(false);
@@ -81,6 +86,8 @@ export function Profile() {
     const [userData, setUserData] = useState<{ profile?: UserProfile; family?: UserFamily; profession?: UserProfession }>();
     const [preferences, setPreferences] = useState<string>("");
     const [preferencesError, setPreferencesError] = useState("");
+
+    const [userFeedback, setUserFeedback] = useState<FeedbackResponse | null>(null)
 
     const [sidebarToggle, setSidebarToggle] = useState(true);
     const [selectedTab, setSelectedTab] = useState<string>("profile");
@@ -100,6 +107,12 @@ export function Profile() {
     const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false);
 
     const [isLoggedUser, setIsLoggedUser] = useState<boolean>(false);
+
+    const hasAcceptedInterest = userData?.profile &&
+    (
+        userData.profile.interestSend.find((interest) => interest.status === "accepted") ||
+        userData.profile.interestReceived.find((interest) => interest.status === "accepted")
+    );
 
 
     const handleAddPreferencesClick = () => {
@@ -151,11 +164,18 @@ export function Profile() {
             setShowLikedUsers(false);
         }
 
+        if (itemName === "Call logs") {
+            setShowCallHistory(true);
+        } else {
+            setShowCallHistory(false);
+        }
+        
         if (itemName === "Logout") {
             dispatch(userLogout());
             navigate("/login")
         }
     };
+            
 
 
     useEffect(() => {
@@ -187,6 +207,7 @@ export function Profile() {
 
     }, [curUser?._id, dispatch, id, userData?.profile?._id]);
 
+
     useEffect(() => {
         if (userData?.profile && userData?.profile.interestReceived.some((interestData: InterestReceived) => interestData.sendBy === curUser?._id && interestData.status === "pending")) {
             setSendInterestButtonLabel("Waiting to accept...");
@@ -203,6 +224,18 @@ export function Profile() {
         event.preventDefault();
         setSelectedTab(tab);
     }
+
+    // useEffect fetch feedback data
+    useEffect(()=>{
+        async function getFeedbackDetails(){
+            const res = await dispatch(getFeedback());
+            if(res.payload.data){
+                setUserFeedback(res.payload.data);
+            }
+        }
+
+        getFeedbackDetails();
+    },[dispatch])
 
 
     const handleAddPreferences = async () => {
@@ -616,10 +649,10 @@ export function Profile() {
                                             (<div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
                                                 <h1 className="text-[15px] md:text-[18px] text-center font-semibold">Add your Preferences</h1>
                                                 <button
-                                                    className={`border-[4px] border-[#EAC991] rounded-full ${isFormVisible ? 'hidden' : ''}`}
+                                                    className={`border-[5px] border-[#EAC991] rounded-full ${isFormVisible ? 'hidden' : ''}`}
                                                     onClick={handleAddPreferencesClick}
                                                 >
-                                                    <LuPlus className="text-[70px] text-[#EAC991]" />
+                                                    <LuPlus className="text-[70px] text-[#e2c799]" />
                                                 </button>
 
                                                 <div className={`items-center justify-center flex-col gap-6 w-full ${isFormVisible ? 'flex' : 'hidden'
@@ -657,6 +690,14 @@ export function Profile() {
                                             </div>)
                                         }
 
+                                        {
+                                            hasAcceptedInterest && (
+                                                <div>
+                                                    <FeedbackDiv matchSend={userData.profile?.interestSend} matchReceived={userData.profile?.interestReceived} userFeedback={userFeedback}/>
+                                                </div>
+                                            )
+                                        }
+
                                     </div>
                                 )
                             }
@@ -689,6 +730,12 @@ export function Profile() {
                 {
                     showLikedUsers && (
                         <LikedUsers/>
+                    )
+                }
+
+                {
+                    showCallHistory && (
+                        <CallHistory/>
                     )
                 }
             </div>

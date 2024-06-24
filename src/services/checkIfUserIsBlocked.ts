@@ -10,8 +10,7 @@ export async function checkIfUserIsBlocked() {
         const response = await axios.get(`${API_URL}/check-report-user`, {
             withCredentials: true,
         });
-        console.log(response, "response from user axios-----------------");
-
+        
         if (response.status === 403) { 
             return false; 
         }

@@ -30,10 +30,10 @@ export function MessageReceived ({ message, createdAt }: MessageReceivedProps) {
             {
                 message.type == "image" && 
                 <div 
-                    className="message-receive-message-container border-t-[12px] border-[5px] border-[#a68964]  h-[250px] w-[250px] mt-5 px-1 py-1 rounded-md relative text-white ml-14"
+                    className="message-receive-message-container border-t-[19px] border-[5px] border-[#ccad77]  h-[250px] w-[250px] mt-5 px-1 py-1 rounded-md relative text-white ml-14"
                     style={{backgroundImage: `url(${message.file})`, backgroundSize: "cover", backgroundRepeat: "no-repeat"}}
                 >
-                    <VscTriangleDown className="absolute text-[30px] top-[-21.38px] left-[-17px] text-[#ccad77]" />
+                    <VscTriangleDown className="absolute text-[30px] top-[-28.3px] left-[-17px] text-[#ccad77]" />
                 </div>
 
             }

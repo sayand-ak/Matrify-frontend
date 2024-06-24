@@ -12,6 +12,7 @@ import "./Chat.css"
 import { userProfile } from "../../../services/userAPI";
 import { UserData } from "../../../typings/user/userTypes";
 import { useNavigate } from "react-router-dom";
+import { changeCallStatus } from "../../../services/videoCallApi";
 
 export function Chat() {
     const [currentChat, setCurrentChat] = useState<Message[]>([]);
@@ -24,6 +25,9 @@ export function Chat() {
     const [roomId, setRoomId] = useState<string>("");
 
     const userId = useAppSelector(state => state.user.user?._id);
+
+    const curUser = useAppSelector(state => state.user.user);
+
     const dispatch = useAppDispatch();
     
     const navigate = useNavigate();
@@ -47,9 +51,9 @@ export function Chat() {
 
         socket.on('notify-receiver', async(data) => {
             if (data.receiverId == userId) {
-                
+
                 const userData = await dispatch(userProfile(data.callerId));
-                if(userData.payload?.success){
+                if(userData.payload?.success){                    
                     setCallingUser(userData.payload.data[0]);
                    
                     setShowCallNotifier(true);
@@ -98,9 +102,7 @@ export function Chat() {
     }
     
     async function handleSendMessage(data: MessageData) {
-        const formData = new FormData();
-        console.log(data);
-        
+        const formData = new FormData();        
     
         // Add common fields to FormData
         formData.append('conversationId', conversationId);
@@ -139,19 +141,56 @@ export function Chat() {
             alert("Failed to send message");
         }
     }
-    console.log(callingUser, userId, roomId);
-    
 
-    function handleAcceptCall(){
+
+    async function handleAcceptCall(){
         if(roomId) {
-            socket.emit('join-room', {callerId: userId , receiverId:  callingUser._id, roomId: roomId});
+            const response = await dispatch(changeCallStatus({roomId: roomId, status: "accepted"}));
+            if(response.payload?.success) {
+                socket.emit('join-room', {callerId: userId , receiverId:  callingUser._id, roomId: roomId});
+            } else {
+                alert("Failed to accept call");
+            }
         } else {
             alert("Failed to join room");
         }
     }  
 
+    async function handleRejectCall() {
+        if(roomId) {
+            const response = await dispatch(changeCallStatus({roomId: roomId, status: "rejected"}));
+            if(response.payload?.success) {
+                setShowCallNotifier(false);
+            } else {
+                alert("Failed to reject call");
+            }
+        } else {
+            alert("Failed to leave room");
+        }
+    }
+
+    if (curUser && !curUser.subscribed) {
+        return (
+            <div className="h-[100vh] w-[100vw] flex items-center justify-center">
+                <div className="max-w-md bg-white p-8 rounded-lg shadow-lg">
+                    <h1 className="text-2xl font-bold mb-4">Subscribe to unlock chat features</h1>
+                    <p className="text-lg mb-4">Subscribe now to enjoy unlimited chatting and more features!</p>
+                    <div className="flex justify-between">
+                        <a href="/payment" className="bg-[#C2A170] hover:bg-[#b38641] text-white font-bold py-2 px-4 rounded">
+                            Subscribe Now
+                        </a>
+                        <a href={`/profile/${curUser._id}`} className="border-[1px] border-[#C2A170]  text-[#C2A170] font-bold py-2 px-4 rounded">
+                            Back
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="h-[100vh] w-[100vw] flex overflow-hidden">
+        <div className={`h-[100vh] w-[100vw] flex overflow-hidden`}>
             <ChatMenu 
                 handleMenuItemClick={handleMenuItemClick}
                 conversations={conversations}
@@ -167,7 +206,7 @@ export function Chat() {
             {
                 showCallNotifier && (
                     <>
-                        <div className={`call-notifier flex items-center justify-between px-12 ${showCallNotifier ? 'show' : ''}`}>
+                        <div className={`call-notifier w-[80%] md:w-[50%] lg:w-[40%] flex items-center justify-between px-12 ${showCallNotifier ? 'show' : ''}`}>
                             <div className="flex gap-3 items-center">
                                 <div 
                                     className="h-14 w-14 rounded-full bg-blue-700"
@@ -185,7 +224,10 @@ export function Chat() {
                                 >
                                     <IoMdCall className="text-[25px]"/>
                                 </button>
-                                <button className="bg-red-500 rounded-full h-12 w-12 flex items-center justify-center">
+                                <button 
+                                    className="bg-red-500 rounded-full h-12 w-12 flex items-center justify-center"
+                                    onClick={() => handleRejectCall()}
+                                >
                                     <HiPhoneMissedCall className="text-[25px]"/>
                                 </button>
                             </div>

@@ -55,10 +55,10 @@ export function PaymentHistory ({userData}:{userData?: {
 
             }
             {
-                activeExpirationDay <= 0 && (
+                (activeExpirationDay <= 0) && (
                     <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
                         <p className="text-[18px] font-semibold text-red-700 ">
-                            {activeExpirationDay === 0
+                            {activeExpirationDay === 0 
                                 ? `Your ${activeExpirationType} subscription expired today`
                                 : `Your ${activeExpirationType} subscription expired ${Math.abs(activeExpirationDay)} day(s) ago`
                             }
@@ -71,7 +71,7 @@ export function PaymentHistory ({userData}:{userData?: {
             <div className="w-full p-12 h-[90vh] overflow-scroll">
                     {paymentData?.map((payment, index) => {
                         const expiresInDate = new Date(payment.expiresIn?.toString() || 0);
-                        const isExpired = expiresInDate.getTime() < Date.now();
+                        const isExpired = expiresInDate.getTime() < Date.now();                        
                         const daysDifference : number|string|null = expiresInDate ? Math.ceil((expiresInDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
                         const status = isExpired ? "Expired" : "Active";
                         const statusClass = isExpired ? "text-white bg-[#F6DCAC]" : "text-white bg-[#E7C68F]";

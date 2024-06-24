@@ -39,6 +39,7 @@
     "react-router-dom": "^6.23.0",
     "react-timer-hook": "^3.0.7",
     "react-toastify": "^10.0.5",
+    "semantic-ui-react": "^2.1.5",
     "socket.io-client": "^4.7.5",
     "yup": "^1.4.0"
   },

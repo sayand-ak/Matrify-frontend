@@ -24,6 +24,7 @@ import { SearchBox } from "../../../components/searchbox/searchBox";
 import { AdminPayment } from "../Payment/Payment";
 import { ListUser } from "../ListUsers/ListUsers";
 import { ReportUser } from "../ReportUser/ReportUser";
+import { ListFeedback } from "../ListFeedbacks/ListFeedbacks";
 
 
 
@@ -32,6 +33,7 @@ export function Home() {
     const [showDashboard, setShowDashboard] = useState(true);
     const [showAdminPayment, setShowAdminPayment] = useState(false);
     const [showReportUser, setShowReportUser] = useState(false);
+    const [showFeedbacks, setShowFeedbacks] = useState(false);
 
     const [search, setSearch] = useState("");
     const [searchUserData, setSearchUserData] = useState<Users[]>([]);
@@ -79,6 +81,12 @@ export function Home() {
             setShowReportUser(true);
         } else {
             setShowReportUser(false);
+        }
+
+        if (itemName === "Feedback") {
+            setShowFeedbacks(true);
+        } else {
+            setShowFeedbacks(false);
         }
     };
 
@@ -160,6 +168,10 @@ export function Home() {
                         {
                             showReportUser && 
                             <ReportUser value={value}/>
+                        }
+                        {
+                            showFeedbacks && 
+                            <ListFeedback/>
                         }
 
                     </div>

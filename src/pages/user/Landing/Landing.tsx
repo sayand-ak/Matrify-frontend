@@ -8,6 +8,7 @@ import { LuMessagesSquare } from "react-icons/lu";
 import { IoIosVideocam } from "react-icons/io";
 import { motion } from 'framer-motion';
 import { containerVariants } from "../../../utils/animations/animation1";
+import { FeedbackSlider } from "../../../components/FeedbackSlider/FeedbackSlider";
 
 
 export function Landing(){
@@ -142,10 +143,21 @@ export function Landing(){
                 whileInView="visible"
                 viewport={{ once: true }} 
             >
+
+                <FeedbackSlider/>
+            </motion.div>
+            
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }} 
+            >
                 <div className="banner4-div font-quote relative h-[50vh] md:h-[90vh]">
                     <p className="font-semibold w-[60%] text-[#0000009d] text-[25px] absolute top-[40%] left-20 md:text-[50px]">Join hearts, weave destinies - where love find its forever.</p>
                 </div>
             </motion.div>
+
                 
             <Footer/>
 
