@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 
 
-export function PaymentSuccess(){
+function PaymentSuccess(){
     const { type } = useParams();
 
     const tickSvg = <svg width="26" height="14" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,3 +40,5 @@ export function PaymentSuccess(){
         </div>
     )
 }
+
+export default PaymentSuccess;

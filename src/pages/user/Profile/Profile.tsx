@@ -7,12 +7,12 @@ import { HiOutlineCurrencyRupee } from "react-icons/hi2";
 import { CiChat1 } from "react-icons/ci";
 import { MdOutlineBlock } from "react-icons/md";
 import { IconType } from "react-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Navbar from "../../../components/navbar/Navbar";
 import { LuPlus } from "react-icons/lu";
 import { SlCalender } from "react-icons/sl";
 import "./Profile.css";
-import { addPreferences, blockUser, likeUser, sendInterest, unblockUser, userProfile } from "../../../services/userAPI";
+import { addPreferences, blockUser, getUserNotifications, likeUser, sendInterest, unblockUser, userProfile } from "../../../services/userAPI";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profile/professionDataType";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -64,6 +64,7 @@ import { CallHistory } from "../CallHistory/CallHistory";
 import { FeedbackDiv } from "../../../components/feedbackDiv/FeedbackDiv";
 import { getFeedback } from "../../../services/feedbackAPI";
 import { FeedbackResponse } from "../../../typings/feedback/feedback";
+import { NotificationType } from "../../../typings/notifications/notificationType";
 
 
 
@@ -72,8 +73,7 @@ interface RouteParams extends Record<string, string | undefined> {
     user: string
 }
 
-export function Profile() {
-
+function Profile() {
     const [showProfile, setShowProfile] = useState<boolean>(true);
     const [showPayment, setShowPayment] = useState<boolean>(false);
     const [showInterestLogs, setShowInterestLogs] = useState<boolean>(false);
@@ -108,23 +108,67 @@ export function Profile() {
 
     const [isLoggedUser, setIsLoggedUser] = useState<boolean>(false);
 
-    const hasAcceptedInterest = userData?.profile &&
-    (
-        userData.profile.interestSend.find((interest) => interest.status === "accepted") ||
-        userData.profile.interestReceived.find((interest) => interest.status === "accepted")
-    );
+    const [notifications, setNotifications] = useState<NotificationType | null>(null);
+
+
+    const hasAcceptedInterest = useMemo(() => {
+        if (!userData?.profile) return false;
+        const { interestSend, interestReceived } = userData.profile;
+    
+        return (
+            interestSend.some((interest) => interest.status === "accepted") ||
+            interestReceived.some((interest) => interest.status === "accepted")
+        );
+    }, [userData]);
 
 
     const handleAddPreferencesClick = () => {
         setIsFormVisible(!isFormVisible);
     };
 
-    const items: Array<{ name: string, icon: IconType }> = [
+    // Convert chat object to Map if needed
+    const chatMap = useMemo(() => {
+        if (notifications && notifications.chat) {
+            return notifications.chat instanceof Map
+                ? notifications.chat
+                : new Map(Object.entries(notifications.chat));
+        }
+        return new Map();
+    }, [notifications]);
+
+    // Check if any value in the chat map is greater than 1
+    const UnreadMessages = useMemo(() => {
+        let total = 0;
+        for (const value of chatMap.values()) {
+            total += value;
+        }
+        return total;
+    }, [chatMap]);
+
+    const hasInterestRequest = useMemo(() => {        
+        if(notifications && notifications?.interestReceived.length > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }, [notifications])
+    
+    const handleGetNotifications = useCallback(async() => {
+      const response = await dispatch(getUserNotifications());
+      setNotifications(response.payload.data);
+      
+    }, [dispatch])
+
+    useEffect(() => {
+      handleGetNotifications();
+    }, [handleGetNotifications]);
+
+    const items: Array<{ name: string, icon: IconType, notificationCount?: number  }> = [
         { name: "Profile", icon: CiUser },
-        { name: "Interest Shared", icon: CiPercent },
+        { name: "Interest Shared", icon: CiPercent, notificationCount: hasInterestRequest },
         { name: "Call logs", icon: PiPhoneCallThin },
         { name: "Payments", icon: HiOutlineCurrencyRupee },
-        { name: "Chat", icon: CiChat1 },
+        { name: "Chat", icon: CiChat1, notificationCount: UnreadMessages },
         { name: "Likes", icon: CiHeart },
         { name: "Blocked", icon: MdOutlineBlock },
     ];
@@ -175,9 +219,8 @@ export function Profile() {
             navigate("/login")
         }
     };
+
             
-
-
     useEffect(() => {
         const fetchUserData = async () => {
             if (id) {
@@ -402,11 +445,13 @@ export function Profile() {
                                                     }
                                                 </h1>
 
-                                                <h1
-                                                    className="text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"
-                                                >
-                                                    {userData?.profile?.email}
-                                                </h1>
+                                                {isLoggedUser && (
+                                                    <h1
+                                                        className="text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"
+                                                    >
+                                                        {userData?.profile?.email}
+                                                    </h1>
+                                                )}
 
                                                 <h1
                                                     className="flex items-center gap-2 text-[13px] md:text-[12px] lg:text-[14px] text-[#00000069]"
@@ -693,7 +738,7 @@ export function Profile() {
                                         {
                                             hasAcceptedInterest && (
                                                 <div>
-                                                    <FeedbackDiv matchSend={userData.profile?.interestSend} matchReceived={userData.profile?.interestReceived} userFeedback={userFeedback}/>
+                                                    <FeedbackDiv matchSend={userData && userData.profile?.interestSend} matchReceived={userData && userData.profile?.interestReceived} userFeedback={userFeedback}/>
                                                 </div>
                                             )
                                         }
@@ -744,3 +789,6 @@ export function Profile() {
         </div>
     )
 }
+
+
+export default Profile;

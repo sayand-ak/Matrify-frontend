@@ -162,3 +162,56 @@ export const updateReportStatus = createAsyncThunk("/api/updateReportStatus", as
     }
 });
 
+export const dashboardUserCount = createAsyncThunk("/api/dashboardUserCount", async () => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/dashboard-user-count`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});
+
+export const dashboardUserRate = createAsyncThunk("/api/dashboardUserRate", async (type: string) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/dashboard-user-rate/${type}`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});
+
+export const findUser = createAsyncThunk("/api/findUser", async (id: string) => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/find-user/${id}`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});
+
+export const dashboardPaymentRate = createAsyncThunk("/api/dashboardPaymentRate", async () => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/payment-method-rate`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});
+
+export const dashboardTotalRevenue = createAsyncThunk("/api/dashboardTotalRevenue", async () => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/dashboard-total-revenue`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});
+
+export const salesReport = createAsyncThunk("/api/salesReport", async (type: string = "") => {
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/sales-report/${type}`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});

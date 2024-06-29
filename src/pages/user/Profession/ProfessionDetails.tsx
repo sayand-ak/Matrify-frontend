@@ -8,7 +8,7 @@ import showToast from "../../../components/Toast/Toast";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-export function ProfessionDetails() {
+function ProfessionDetails() {
 
     const educationOptions = ["High School", "Bachelor's Degree", "Master's Degree", "Doctorate"];
     const employmentOptions = ["Employed", "Unemployed", "Self-employed"];
@@ -164,3 +164,5 @@ export function ProfessionDetails() {
         </div>
     );
 }
+
+export default ProfessionDetails;;

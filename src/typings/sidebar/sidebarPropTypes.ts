@@ -6,6 +6,8 @@ export interface SidebarItemProps {
     className?: string;
     onClick?: () => void;
     selected: boolean;
+    notification?: boolean; 
+    notificationCount?: number
 }
 
 export interface SidebarProps {
@@ -13,6 +15,7 @@ export interface SidebarProps {
     items: {
         name: string;
         icon: IconType;
+        notificationCount?: number
     }[];
     onClickItem: (itemName: string) => void;
 }

@@ -61,7 +61,7 @@ export function ListFeedback() {
             exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="table-container h-[fit-content] mt-5 flex rounded-[10px] overflow-x-auto">
+            <div className="table-container h-[fit-content] mt-10 mx-10 flex rounded-[10px] overflow-x-auto">
                 <Table
                     headers={headers}
                     data={feedbacks}

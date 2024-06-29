@@ -13,6 +13,7 @@ interface InterestSend {
     sendTo: string;
     sendOn: Date;
     status: string;
+    viewed?: boolean
 }
 
 interface InterestReceived {

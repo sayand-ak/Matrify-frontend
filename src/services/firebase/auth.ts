@@ -1,8 +1,7 @@
-import { RecaptchaVerifier, getAuth } from 'firebase/auth';
+import { RecaptchaVerifier, getAuth} from 'firebase/auth';
 import { initializeApp } from "firebase/app";
 
-
-//firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "matrify-cd3bc.firebaseapp.com",
@@ -14,29 +13,28 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase outside the function
-initializeApp(firebaseConfig);
-const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 // Existing recaptchaVerifier variable
 let recaptchaVerifier: RecaptchaVerifier | null = null;
 
 // Function to initialize RecaptchaVerifier
-export function onSignInSubmit(signUpBtn: HTMLButtonElement | null) {
-  
-  console.log("btn-------",signUpBtn);
-  
-    if (signUpBtn != null) {
-      
-      recaptchaVerifier = new RecaptchaVerifier(auth, signUpBtn, {
-          'size': 'invisible',
-          "callback": (response: unknown) => {
-              return { auth, recaptchaVerifier, response };
-          }
-      });
+export function onSignInSubmit(signUpBtn: HTMLButtonElement | null) {  
+  if (signUpBtn != null) {
+    recaptchaVerifier = new RecaptchaVerifier(auth, signUpBtn, {
+      'size': 'invisible',
+      'callback': (response: unknown) => {
+        console.log(response);
+      }
+    });
+    return { auth, recaptchaVerifier };
+  } 
+}
 
-      console.log(recaptchaVerifier);
-      console.log(auth);
-
-        return { auth, recaptchaVerifier };
-    }
+export function clearRecaptchaVerifier() {
+  if (recaptchaVerifier) {
+    recaptchaVerifier.clear();
+    recaptchaVerifier = null;
+  }
 }

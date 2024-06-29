@@ -20,3 +20,17 @@ export interface FeedbackResponse {
     createdAt: Date;
 }
 
+export interface FeedbackAdminType {
+    _id: string;
+    userId: {
+        username: string;
+        userImg: string
+    };
+    partnerId: {
+        username: string;
+        partnerImg: string
+    };
+    story: string;
+    image: string;
+    createdAt: Date;
+}

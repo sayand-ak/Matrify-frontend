@@ -10,9 +10,12 @@ import { getMatches } from "../../../services/userAPI";
 import { CarousalItems } from "../../../components/CarousalItems/CarousalItems";
 import { toTitleCase } from "../../../utils/toTitleCase";
 
-export const ViewAllMatches = () => {
+const ViewAllMatches = () => {
     const params = useParams();
     const [data, setData] = useState<UserData[]>([]);
+    const [selectedFilter, setSelectedFilter] = useState<UserData[]>([]);
+    const [selectedFilterItem, setSelectedFilterItem] = useState<string | null>(null);
+    
     const dispatch = useAppDispatch();
 
 
@@ -22,7 +25,8 @@ export const ViewAllMatches = () => {
                 matchBase: params.matchBase || "", 
                 matchKey: params.matchKey || "", 
                 matchData: params.matchData || ""
-            }));            const data = response.payload.data;
+            }));            
+            const data = response.payload.data;
             setData(data);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -31,7 +35,23 @@ export const ViewAllMatches = () => {
 
     useEffect(() => {
         fetchData();
-    }, [fetchData])
+    }, [fetchData]);
+
+    async function handleFilterItemClick(item: string) {
+        setSelectedFilterItem(item);
+        const response = await dispatch(getMatches({
+            matchBase: params.matchBase || "", 
+            matchKey: params.matchKey || "", 
+            matchData: item || ""
+        }));
+
+        if(response.payload.data) {
+            setSelectedFilter(response.payload.data);
+        } else {
+            alert("No matches found")
+        }
+    };
+    
     
     return (
         <div className="min-h-[100vh] w-full overflow-hidden">
@@ -43,13 +63,19 @@ export const ViewAllMatches = () => {
                 </div>
             </div>
             <div className="overflow-x-scroll no-scrollbar">
-                <FilterSlider matchKey={params.matchKey || ""}/>
+                <FilterSlider matchKey={params.matchKey || ""} handleFilterItemClick={handleFilterItemClick} selectedFilterItem={selectedFilterItem}/>
             </div>
 
             <div className="w-full flex justify-center py-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-14 lg:grid-cols-4  w-fit">
                     
-                    {data.map((user) => (<CarousalItems data={user}/>))}
+                    {
+                        selectedFilter.length > 0 ?
+
+                        (selectedFilter.map((user) => (<CarousalItems data={user}/>)))
+                        :
+                        (data.map((user) => (<CarousalItems data={user}/>)))
+                    }
 
                 </div>
             </div>
@@ -58,3 +84,5 @@ export const ViewAllMatches = () => {
         </div>
     )
 }
+
+export default ViewAllMatches;

@@ -8,8 +8,12 @@ export default {
     extend: {
       fontFamily: {
         custom: ['"font-btn"', "serif"], 
-        quote: ['"quote"', "serif"],
-        gillroy: ['"gillroy"', "serif"],
+        poppins: ['"poppins"', "sans"],
+        roboto: ['"roboto"', "sans"],
+        montserrat: ['"montserrat"', "sans"],
+        varela: ['"varela"', "sans"],
+        lexend_Deca: ['"lexend_Deca"'],
+        rubik: ['"rubik"'],
       }
     },
   },

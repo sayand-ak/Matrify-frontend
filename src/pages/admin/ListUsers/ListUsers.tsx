@@ -25,11 +25,11 @@ export function ListUser({value}: {value: Array<Users>}) {
     const [users, setUsers] = useState<Users[]>([]);
     const [paginationCount, setPaginationCount] = useState(1);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
+    
 
     useEffect(() => {
         async function getUsersData() {
             const response = await dispatch(listUser(paginationCount - 1)); 
-            console.log(response);
             setIsLoading(true);
             
             setTotalItemsCount(response.payload.totalPages);
@@ -46,20 +46,17 @@ export function ListUser({value}: {value: Array<Users>}) {
 
     const handlePagination = async (direction: string) => {
         let newPaginationCount = paginationCount;
-        if (direction === "left" && paginationCount > 1) { // Adjust logic for left pagination
+        if (direction === "left" && paginationCount > 1) { 
             newPaginationCount -= 1;
         } else if (direction === "right" && paginationCount < Math.ceil(totalItemsCount / 6)) {
             newPaginationCount += 1;
         } else {
             return;
         }
-
         setPaginationCount(newPaginationCount); 
     };
 
-
     const displayedData = value?.length > 0 ? value : users;
-
 
     return (
         <motion.div
@@ -68,7 +65,7 @@ export function ListUser({value}: {value: Array<Users>}) {
             exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="table-container h-[fit-content] mt-5 flex rounded-[10px] overflow-x-auto">
+            <div className="table-container h-[fit-content] mt-10 mx-10 flex rounded-[10px] overflow-x-auto">
                 <Table
                     headers={headers}
                     data={displayedData}

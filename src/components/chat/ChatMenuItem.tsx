@@ -12,9 +12,10 @@ import "./chat.css"
 interface ChatMenuItemsProps {
     conversation: Conversation;
     userId: string;
+    notificationCount: number
 }
 
-export function ChatMenuItems({ conversation, userId }: ChatMenuItemsProps) {
+export function ChatMenuItems({ conversation, userId, notificationCount }: ChatMenuItemsProps) {
     const [user, setUser] = useState<UserData>();
     const dispatch = useAppDispatch();
     const curUser = useAppSelector(state => state.user.user);
@@ -37,7 +38,7 @@ export function ChatMenuItems({ conversation, userId }: ChatMenuItemsProps) {
     }
 
     return (
-        <div className="h-20 px-5 my-2 flex items-center gap-5 hover:bg-[#e0e2e5] cursor-pointer">
+        <div className="h-[90px] px-5 my-2 flex items-center gap-5 hover:bg-[#e0e2e5] cursor-pointer">
             <div
                 className="h-[4rem] w-[5rem] rounded-full"
                 style={{ backgroundImage: `url(${user?.image ? user.image : '../src/assets/images/profile.png'})`, backgroundSize: "cover" }}
@@ -63,8 +64,17 @@ export function ChatMenuItems({ conversation, userId }: ChatMenuItemsProps) {
                                 Blocked
                             </p>
                         )}
-                    </p>                </div>
-                <p className="text-[13px]">{formatDate(conversation.createdAt || "")}</p>
+                    </p>                
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                    <p className="text-[11px]">{formatDate(conversation.createdAt || "")}</p>
+                    {
+                        notificationCount > 0 && (
+                            <div className="px-2
+                             text-sm text-white rounded-full bg-[#c68b25] flex items-center justify-center">{notificationCount}</div>
+                        )
+                    }
+                </div>
             </div>
         </div>
     );

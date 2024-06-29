@@ -9,7 +9,7 @@ import showToast from "../../../components/Toast/Toast";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-export function FamilyDetails() {
+function FamilyDetails() {
     // Define options for dropdowns
     const familyStatusOptions = ["High", "Medium", "Stable", "Low"];
     const familyTypeOptions = ["Nuclear", "Joint"];
@@ -237,3 +237,5 @@ export function FamilyDetails() {
         </div>
     );
 }
+
+export default FamilyDetails;

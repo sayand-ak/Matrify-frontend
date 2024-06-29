@@ -15,7 +15,7 @@ import { ToastContainer } from "react-toastify";
 import { CustomModal } from "../../../components/modal/CustomModal";
 
 
-export function Login() {
+function Login() {
 
     const [ data, setData ] = useState("");
     const [ type, setType ] = useState("");
@@ -296,3 +296,6 @@ export function Login() {
         </div>
     )
 }
+
+
+export default Login;

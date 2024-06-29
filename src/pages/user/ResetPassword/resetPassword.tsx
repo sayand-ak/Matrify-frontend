@@ -8,7 +8,7 @@ import { Loader } from '../../../components/loader/Loader';
 import showToast from '../../../components/Toast/Toast';
 import { ToastContainer } from 'react-toastify';
 
-export function ResetPassword() {
+function ResetPassword() {
     const [userId, setUserId] = useState<string>('');
     const dispatch = useAppDispatch();
     const params = useParams();
@@ -102,3 +102,5 @@ export function ResetPassword() {
         </div>
     );
 }
+
+export default ResetPassword;

@@ -127,7 +127,7 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                                     data.map((paymentHistory, index) => (
                                         "subscription" in paymentHistory &&  paymentHistory.subscription.map((subscription, subIndex) => (
                                         <tr className="text-center h-[60px]" key={`${index}-${subIndex}`}>
-                                            <td className="py-2 px-4 border-b">{subscription.subId}</td>
+                                            <td className="truncate max-w-20 py-2 border-b">{subscription.pid}</td>
                                             <td className="py-2 px-4 border-b">{paymentHistory.username}</td>
                                             <td className="py-2 px-4 border-b">{subscription.amount}</td>
                                             <td className="py-2 px-4 border-b">
@@ -214,7 +214,7 @@ export function Table({ headers, data, isLoading, handlePagination, paginationCo
                 </table>
             }
             <CustomModal  isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-                <div>hello in modal</div>
+                <div></div>
             </CustomModal>
 
             <div className="w-full flex items-center justify-end gap-5 py-4 px-5 bg-[#f2eade] rounded-b-lg">

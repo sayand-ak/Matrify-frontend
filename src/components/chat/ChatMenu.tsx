@@ -3,14 +3,17 @@ import { SearchBox } from "../searchbox/searchBox";
 import { ChatMenuItems } from "./ChatMenuItem";
 import { Conversation } from "../../typings/conversation/conversation";
 import { useAppSelector } from "../../hooks/useTypedSelectors";
+import { IoArrowBack } from "react-icons/io5";
+
 
 interface ChatMenuProps {
     handleMenuItemClick: (conversationId: string) => void;
     conversations: Conversation[];
     isChatSelected: boolean;
+    chatMap: Map<string, number>
 }
 
-export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected}: ChatMenuProps) {
+export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected, chatMap}: ChatMenuProps) {
     const [search, setSearch] = useState("");
     
 
@@ -23,7 +26,12 @@ export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected}: 
     return (
             <div className={`chat-list bg-[#efcf9718] overflow-scroll no-scrollbar ${isChatSelected ? 'hidden sm:block' : 'w-full'} md:w-[50%] lg:w-[30%]`}>            
             <div className="chat-menu-header sticky top-0 pb-5 bg-[#EFCE97]">
-                <h2 className="text-[25px] pl-10 font-bold py-5">Chat</h2>
+                <div className="flex items-center px-5 text-[#000000]">
+                    <a href={`/profile/${userId}`}>
+                        <IoArrowBack className="text-2xl"/>
+                    </a>
+                    <h2 className="text-[25px] pl-4 font-bold py-5">Chat</h2>
+                </div>
                 <div className="w-full flex justify-center">
                     <SearchBox handleSearch={handleSearch} search={search} setSearch={setSearch} />
                 </div>
@@ -37,7 +45,15 @@ export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected}: 
                             }}
                             key={index}
                         >
-                            <ChatMenuItems conversation={conversation} userId={userId || ""} />
+                            <ChatMenuItems
+                                conversation={conversation}
+                                userId={userId || ""}
+                                notificationCount={
+                                    chatMap.get(
+                                        (conversation.members.find((member) => member !== userId))as string
+                                    ) || 0
+                                }
+                            />
                             
                         </div>
                     ))

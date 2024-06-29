@@ -9,8 +9,9 @@ import { LuUser2 } from 'react-icons/lu';
 import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { MdOutlinePayments } from 'react-icons/md';
 import { MdOutlineFeedback } from 'react-icons/md';
-import { GiVerticalBanner } from 'react-icons/gi';
 import { CgMenuLeft } from "react-icons/cg";
+import { BsGraphUpArrow } from "react-icons/bs";
+
 
 import { useDebounce } from 'use-debounce';
 
@@ -25,6 +26,7 @@ import { AdminPayment } from "../Payment/Payment";
 import { ListUser } from "../ListUsers/ListUsers";
 import { ReportUser } from "../ReportUser/ReportUser";
 import { ListFeedback } from "../ListFeedbacks/ListFeedbacks";
+import Sales from "../Sales/Sales";
 
 
 
@@ -34,6 +36,7 @@ export function Home() {
     const [showAdminPayment, setShowAdminPayment] = useState(false);
     const [showReportUser, setShowReportUser] = useState(false);
     const [showFeedbacks, setShowFeedbacks] = useState(false);
+    const [showSales, setShowSales] = useState(false);
 
     const [search, setSearch] = useState("");
     const [searchUserData, setSearchUserData] = useState<Users[]>([]);
@@ -52,9 +55,9 @@ export function Home() {
         { name: "Dashboard", icon: RxDashboard },
         { name: "Users", icon: LuUser2 },
         { name: "Report Request", icon: MdOutlineReportGmailerrorred },
-        { name: "Payment", icon: MdOutlinePayments  },
-        { name: "Feedback", icon: MdOutlineFeedback  },
-        { name: "Banner", icon: GiVerticalBanner  },
+        { name: "Payment", icon: MdOutlinePayments },
+        { name: "Feedback", icon: MdOutlineFeedback },
+        { name: "Sales", icon: BsGraphUpArrow },
     ];
 
     const handleSidebarItemClick = (itemName: string) => {
@@ -88,6 +91,12 @@ export function Home() {
         } else {
             setShowFeedbacks(false);
         }
+
+        if (itemName === "Sales") {
+            setShowSales(true);
+        } else {
+            setShowSales(false);
+        }
     };
 
     const handleSearch = async(text: string) => {
@@ -109,7 +118,7 @@ export function Home() {
     
     
     return (
-        <div className="flex overflow-hidden">
+        <div className="flex overflow-hidden font-rubik h-[100vh]">
             {/* Pass necessary props to the Sidebar component */}
         
             <div className={`bg-white transition-transform duration-300 ease-in-out ${sidebarToggle ? "fixed translate-x-0" : "fixed -translate-x-full"} md:hidden w-[70vw] h-[100vh] z-10`}>
@@ -121,7 +130,7 @@ export function Home() {
                 />
             </div>
 
-            <div className="hidden md:flex ">
+            <div className="hidden md:flex">
                 <Sidebar 
                     role="admin"
                     items={items}
@@ -130,7 +139,6 @@ export function Home() {
             </div>
 
             <div className="w-full h-[100vh] flex flex-col items-center bg-[#a17c441a]">
-
 
                 <div className="nav min-h-[10vh] w-full gap-10 z-0 flex items-center justify-between px-3 md:px-8">
 
@@ -152,29 +160,34 @@ export function Home() {
                 </div>
 
 
-                    <div className="flex flex-col pt-5 w-[93%]">
-                        {
-                            showDashboard &&
-                            <Dashboard/>
-                        }
-                        {
-                            showTable && 
-                            <ListUser value={value}/>
-                        }
-                        {
-                            showAdminPayment && 
-                            <AdminPayment/>
-                        }
-                        {
-                            showReportUser && 
-                            <ReportUser value={value}/>
-                        }
-                        {
-                            showFeedbacks && 
-                            <ListFeedback/>
-                        }
+                <div className="flex flex-col w-full overflow-y-scroll">
+                    {
+                        showDashboard &&
+                        <Dashboard/>
+                    }
+                    {
+                        showTable && 
+                        <ListUser value={value}/>
+                    }
+                    {
+                        showAdminPayment && 
+                        <AdminPayment/>
+                    }
+                    {
+                        showReportUser && 
+                        <ReportUser value={value}/>
+                    }
+                    {
+                        showFeedbacks && 
+                        <ListFeedback/>
+                    }
 
-                    </div>
+                    {
+                        showSales && 
+                        <Sales/>
+                    }
+
+                </div>
             </div>
 
         </div>

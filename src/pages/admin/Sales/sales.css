@@ -1,0 +1,31 @@
+.sticky {
+    position: sticky;
+    bottom: 0; 
+    right: 0;
+    left: 26px;
+    width: 95.3%;
+    background-color: #F2E9DE;
+    color: #222222;
+    height: 10vh;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: end;
+    padding-right: 14px;
+}
+
+.sales {
+    padding-bottom: 10vh; 
+}
+
+.line-chart{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.sales-filter-list.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+

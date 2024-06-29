@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { CustomModal } from "../../../components/modal/CustomModal";
 import { useAppSelector } from "../../../hooks/useTypedSelectors";
 
-export function Home() {
+function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [showNavbar, setShowNavbar] = useState(true);
@@ -112,3 +112,6 @@ export function Home() {
         </div>
     )
 }
+
+
+export default Home;

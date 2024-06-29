@@ -6,7 +6,7 @@ export function QuoteBanner() {
     return (
         <div className="min-h-[70vh] flex bg-[#ece3d4] flex-col-reverse lg:flex-row flex-wrap">
             <motion.div
-                className="banner-quote w-full lg:w-1/2 flex flex-1 flex-col items-center justify-center text-[46px] font-gillroy h-100"
+                className="banner-quote w-full lg:w-1/2 flex flex-1 flex-col items-center justify-center text-[46px] h-100"
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"

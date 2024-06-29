@@ -8,13 +8,13 @@ import { useNavigate } from "react-router-dom";
 import OtpInput from 'react-otp-input';
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
 import { otpVerify, signupUserAsync } from "../../../services/userAPI";
-import { onSignInSubmit } from "../../../services/firebase/auth";
+import { clearRecaptchaVerifier, onSignInSubmit } from "../../../services/firebase/auth";
 import { ToastContainer } from "react-toastify";
-import { Auth, ConfirmationResult, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { ConfirmationResult, signInWithPhoneNumber } from "firebase/auth";
 import showToast from "../../../components/Toast/Toast";
 
 
-export function SignUp() {
+function SignUp() {
     const [uname, setUname] = useState("");
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
@@ -38,8 +38,6 @@ export function SignUp() {
     const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
 
     const [resendOtp, setResendOtp] = useState(false);
-
-    const [otpIncome, setOtpIncome] = useState<{auth: Auth, recaptchaVerifier: RecaptchaVerifier} | null>(null);
 
     
 
@@ -92,7 +90,8 @@ export function SignUp() {
         }
     }
 
-    async function handleRegisterSubmit(){
+
+    async function handleRegisterSubmit(){        
         if(!uname || !phone || !password){
             setRePasswordErr("Please fill all the fields");
         } else {
@@ -101,43 +100,22 @@ export function SignUp() {
             
             if(response.payload.success){
                 
-                const otpConfig = onSignInSubmit(submitBtn.current) || null;
+                const otpConfig = onSignInSubmit(submitBtn.current);
                 
-                setOtpIncome(otpConfig);            
-                
-                if (otpIncome && otpConfig) {
-                    setConfirmationResult(await signInWithPhoneNumber(otpIncome?.auth, "+91"+phone, otpIncome?.recaptchaVerifier));
-    
-                    //setting timer 
-                    const currentTime = new Date();
-                    const oneMinuteLater = new Date(currentTime.getTime() + (1 * 60000));
-                    localStorage.setItem("expireTime", oneMinuteLater.toString());
-    
-                    const expireTimeString = localStorage.getItem("expireTime");
-                    if (expireTimeString) {
-                        const expireTime = new Date(expireTimeString);
+                if (otpConfig) {
+                    otpConfig.recaptchaVerifier.render();
+                    setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
                     
-                        // Calculate remaining time
-                        const currentTime = new Date();
-                        const timeDifference = expireTime.getTime() - currentTime.getTime();
-                        const remainingSeconds = Math.floor(timeDifference / 1000);
-                    
-                        // Start the timer if there is remaining time
-                        if (remainingSeconds > 0) {
-                            setRemainingTime(remainingSeconds);
-                    
-                            const interval = setInterval(() => {
-                                setRemainingTime(prevTime => (prevTime && prevTime > 0) ? prevTime - 1 : null);
-                            }, 1000);
-                            setTimerInterval(interval);
-                        }
-                    } 
-                    
+                    //setting timer
+                    const { interval, remainingTime } = startTimer();
+                    if (remainingTime !== null) {
+                        setRemainingTime(remainingTime);
+                        setTimerInterval(interval);
+                    }                    
                     setIsModalOpen(true);
     
                 } else{
                     console.log("error");
-                    
                 }
             }else{
                 showToast("error", response.payload.message);
@@ -187,45 +165,20 @@ export function SignUp() {
     async function handleResendOTP() {
 
         try {
-            alert();
             const otpConfig = onSignInSubmit(resendLink.current) || null;
             
-            // Resend OTP logic
-            setOtpIncome(otpConfig);
-            console.log("-------------",otpIncome,"-----------");
-            
-            if (otpIncome) {
-                setConfirmationResult(await signInWithPhoneNumber(otpIncome?.auth, "+91"+phone, otpIncome?.recaptchaVerifier));
+            if (otpConfig) {
+                setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig?.recaptchaVerifier));
     
-                //setting timer 
-                const currentTime = new Date();
-                const oneMinuteLater = new Date(currentTime.getTime() + (1 * 60000));
-                localStorage.setItem("expireTime", oneMinuteLater.toString());
-    
-                const expireTimeString = localStorage.getItem("expireTime");
-                if (expireTimeString) {
-                    const expireTime = new Date(expireTimeString);
-                
-                    // Calculate remaining time
-                    const currentTime = new Date();
-                    const timeDifference = expireTime.getTime() - currentTime.getTime();
-                    const remainingSeconds = Math.floor(timeDifference / 1000);
-                
-                    // Start the timer if there is remaining time
-                    if (remainingSeconds > 0) {
-                        setRemainingTime(remainingSeconds);
-                
-                        const interval = setInterval(() => {
-                            setRemainingTime(prevTime => (prevTime && prevTime > 0) ? prevTime - 1 : null);
-                        }, 1000);
-                        setTimerInterval(interval);
-                    } else {
-                        // Handle case when remaining time is not positive
-                        console.log("The remaining time is not positive.");
-                    }
-                } 
+                //setting timer
+                const { interval, remainingTime } = startTimer();
+                if (remainingTime !== null) {
+                    setRemainingTime(remainingTime);
+                    setTimerInterval(interval);
+                }
                 
                 setIsModalOpen(true);
+
             } else {
                 alert("Firebase error");
             }
@@ -234,7 +187,11 @@ export function SignUp() {
             console.log(error);
             
         }
+    }
 
+    function handleCancel() {
+        clearRecaptchaVerifier()
+        setIsModalOpen(false);
     }
     
 
@@ -388,7 +345,7 @@ export function SignUp() {
                         </button>
                         <button 
                             className="w-1/2 border-[#1B2931] border-[1px] rounded-md"
-                             onClick={() => setIsModalOpen(false)}
+                             onClick={() => handleCancel()}
                         >
                         Cancel
                         </button>
@@ -398,3 +355,5 @@ export function SignUp() {
         </div>
     )
 }
+
+export default SignUp;

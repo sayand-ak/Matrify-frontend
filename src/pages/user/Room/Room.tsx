@@ -16,7 +16,7 @@ import { ToastContainer } from "react-toastify";
 
 
 
-export function Room() {
+function Room() {
     const { socket } = useSocket();
     const { peer, createOffer, createAnswer, setRemoteAns, sendStream, remoteStream, hangUp } = usePeer();
     const [myStream, setMyStream] = useState<MediaStream | null>(null);
@@ -208,3 +208,6 @@ export function Room() {
         </div>
     )
 }
+
+
+export default Room;

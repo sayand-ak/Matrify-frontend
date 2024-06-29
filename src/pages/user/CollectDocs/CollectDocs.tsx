@@ -5,7 +5,7 @@ import showToast from "../../../components/Toast/Toast";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-export function CollectDocs() {
+function CollectDocs() {
     const [educationDocs, setEducationDocs] = useState<File | null>(null);
     const [professionDocs, setProfessionDocs] = useState<File | null>(null);
     const [educationError, setEducationError] = useState<string>("");
@@ -158,3 +158,6 @@ export function CollectDocs() {
         </div>
     );
 }
+
+
+export default CollectDocs;

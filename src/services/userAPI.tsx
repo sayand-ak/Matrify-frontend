@@ -403,9 +403,7 @@ export const editFamilyData = createAsyncThunk("/api/editFamilyData", async (fam
 });
 
 export const getMatches = createAsyncThunk("/api/getMatches", async ({ matchBase, matchKey, matchData }: { matchBase: string, matchKey: string, matchData: string }) => {
-    try {
-        console.log(matchBase, matchKey, matchData);
-        
+    try {        
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/get-matches?matchBase=${matchBase}&matchKey=${matchKey}&matchData=${matchData}`, { withCredentials: true })
         return response.data;
     } catch (error) {
@@ -494,3 +492,13 @@ export const getPossibleFilterValues = createAsyncThunk("/api/getPossibleFilterV
         return (error as Error).response?.data;
     }
 });
+
+export const getUserNotifications = createAsyncThunk("/api/getUserNotifications", async() => {
+    try {
+        const response: AxiosResponse = await axios.get(`${API_URL}/get-user-notifications`, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+

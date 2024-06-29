@@ -188,7 +188,7 @@ export function AdminPayment() {
 
     return (
         <>
-            <div className="payment-tabs h-12 flex font-semibold justify-center gap-20 text-[17px]">
+            <div className="payment-tabs h-12 mt-10 flex font-semibold justify-center gap-20 text-[17px]">
                 <button
                     className={activeTab === "PLANS" ? "active-tab" : ""}
                     onClick={() => handleTabClick("PLANS")}
@@ -217,6 +217,7 @@ export function AdminPayment() {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -10, opacity: 0 }}
                 transition={{ duration: 0.5 }}
+                className="mx-10"
                 >
                     <div className="flex justify-end p-5">
                         <button
@@ -226,6 +227,7 @@ export function AdminPayment() {
                             Add Plan
                         </button>
                     </div>
+
                     <Table
                         headers={headers}
                         data={subscriptions}
@@ -310,6 +312,7 @@ export function AdminPayment() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -10, opacity: 0 }}
                     transition={{ duration: 0.5 }}
+                    className="mx-10"
                 >
                     <div className="flex justify-end p-5">
                         <button
@@ -434,7 +437,7 @@ export function AdminPayment() {
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: -10, opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="my-10"
+                        className="my-10 mx-10"
                     >
                         <Table
                             headers={paymentHistoryHeaders} 

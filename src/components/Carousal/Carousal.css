@@ -1,5 +1,5 @@
 .carousal-container {
     display: flex;
-    gap: 10px; /* Adjust based on your desired spacing */
+    gap: 25px; /* Adjust based on your desired spacing */
     scroll-behavior: smooth; /* Optional for smooth scrolling */
 }

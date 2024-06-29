@@ -13,7 +13,7 @@ import { ToastContainer } from "react-toastify";
 import { states } from 'indian_address';
 
 
-export function SetProfile() {
+function SetProfile() {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const emailExist:string | null = useAppSelector((state) => state.user.user?.email) || null;
@@ -403,3 +403,6 @@ export function SetProfile() {
     </div>
   );
 }
+
+
+export default SetProfile

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChatBox } from "../../../components/chat/ChatBox";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { getMessages, getConversations, sendMessages } from "../../../services/chatAPI";
@@ -9,12 +9,13 @@ import { socket } from "../../../services/socket";
 import { IoMdCall } from "react-icons/io";
 import { HiPhoneMissedCall } from "react-icons/hi";
 import "./Chat.css"
-import { userProfile } from "../../../services/userAPI";
+import { getUserNotifications, userProfile } from "../../../services/userAPI";
 import { UserData } from "../../../typings/user/userTypes";
 import { useNavigate } from "react-router-dom";
 import { changeCallStatus } from "../../../services/videoCallApi";
+import { NotificationType } from "../../../typings/notifications/notificationType";
 
-export function Chat() {
+function Chat() {
     const [currentChat, setCurrentChat] = useState<Message[]>([]);
     const [isChatSelected, setIsChatSelected] = useState(false);
     const [conversationId, setConversationId] = useState<string>("");
@@ -23,6 +24,7 @@ export function Chat() {
     const [showCallNotifier, setShowCallNotifier] = useState(false);
     const [callingUser, setCallingUser] = useState<UserData>({} as UserData);
     const [roomId, setRoomId] = useState<string>("");
+    const [notifications, setNotifications] = useState<NotificationType | null>(null);
 
     const userId = useAppSelector(state => state.user.user?._id);
 
@@ -31,6 +33,27 @@ export function Chat() {
     const dispatch = useAppDispatch();
     
     const navigate = useNavigate();
+
+
+    // Convert chat object to Map if needed
+    const chatMap = useMemo(() => {
+        if (notifications && notifications.chat) {
+            return notifications.chat instanceof Map
+                ? notifications.chat
+                : new Map(Object.entries(notifications.chat));
+        }
+        return new Map();
+    }, [notifications]);
+    
+    const handleGetNotifications = useCallback(async() => {
+      const response = await dispatch(getUserNotifications());
+      setNotifications(response.payload.data);
+      
+    }, [dispatch])
+
+    useEffect(() => {
+      handleGetNotifications();
+    }, [handleGetNotifications]);
 
     useEffect(() => {
         async function fetchConversations() {
@@ -195,6 +218,7 @@ export function Chat() {
                 handleMenuItemClick={handleMenuItemClick}
                 conversations={conversations}
                 isChatSelected={isChatSelected}
+                chatMap={chatMap}
             />
             <ChatBox 
                 currentChat={currentChat} 
@@ -240,3 +264,5 @@ export function Chat() {
         </div>
     );
 }
+
+export default Chat;

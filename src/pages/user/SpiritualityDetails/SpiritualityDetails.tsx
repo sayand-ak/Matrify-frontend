@@ -7,7 +7,7 @@ import { addReligion } from "../../../services/userAPI";
 import showToast from "../../../components/Toast/Toast";
 import { ToastContainer } from "react-toastify";
 
-export function SpiritualityDetails() {
+function SpiritualityDetails() {
 
     const user = useAppSelector((state) => state.user.user);
     const dispatch = useAppDispatch();
@@ -149,3 +149,6 @@ export function SpiritualityDetails() {
         </div>
     );
 }
+
+
+export default SpiritualityDetails;

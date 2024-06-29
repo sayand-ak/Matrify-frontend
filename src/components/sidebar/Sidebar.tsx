@@ -49,7 +49,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
             </div>}
 
             <div className="options">
-                <ul className={`flex flex-col gap-5 pt-${role === 'user' ? 10 : 0}`}>
+                <ul className={`flex flex-col gap-6 pt-${role === 'user' ? 10 : 0}`}>
                     {items.map((item, index) => (
 
                         <span key={index}>
@@ -59,6 +59,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
                                 className={undefined}
                                 onClick={() => handleItemClick(item.name, "admin")}
                                 selected={selected === item.name}
+                                notificationCount={item.notificationCount}
                             />
                         </span>
                     ))}
@@ -81,7 +82,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
                         text="Logout"
                         className="text-red-700 flex"
                         onClick={() => handleItemClick("Logout", role)}
-                        selected={selected === "Logout"} 
+                        selected={selected === "Logout"}
                     />
                 </ul>
                 <ToastContainer/>

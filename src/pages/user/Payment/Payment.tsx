@@ -14,7 +14,7 @@ interface RefObj {
     year: React.MutableRefObject<HTMLDivElement | null>;
 }
 
-export function Payment () {
+function Payment () {
 
     const weeklyRef = useRef<HTMLDivElement | null>(null);
     const monthlyRef = useRef<HTMLDivElement | null>(null);
@@ -123,7 +123,12 @@ export function Payment () {
                 <p 
                     className="w-full text-center text-[1rem] md:text-[1.3rem] lg:text-[1.7rem] text-[#707070]"
                 >You will be able to access advance interaction features</p>
-                <p className="text-[35px] font-bold text-[#C59D77]">Get {offers?.offerPercentage}% off on our {offers?.title}</p>
+
+                {
+                    offers?.status === "active" &&
+                    <p className="text-[35px] font-bold text-[#C59D77]">Get {offers?.offerPercentage}% off on our {offers?.title}</p>
+                }
+                
             </div>
 
             <div className="payment-card-container min-h-[35rem] flex-col lg:flex-row flex gap-10 items-center justify-around sm:px-10 md:px-40 lg:px-20 my-10">
@@ -235,3 +240,5 @@ export function Payment () {
         </div>
     )
 }
+
+export default Payment;

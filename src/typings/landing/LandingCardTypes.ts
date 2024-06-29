@@ -1,4 +1,5 @@
 export interface LandingCardProps {
     img: string;
-    caption: string
+    caption: string,
+    index?: number
   }

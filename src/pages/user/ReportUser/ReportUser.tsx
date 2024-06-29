@@ -20,7 +20,7 @@ interface ReportUserFormValues {
 }
 
 
-export function ReportUser () {
+function ReportUser () {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [userData, setUserData] = useState<UserProfile>()
     const dispatch = useAppDispatch();
@@ -149,3 +149,5 @@ export function ReportUser () {
         </div>
     )
 }
+
+export default ReportUser;

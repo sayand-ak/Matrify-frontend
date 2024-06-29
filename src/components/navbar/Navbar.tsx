@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { IoSearch } from "react-icons/io5";
-import { LegacyRef, useEffect, useRef, useState } from "react";
+import { LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { Users } from "../../typings/user/userTypes";
-import { searchPartner, saveSearchData } from "../../services/userAPI";
+import { searchPartner, saveSearchData, getUserNotifications } from "../../services/userAPI";
 import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
+import { NotificationType } from "../../typings/notifications/notificationType";
 
 
 interface NavbarProps {
@@ -20,10 +21,52 @@ export default function Navbar({page}: NavbarProps){
     const [searchData, setSearchData] = useState<Users[]>([]);
     const [value] = useDebounce(searchData, 1000);
     const [searchUserIds, setSearchUserIds] = useState<string[] | []>([]);
+    const [notifications, setNotifications] = useState<NotificationType | null>(null);
 
     const dispatch = useAppDispatch();
 
     const selector = useAppSelector(state => state.user.user);
+
+    // Convert chat object to Map if needed
+    const chatMap = useMemo(() => {
+        if (notifications && notifications.chat) {
+            return notifications.chat instanceof Map
+                ? notifications.chat
+                : new Map(Object.entries(notifications.chat));
+        }
+        return new Map();
+    }, [notifications]);
+
+     // Compute the number of unread messages
+     const unreadMessagesCount = useMemo(() => {
+        let count = 0;
+        for (const value of chatMap.values()) {
+            if (value > 1) {
+                count += value;
+            }
+        }
+        return count;
+    }, [chatMap]);
+
+    // Compute the number of interest requests
+    const interestRequestsCount = useMemo(() => {
+        return notifications?.interestReceived.length ?? 0;
+    }, [notifications]);
+
+    // Total notifications count
+    const totalNotificationsCount = useMemo(() => {
+        return unreadMessagesCount + interestRequestsCount;
+    }, [unreadMessagesCount, interestRequestsCount]);
+    const handleGetNotifications = useCallback(async() => {
+      const response = await dispatch(getUserNotifications());      
+      setNotifications(response.payload.data);
+      
+    }, [dispatch, notifications])
+
+    useEffect(() => {
+      handleGetNotifications();
+    }, []);
+
 
     useEffect(() => {
         if (searchData.length > 0) {
@@ -34,7 +77,7 @@ export default function Navbar({page}: NavbarProps){
         }
       }, [searchData]);
       
-    
+
     const searchRef:LegacyRef<HTMLDivElement> = useRef(null);    
 
     // handle search focus event 
@@ -96,14 +139,11 @@ export default function Navbar({page}: NavbarProps){
           // Handle error by displaying a message or something similar
         }
       }
-
-
-      console.log(search);
       
     const navigate = useNavigate();
     return (
            
-            <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent">
+            <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent z-10 relative">
                 <div className="flex">
                     <a href="#">
                         <div className="logo-div h-14 w-16 ">
@@ -113,7 +153,9 @@ export default function Navbar({page}: NavbarProps){
 
                     { page!="landing"&&
                         <ul className={`lg:flex hidden gap-14 items-center w-[fit-content] pl-10 font-semibold ${page == "home" ? "text-[#ffffff73]" : "text-[#000]" } text-[16px]`}>
-                            <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>Home</li>
+                            <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>
+                                <a href="/home">Home</a>
+                            </li>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>About</li>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>Blog</li>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>Gallery</li>
@@ -127,7 +169,7 @@ export default function Navbar({page}: NavbarProps){
                 <div className="flex items-center gap-10 justify-end w-full">
                     { page == "landing" &&
                         <div className="flex items-center gap-5 justify-end w-full">
-                            <a href="/login" className="login-btn px-3 py-2 md:py-3 md:px-5">Log in</a>
+                            <a href="/login" className="login-btn px-2 py-1 md:py-3 md:px-5">Log in</a>
                             <button 
                                 className="px-3 py-2 md:py-3 md:px-5"
                                 onClick={() =>{
@@ -171,7 +213,7 @@ export default function Navbar({page}: NavbarProps){
                                         }}
                                         ref={searchRef}
                                     >
-                                        <span className="text-[#fff] flex items-center px-2 font-gillroy">
+                                        <span className="text-[#fff] flex items-center px-2 font-poppins">
                                             {search.length <=0 && (
                                                 <div className="flex flex-col gap-3 w-full h-full">
                                                     {selector?.searchHistory.length === 0 ? (
@@ -204,10 +246,7 @@ export default function Navbar({page}: NavbarProps){
                                                                     <div 
                                                                         className="flex gap-5 items-center hover:bg-[#ffffff3b] my-2 py-2 px-4"
                                                                     >
-                                                                        <div 
-                                                                            className="rounded-full h-14 w-14"
-                                                                            style={{backgroundImage: `${user.image}`, backgroundSize: 'contain', backgroundPosition: "center"}}
-                                                                        ></div>
+                                                                        <img src={user.image} className="h-14 w-14 rounded-full" alt="" />
                                                                         <p>{user.username}</p>
                                                                     </div>
                                                                 </a>
@@ -229,12 +268,17 @@ export default function Navbar({page}: NavbarProps){
                             }
 
                             <a href={`/profile/${selector?._id}`}>
-                                <div 
+                                <div
                                     className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
-                                    style={{ 
-                                        backgroundImage: selector?.image ? `url(${selector.image})` : 'none' 
+                                    style={{
+                                        backgroundImage: selector?.image ? `url(${selector.image})` : 'none'
                                     }}
                                 >
+                                     {totalNotificationsCount > 0 ? (
+                                        <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
+                                            {totalNotificationsCount}
+                                        </div>
+                                    ) : null}
                                 </div>
                             </a>
 

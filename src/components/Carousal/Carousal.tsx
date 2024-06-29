@@ -8,8 +8,6 @@ import { UserData } from "../../typings/user/userTypes";
 import { useAppDispatch } from "../../hooks/useTypedSelectors";
 import { getMatches } from "../../services/userAPI";
 import { ContentLoader } from "../loader/ContentLoader";
-import { motion } from "framer-motion";
-import { containerVariants } from "../../utils/animations/animation1";
 
 
 interface HomeProp {
@@ -87,7 +85,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
             {
                 isLoaded ? (
                     <div
-                        className="carousal-container flex gap-10 w-fit pl-20"
+                        className="carousal-container w-fit pl-20"
                         style={{
                             transition: "transform 1s",
                             transform: `translateX(${translateValue}%)`,
@@ -97,16 +95,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                         {
                             data.map((user, index) => (
                                 
-                                <motion.div
-                                    key={index}
-                                    variants={containerVariants}
-                                    initial="hidden"
-                                    whileInView="visible"
-                                    viewport={{ once: true }} 
-                                >   
-                                    <CarousalItems data={user}/>
-                                </motion.div>
-                                
+                                <CarousalItems data={user} index={index}/>  
                             ))
                         }
                     </div>

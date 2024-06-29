@@ -11,7 +11,7 @@ import { containerVariants } from "../../../utils/animations/animation1";
 import { FeedbackSlider } from "../../../components/FeedbackSlider/FeedbackSlider";
 
 
-export function Landing(){
+function Landing(){
     const verifyImg: LandingCardProps = {
         img: "../src/assets/images/shield_1161388.png",
         caption: "100% Verified Profiles"
@@ -27,21 +27,29 @@ export function Landing(){
   
     const images:LandingCardProps[] = [ verifyImg, securityImg, matchImg ]; 
 
+    const quoteBannerText = "Join hearts, weave destinies - where love find its forever.".split("");
+
     return(
-        <>
+        <div className="-z-0">
             <Navbar page="landing"/>
-            <div className="banner-landing h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#f4f4f490]">
-                <div className="quotes flex-1 flex flex-col justify-center items-center">
-                    <div className="px-5 md:px-16 min-h-[50vh]">
-                        <h1 className="leading-tight pt-10 text-[40px] md:text-[60px]">Find your perfect partner and perfect family with 
-                            <span className="font-semibold text-[#5B0E12]"> MATRIFY </span>
+            <div className="banner-landing h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#F5F2EC] font-rubik -z-0">
+                <div className="quotes flex-1 flex flex-col items-center py-10 md:pt-28">
+                    <div className="pl-5 md:px-[50px] min-h-[50vh]">
+                        
+                        <h1 className="main-quote leading-tight text-[40px] md:text-[70px] text-[#000]">Find your perfect partner and perfect family with 
+                            <span className="font-semibold text-[#B28849]"> MATRIFY </span>
                         </h1>
-                        <button 
-                            className="bg-[#EDF0F2] text-[#454545] font-semibold w-[fit-content] py-4 px-5 rounded-[30px] mt-10"
+                        
+
+                        <motion.button 
+                            whileTap={{ scale: 0.85 }} 
+                            className="bg-[#c5964f] text-[#fff] font-semibold w-[fit-content] py-3 px-5 rounded-md mt-10"
                             onClick={() => {
                                 window.location.href = "/login";
                             }}
-                        >CREATE ACCOUNT</button>
+                        >
+                            Create Account
+                        </motion.button>
                     </div>
                 </div>
                 <div className="images flex-1 rounded-b-[60px] md:rounded-l-[50px] md:rounded-none"></div>
@@ -49,21 +57,16 @@ export function Landing(){
 
             <div className="features-cards">
                 <div className="feature-card-heading flex justify-center items-center mx-auto h-[13vh] w-3/4 rounded-b-[40px] md:w-1/4">
-                    <h1 className="text-3xl md:text-4xl" >Why  MATRIFY ?</h1>
+                    <h1 className="text-3xl md:text-4xl font-rubik" >Why  MATRIFY ?</h1>
                 </div>
 
-                <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }} 
-                >
-                    <div className="feature-card-items min-h-[60vh] flex flex-col gap-8 justify-center items-center pt-20 md:flex-row md:gap-[8rem]">
-                    {images.map((image) => (
-                        <LandingCard key={image.img} img={image.img} caption={image.caption} /> 
+                <div className="flex items-center justify-center">
+                    <div className="md:w-full lg:w-[80%] min-h-[60vh] flex flex-col gap-8 items-center  md:flex-row justify-around pt-5">
+                    {images.map((image, index) => (
+                        <LandingCard key={image.img} img={image.img} caption={image.caption} index={index} /> 
                         ))}
                     </div>
-                </motion.div>
+                </div>
 
             </div>
 
@@ -76,10 +79,10 @@ export function Landing(){
                 <div className="banner1 flex flex-col md:flex-row min-h-[70vh] mt-10">
                     <div className="banner1_img flex-1 min-h-[40vh] rounded-r-[50px] overflow-hidden"></div>
 
-                    <div className="banner1_content flex-1 flex flex-col items-center justify-center font-quote py-10">
-                        <div className="px-5 w-full md:w-3/4">
+                    <div className="banner1_content flex-1 flex flex-col items-center justify-center font-quote py-10 font-rubik">
+                        <div className="w-full md:w-[90%] flex flex-col gap-8">
                             <h1 className="text-[35px] md:text-[50px] font-quote font-semibold leading-tight">Choose by interest, location and other relevant features</h1>
-                            <p className="text-[18px] md:text-xl pt-5">Customize your partner search with filter like hobbies, location and more.Find your suitable match.</p>
+                            <p className="text-[18px] md:text-xl">Customize your partner search with filter like hobbies, location and more.Find your suitable match.</p>
                         </div>
                     </div>
                 </div>
@@ -91,10 +94,10 @@ export function Landing(){
                 whileInView="visible"
                 viewport={{ once: true }} 
             >
-                <div className="banner2 flex flex-col-reverse md:flex-row min-h-[70vh] font-quote">
+                <div className="banner2 flex flex-col-reverse md:flex-row min-h-[70vh] font-rubik">
 
                     <div className="banner2_content flex-1 flex flex-col items-center justify-center py-10">
-                        <div className="px-5 w-full md:w-3/4">
+                        <div className="px-5 w-full md:w-[85%]">
                             <h1 className="text-[35px] md:text-[45px] font-quote font-semibold leading-tight">Interact with matches the way you like</h1>
                             <ul className="flex flex-col gap-10 pt-10">
                                 <li className="flex gap-5 items-center">
@@ -113,7 +116,7 @@ export function Landing(){
                         </div>
                     </div>
                     
-                    <div className="banner2_img flex-1 min-h-[40vh] rounded-[50px] md:rounded-l-[50px] md:rounded-none overflow-hidden"></div>
+                    <div className="banner2_img flex-1 min-h-[40vh] rounded-[50px] md:rounded-none overflow-hidden"></div>
                 </div>
             </motion.div>
 
@@ -123,12 +126,12 @@ export function Landing(){
                 whileInView="visible"
                 viewport={{ once: true }} 
             >
-                <div className="banner3 flex flex-col md:flex-row min-h-[70vh] font-quote">
+                <div className="banner3 flex flex-col md:flex-row min-h-[70vh] font-rubik">
 
                     <div className="banner3_img flex-1 min-h-[40vh] rounded-[50px] md:rounded-r-[50px] md:rounded-none overflow-hidden"></div>
 
                     <div className="banner3_content flex-1 flex flex-col items-center justify-center py-10">
-                        <div className="px-5 w-full md:w-3/4">
+                        <div className="px-5 w-full md:w-[90%]">
                             <h1 className="text-[35px] md:text-[50px] font-quote font-semibold leading-tight">Advance match recommendation system</h1>
                             <p className="text-[18px] md:text-xl pt-5">Our advanced recommendation system gives profile suggestions based on your preferences. Explore compatible matches from these.</p>
                         </div>
@@ -151,16 +154,32 @@ export function Landing(){
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true }} 
-            >
-                <div className="banner4-div font-quote relative h-[50vh] md:h-[90vh]">
-                    <p className="font-semibold w-[60%] text-[#0000009d] text-[25px] absolute top-[40%] left-20 md:text-[50px]">Join hearts, weave destinies - where love find its forever.</p>
+                className="banner4-div font-quote flex items-center pl-16 h-[50vh] md:h-[90vh] font-rubik"
+                viewport={{ once: true }}
+                >
+                <div className="font-semibold w-[50%] text-[#0000009d] text-[25px] left-20 md:text-[45px]">
+                    {quoteBannerText.map((el, i) => (
+                    <motion.span
+                        key={i}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{
+                        duration: 0.25,
+                        delay: i / 10,
+                        }}
+                    >
+                            {el}{""}
+                        
+                    </motion.span>
+                    ))}
                 </div>
             </motion.div>
 
                 
             <Footer/>
 
-        </>
+        </div>
     )
 }
+
+export default Landing;

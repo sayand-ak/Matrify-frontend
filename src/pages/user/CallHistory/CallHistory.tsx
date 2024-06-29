@@ -68,8 +68,8 @@ export const CallHistory = () => {
     }, [handleFetchCallHistory]);
 
     return (
-        <div className="w-full flex flex-col gap-5 items-center my-10">
-            {callHistory.map((call, index) => (
+        <div className="w-full flex flex-col gap-5 items-center my-10 h-[95vh] overflow-scroll no-scrollbar">
+            {callHistory.reverse().map((call, index) => (
                 <div key={index} className="w-[80%] min-h-[90px] rounded-lg bg-[#f4f4f4] p-4">
                     <div className="flex items-center gap-3">
                         <img src={call.otherUserImage} alt="User Avatar" className="w-16 h-16 rounded-full" />
