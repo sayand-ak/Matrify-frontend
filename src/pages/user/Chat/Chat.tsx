@@ -3,7 +3,7 @@ import { ChatBox } from "../../../components/chat/ChatBox";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
 import { getMessages, getConversations, sendMessages } from "../../../services/chatAPI";
 import { Message, MessageData } from "../../../typings/conversation/message";
-import { ChatMenu } from "../../../components/chat/ChatMenu";
+import ChatMenu from "../../../components/chat/ChatMenu";
 import { Conversation } from "../../../typings/conversation/conversation";
 import { socket } from "../../../services/socket";
 import { IoMdCall } from "react-icons/io";

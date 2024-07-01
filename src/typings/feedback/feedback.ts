@@ -4,6 +4,7 @@ export interface Feedback {
     partnerId: string;
     story: string;
     image: string;
+    isArchived: boolean;
     createdAt: Date;
 }
 
@@ -17,6 +18,7 @@ export interface FeedbackResponse {
     };
     story: string;
     image: string;
+    isArchived: boolean;
     createdAt: Date;
 }
 
@@ -32,5 +34,6 @@ export interface FeedbackAdminType {
     };
     story: string;
     image: string;
+    isArchived: boolean;
     createdAt: Date;
 }

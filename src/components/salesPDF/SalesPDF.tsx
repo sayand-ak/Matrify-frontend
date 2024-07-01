@@ -121,7 +121,7 @@ const DownloadDropdown: React.FC<Props> = ({ salesReportData }) => {
                     <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={downloadExcel}>Download Excel</li>
                     <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
                         <PDFDownloadLink document={<SalesReportPDF />} fileName="sales_report.pdf">
-                            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download PDF')}
+                            {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
                         </PDFDownloadLink>
                     </li>
                 </ul>

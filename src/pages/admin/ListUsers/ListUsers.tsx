@@ -26,6 +26,8 @@ export function ListUser({value}: {value: Array<Users>}) {
     const [paginationCount, setPaginationCount] = useState(1);
     const [totalItemsCount, setTotalItemsCount] = useState(0);
     
+    console.log("users data : ",users);
+    
 
     useEffect(() => {
         async function getUsersData() {

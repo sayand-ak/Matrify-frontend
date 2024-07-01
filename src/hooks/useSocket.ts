@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SocketContext } from '../context/SocketContext';
+import { SocketContext } from '../context/socketContext';
 
 // Custom hook to use the SocketContext
 export const useSocket = () => {

@@ -1,4 +1,4 @@
-const startTimer = (): { interval: NodeJS.Timeout | null, remainingTime: number | null } => {
+export const startTimer = (): { interval: NodeJS.Timeout | null, remainingTime: number | null } => {
     let interval: NodeJS.Timeout | null = null;
     let remainingTime: number | null = null;
 

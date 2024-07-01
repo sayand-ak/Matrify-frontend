@@ -74,21 +74,34 @@ export const loginAdminAsync = createAsyncThunk("/api/admin/login", async ({ ema
 });
 
 export const listUser = createAsyncThunk("/api/admin/list-users", async (count: number) => {
-    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-users/page?count=${count}`, { withCredentials: true });
-
-    return response.data;
+    try{
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-users/page?count=${count}`, { withCredentials: true });
+    
+        return response.data;
+    } catch(error) {
+        return (error as Error).message;
+    }
 });
 
 export const searchUser = createAsyncThunk("/api/admin/search-users", async (searchTxt: string) => {
-    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/search-user/text?expr=${searchTxt}`, { withCredentials: true });
-
-    return response.data;
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/search-user/text?expr=${searchTxt}`, { withCredentials: true });
+    
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
 });
 
 export const listSubscription = createAsyncThunk("/api/admin/list-subscription", async (count: number) => {
-    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-subscriptions/page?count=${count}`, { withCredentials: true });
-
-    return response.data;
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-subscriptions/page?count=${count}`, { withCredentials: true });
+    
+        return response.data;
+        
+    } catch (error) {
+        return (error as Error).message;
+    }
 });
 
 
@@ -103,12 +116,17 @@ interface AddSubscriptionPayload {
 }
 
 export const addSubscription = createAsyncThunk('admin/addSubscription', async (subscriptionData: AddSubscriptionPayload) => {
-    const response: AxiosResponse = await axios.post(
-        `${API_URL}/add-subscription`,
-        subscriptionData,
-        { withCredentials: true }
-    );
-    return response.data;
+    try {
+        const response: AxiosResponse = await axios.post(
+            `${API_URL}/add-subscription`,
+            subscriptionData,
+            { withCredentials: true }
+        );
+        return response.data;
+        
+    } catch (error) {
+        return (error as Error).message;
+    }
 }
 );
 
@@ -122,25 +140,40 @@ interface AddSubscriptionOfferPayload {
 
 
 export const addSubscriptionOffer = createAsyncThunk('admin/addSubscriptionOffer', async (offerData: AddSubscriptionOfferPayload) => {
-    const response: AxiosResponse = await axios.post(
-        `${API_URL}/add-offers`,
-        offerData,
-        { withCredentials: true }
-    );
-    return response.data;
+    try {
+        const response: AxiosResponse = await axios.post(
+            `${API_URL}/add-offers`,
+            offerData,
+            { withCredentials: true }
+        );
+        return response.data;
+        
+    } catch (error) {
+        return (error as Error).message;
+    }
 }
 );
 
 export const listSubscriptionOffers = createAsyncThunk("/api/admin/list-subscription-offers", async (count: number) => {
-    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-subscription-offers/page?count=${count}`, { withCredentials: true });
-
-    return response.data;
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-subscription-offers/page?count=${count}`, { withCredentials: true });
+    
+        return response.data;
+        
+    } catch (error) {
+        return (error as Error).message;
+    }
 });
 
 export const listPaymentHistory = createAsyncThunk("/api/admin/list-payment-history", async (count: number) => {
-    const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-payment-history/page?count=${count}`, { withCredentials: true });
-
-    return response.data;
+    try {
+        const response: AxiosResponse = await axiosInstance.get(`${API_URL}/list-payment-history/page?count=${count}`, { withCredentials: true });
+    
+        return response.data;
+        
+    } catch (error) {
+        return (error as Error).message;
+    }
 });
 
 
@@ -210,6 +243,15 @@ export const dashboardTotalRevenue = createAsyncThunk("/api/dashboardTotalRevenu
 export const salesReport = createAsyncThunk("/api/salesReport", async (type: string = "") => {
     try {
         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/sales-report/${type}`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        return (error as Error).message;
+    }
+});
+
+export const blockUser = createAsyncThunk("/api/blockUser", async (userId: string = "") => {
+    try {
+        const response: AxiosResponse = await axiosInstance.patch(`${API_URL}/block-user/${userId}`, { withCredentials: true })
         return response.data;
     } catch (error) {
         return (error as Error).message;

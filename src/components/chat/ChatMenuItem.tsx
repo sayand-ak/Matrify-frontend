@@ -5,8 +5,8 @@ import { formatDate } from "../../utils/formateDate";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { userProfile } from "../../services/userAPI";
 import { MdBlock } from "react-icons/md";
-import { SocketContext } from "../../context/SocketContext";
 import "./chat.css"
+import { SocketContext } from "../../context/socketContext";
 
 
 interface ChatMenuItemsProps {

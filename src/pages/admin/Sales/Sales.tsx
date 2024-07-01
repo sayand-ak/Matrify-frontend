@@ -6,7 +6,6 @@ import { salesReport } from "../../../services/adminAPI";
 import { formatDate } from "../../../utils/formateDate";
 import LineChart from "../../../components/chart/LineChart";
 import { IoFilterOutline } from "react-icons/io5";
-import * as XLSX from "xlsx";
 import DownloadDropdown from "../../../components/salesPDF/SalesPDF";
 
 interface Data {
@@ -64,35 +63,6 @@ const Sales = () => {
                 tension: 0.1
             }
         ]
-    };
-
-    const downloadExcel = () => {
-        if (!salesReportData) return;
-
-        const data = salesReportData.payments.map((payment, index) => ({
-            PID: payment.subscription.pid,
-            Username: salesReportData.user[index]?.username,
-            Amount: payment.subscription.amount,
-            Type: payment.subscription.type,
-            "Expires In": formatDate(payment.subscription.expiresIn),
-            "Created At": formatDate(payment.subscription.createdAt),
-            "Updated At": formatDate(payment.subscription.updatedAt)
-        }));
-
-        data.push({
-            PID: '',
-            Username: '',
-            Amount: salesReportData.total,
-            Type: 'Total',
-            "Expires In": '',
-            "Created At": '',
-            "Updated At": ''
-        });
-
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
-        XLSX.writeFile(wb, "sales_report.xlsx");
     };
 
     return (

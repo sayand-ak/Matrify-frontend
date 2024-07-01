@@ -12,15 +12,8 @@ import { IoVideocamOutline } from "react-icons/io5";
 import { VideoCallData } from "../../typings/videoCall/videoCall";
 import { newCall } from "../../services/videoCallApi";
 import { socket } from "../../services/socket";
-import { SocketContext } from "../../context/SocketContext";
-// import { useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
-
-
-// interface SocketUserType {
-//     userId: string;
-//     socketId: string;
-// }
+import { SocketContext } from "../../context/socketContext";
 
 
 interface ChatBoxProps {

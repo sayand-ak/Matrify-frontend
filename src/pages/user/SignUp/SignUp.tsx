@@ -8,11 +8,17 @@ import { useNavigate } from "react-router-dom";
 import OtpInput from 'react-otp-input';
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
 import { otpVerify, signupUserAsync } from "../../../services/userAPI";
-import { clearRecaptchaVerifier, onSignInSubmit } from "../../../services/firebase/auth";
+import {  onSignInSubmit } from "../../../services/firebase/auth";
 import { ToastContainer } from "react-toastify";
 import { ConfirmationResult, signInWithPhoneNumber } from "firebase/auth";
 import showToast from "../../../components/Toast/Toast";
+import { startTimer } from "../../../utils/timer";
 
+declare global {
+    interface Window {
+        recaptchaVerifier: any;
+    }
+}
 
 function SignUp() {
     const [uname, setUname] = useState("");
@@ -103,6 +109,8 @@ function SignUp() {
                 const otpConfig = onSignInSubmit(submitBtn.current);
                 
                 if (otpConfig) {
+                    console.log("recaptche rendered");
+                    
                     otpConfig.recaptchaVerifier.render();
                     setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
                     
@@ -125,74 +133,77 @@ function SignUp() {
     
 
     async function handleOTPVerification(){
-        if(otp && confirmationResult){
-            confirmationResult.confirm(otp)
-                .then(async (result) => {
-                if(result.user){     
-                                                            
+        if(otp.length === 6 && confirmationResult){
+            try {
+                const result = await confirmationResult.confirm(otp);
+                if (result.user) {     
                     const response = await dispatch(otpVerify({
                         username: uname,
                         phone: phone, 
                         password: password,
                         firebaseData: result.user
                     }));
-
+    
                     if(response.payload.success){
                         showToast("success", response.payload.message, () => {
                             navigate("/login");
                         });
-                        
-                    }else{
+                    } else {
                         showToast("error", response.payload.message);
                     }
-
-                }else{
+                } else {
                     showToast("error", "Invalid OTP");
                 }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    
-                    showToast("error", "Invalid OTP.Check OTP and try again");
-                
-                });
-        }else{
-            alert("invalid OTP")
+            } catch (error) {
+                console.log(error);
+                showToast("error", "Invalid OTP. Check OTP and try again.");
+            }
+        } else {
+            alert("Invalid OTP");
         }
     }
+    
 
 
     async function handleResendOTP() {
-
         try {
-            const otpConfig = onSignInSubmit(resendLink.current) || null;
-            
+            const otpConfig = onSignInSubmit(resendLink.current);
             if (otpConfig) {
-                setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig?.recaptchaVerifier));
+                const confirmation = await signInWithPhoneNumber(otpConfig.auth, "+91"+phone, otpConfig.recaptchaVerifier);
+                setConfirmationResult(confirmation);
     
-                //setting timer
                 const { interval, remainingTime } = startTimer();
                 if (remainingTime !== null) {
                     setRemainingTime(remainingTime);
                     setTimerInterval(interval);
                 }
-                
+    
                 setIsModalOpen(true);
-
             } else {
                 alert("Firebase error");
             }
-            
         } catch (error) {
             console.log(error);
-            
         }
     }
+    
 
-    function handleCancel() {
-        clearRecaptchaVerifier()
+    function handleCancel() {        
+            
+        const element = document.getElementById("recaptcha-container");
+        if (element) {
+            element.innerHTML = "";
+        }
+                
+        setOtp("");
+        setRemainingTime(null);
+        setTimerInterval(null);
+
+        // Close the OTP verification modal
         setIsModalOpen(false);
     }
+
+    
     
 
 
@@ -345,13 +356,15 @@ function SignUp() {
                         </button>
                         <button 
                             className="w-1/2 border-[#1B2931] border-[1px] rounded-md"
-                             onClick={() => handleCancel()}
+                             onClick={() => handleCancel()} 
                         >
                         Cancel
-                        </button>
+                        </button>                        
                     </div>
                 </div>
             </CustomModal>
+
+            <div id="recaptcha-container" className="absolute bottom-0"></div>
         </div>
     )
 }

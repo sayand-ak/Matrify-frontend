@@ -46,6 +46,12 @@ axiosInstance.interceptors.response.use((response) => {
         const refreshToken = localStorage.getItem("userRefresh");
         // console.log(error.response.status, "----------", originalRequest, "--------", refreshToken);
 
+        if (error.response.data.error === 'User is blocked') {
+            alert("You are blocked by admin...")
+            window.location.href = "/login"; // Redirect to login page if user is blocked
+            return Promise.reject(new Error("User is blocked"));
+        }
+
         if (error.response.status === 401 && !originalRequest._retry && refreshToken) {
             // console.log("from user axios.........");
 
@@ -456,15 +462,6 @@ export const reportUser = createAsyncThunk("/api/reportUser", async(reportData: 
         return (error as Error).response?.data;
     }
 });
-
-// export const checkReportUser = createAsyncThunk("/api/checkReportUser", async() => {
-//     try {
-//         const response: AxiosResponse = await axiosInstance.get(`${API_URL}/check-report-user`, { withCredentials: true })
-//         return response.data;
-//     } catch(error) {
-//         return (error as Error).response?.data;
-//     }
-// });
 
 export const likeUser = createAsyncThunk("/api/likeUser", async(targetUserId: string) => {
     try {

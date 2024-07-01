@@ -26,8 +26,11 @@ export const UserRoutes: FC = () => {
         document.title = "Matrify - User";
     }, []);
 
+
     return (
-        <Suspense fallback={<div className='h-[100vh] w-[100vw] flex justify-center items-center text-[20px]'>Loading...</div>}>
+        <Suspense fallback={<div className='h-[100vh] w-[100vw] flex justify-center items-center text-[20px]'>
+            <img src="../src/assets/svg/Ripple@1x-1.0s-200px-200px.svg" alt="" className='h-50 w-50' />
+        </div>}>
             <Routes>
                 <Route path='/' element={<Landing />} />
                 <Route path="/login" element={<Login />} />

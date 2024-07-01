@@ -12,6 +12,8 @@ export interface UserData {
     username?:string,
     dob?:string;
     state?:string,
+    gender?: string;
+    height: number;
     district?:string,
     searchHistory: SearchHistory[];
     image: string;
@@ -19,6 +21,7 @@ export interface UserData {
     subscribed?: boolean
     likedProfiles: Array<string>;
     deleted: boolean;
+    isBlocked: boolean;
     payload: {
         data: {
             email: string;

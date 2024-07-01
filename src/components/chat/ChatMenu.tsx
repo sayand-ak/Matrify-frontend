@@ -4,6 +4,7 @@ import { ChatMenuItems } from "./ChatMenuItem";
 import { Conversation } from "../../typings/conversation/conversation";
 import { useAppSelector } from "../../hooks/useTypedSelectors";
 import { IoArrowBack } from "react-icons/io5";
+import "./chat.css"
 
 
 interface ChatMenuProps {
@@ -13,7 +14,7 @@ interface ChatMenuProps {
     chatMap: Map<string, number>
 }
 
-export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected, chatMap}: ChatMenuProps) {
+function ChatMenu({ handleMenuItemClick, conversations, isChatSelected, chatMap}: ChatMenuProps) {
     const [search, setSearch] = useState("");
     
 
@@ -25,7 +26,7 @@ export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected, c
 
     return (
             <div className={`chat-list bg-[#efcf9718] overflow-scroll no-scrollbar ${isChatSelected ? 'hidden sm:block' : 'w-full'} md:w-[50%] lg:w-[30%]`}>            
-            <div className="chat-menu-header sticky top-0 pb-5 bg-[#EFCE97]">
+            <div className="chat-menu-header pb-5 bg-[#EFCE97]">
                 <div className="flex items-center px-5 text-[#000000]">
                     <a href={`/profile/${userId}`}>
                         <IoArrowBack className="text-2xl"/>
@@ -64,3 +65,5 @@ export function ChatMenu({ handleMenuItemClick, conversations, isChatSelected, c
         </div>
     );
 }
+
+export default ChatMenu;
