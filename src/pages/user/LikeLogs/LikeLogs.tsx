@@ -7,18 +7,24 @@ import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 export function LikedUsers() {
     const curUser = useAppSelector(state => state.user.user);
     const [likedUserData, setLikedUserData] = useState<UserData[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     const dispatch = useAppDispatch();
 
-    const fetchLikedUserData = useCallback(async() => {
+    const fetchLikedUserData = useCallback(async () => {
         if (curUser?.likedProfiles && curUser?.likedProfiles.length > 0) {
-            curUser.likedProfiles.map(async (user) => {
-                const userData = await dispatch(userProfile(user));
-                if(userData.payload.data){
-                    setLikedUserData(prev => [...prev, userData.payload.data[0]]);
-                }
-            });
-       }
-    }, [curUser])
+            const users = await Promise.all(
+                curUser.likedProfiles.map(async (user) => {
+                    const userData = await dispatch(userProfile(user));
+                    return userData.payload.data ? userData.payload.data[0] : null;
+                })
+            );
+            setLikedUserData(users.filter(user => user !== null));
+            setIsLoading(false); 
+        } else {
+            setIsLoading(false);
+        }
+    }, [curUser, dispatch]);
 
     useEffect(() => {
         fetchLikedUserData();
@@ -53,10 +59,18 @@ export function LikedUsers() {
                             key={user._id} className="flex items-center justify-between gap-10 p-2 border-b px-14 w-3/4 hover:bg-gray-200"
                         >
                            <div className="flex gap-5 items-center">
-                                <div 
-                                    className="h-16 w-16 rounded-full overflow-hidden mb-2"
-                                    style={{backgroundImage: `url(${user.image})`, backgroundSize: 'cover', backgroundPosition: 'center'}}
-                                ></div>
+                                <div className="relative">
+                                    {isLoading ? (
+                                        <div className="loader"></div>
+                                    ) : (
+                                        <img
+                                            src={user.image}
+                                            alt="Profile"
+                                            className="h-20 w-20 rounded-full object-cover"
+                                            style={{ backgroundColor: "#FFF5E1" }}
+                                        />
+                                    )}
+                                </div>
 
                                 <div>
                                     <h1 className="text-[16px] font-semibold">{user.username}</h1>

@@ -14,7 +14,7 @@ export interface DocsData {
 }
 
 
-interface StripeReqDataType {
+export interface StripeReqDataType {
   subId: string,
   pid: string,
   type: string,

@@ -37,6 +37,24 @@
     src: url('./assets/fonts/Rubik/Rubik-VariableFont_wght.ttf');
 }
 
+.loader {
+    width: 5rem;
+    height: 5rem;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 50%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
 
 :root{
     --background-color: #f6f6f6;

@@ -6,6 +6,8 @@ import { createSubscriptionSession, findActiveOffer, getActiveSubscription } fro
 import { Offer, Subscription } from "../../../typings/user/userTypes";
 import { BsSkipBackward } from "react-icons/bs";
 import { PayButton } from "../../../components/PayButton/PayButton";
+import { Footer } from "../../../components/footer/Footer";
+import RefundPolicyModal from "../../../components/refundPolicyModal/RefundPolicyModal";
 
 
 interface RefObj {
@@ -19,6 +21,10 @@ function Payment () {
     const weeklyRef = useRef<HTMLDivElement | null>(null);
     const monthlyRef = useRef<HTMLDivElement | null>(null);
     const yearlyRef = useRef<HTMLDivElement | null>(null);
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenType, setIsOpenType] = useState<string>("");
+
 
     const [subscriptionAmt, setSubscriptionAmt] = useState<Subscription>();
 
@@ -107,7 +113,7 @@ function Payment () {
     
 
     return (
-        <div className="min-h-[100vh] font-gillroy">
+        <div className="min-h-[100vh] font-rubik">
 
             <a href="/home" className="absolute top-5 right-5 flex gap-2 text-[15px] text-[#9a9797] cursor-pointer">
                 SKIP
@@ -117,9 +123,9 @@ function Payment () {
             <div className="flex flex-col items-center gap-5 pt-5">
                 <div className="flex items-center gap-2">
                     <img src="../src/assets/images/logo.png"className="h-[5rem] md:h-[5rem] lg:h-[6rem]" alt="" />
-                    <h2 className="logo-heading text-[3rem] md:text-[3.5rem] lg:text-[4rem] font-extrabold">MATRIFY</h2>
+                    <h2 className="logo-heading text-[3rem] md:text-[3.5rem] lg:text-[4rem] font-semibold">MATRIFY</h2>
                 </div>
-                <h2 className="font-semibold text-center text-[1.5rem] md:text-[2.2rem] lg:text-[3.5rem]">Select your plan and Upgrade to Premium</h2>
+                <h2 className="text-center text-[1.5rem] md:text-[2.2rem] lg:text-[3.5rem]">Select your plan and Upgrade to Premium</h2>
                 <p 
                     className="w-full text-center text-[1rem] md:text-[1.3rem] lg:text-[1.7rem] text-[#707070]"
                 >You will be able to access advance interaction features</p>
@@ -157,7 +163,17 @@ function Payment () {
                             </li>
                         </ul>
 
-                        <PayButton handleSubscriptionPayment={() => handleSubscriptionPayments("weekly", selector?._id as string)}/>
+                        <div className="flex flex-col gap-5 items-center justify-center pt-5">
+                            <PayButton handleSubscriptionPayment={() => handleSubscriptionPayments("weekly", selector?._id as string)}/>
+                            <a 
+                                className="text-[12px] underline cursor-pointer"
+                                onClick={() => {
+                                    setIsOpen(true);
+                                    setIsOpenType("weekly")
+                                }}
+                            >terms and conditions</a>
+                        </div>
+
                     </div>
                 </div>
 
@@ -196,7 +212,16 @@ function Payment () {
                                 </li>
                             </ul>
 
-                            <PayButton handleSubscriptionPayment={() => handleSubscriptionPayments("monthly", selector?._id as string)}/>
+                            <div className="flex flex-col gap-5 items-center justify-center pt-5">
+                                <PayButton handleSubscriptionPayment={() => handleSubscriptionPayments("monthly", selector?._id as string)}/>
+                                <a 
+                                    className="text-[12px] underline cursor-pointer"
+                                    onClick={() => {
+                                        setIsOpen(true);
+                                        setIsOpenType("monthly")
+                                    }}
+                                >terms and conditions</a>
+                            </div>
 
                         </div>
                     </div>
@@ -231,12 +256,30 @@ function Payment () {
                             </li>
                         </ul>
 
-                        <PayButton handleSubscriptionPayment={() => handleSubscriptionPayments("yearly", selector?._id as string)}/>
+                        <div className="flex flex-col gap-5 items-center justify-center pt-5">
+                            <PayButton handleSubscriptionPayment={() => handleSubscriptionPayments("yearly", selector?._id as string)}/>
+                            <a 
+                                className="text-[12px] underline cursor-pointer"
+                                onClick={() => {
+                                    setIsOpen(true);
+                                    setIsOpenType("yearly")
+                                }}
+                            >terms and conditions</a>
+                        </div>
                     </div>
 
                 </div>
 
             </div>
+
+            <RefundPolicyModal 
+                isOpen={isOpen} 
+                setIsOpen={setIsOpen} 
+                isOpenType={isOpenType} 
+                onRequestClose={() => {}}
+            />
+
+            <Footer/>
         </div>
     )
 }

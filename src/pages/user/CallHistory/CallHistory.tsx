@@ -6,6 +6,7 @@ import { userProfile } from "../../../services/userAPI";
 import { ImArrowUpRight2 } from "react-icons/im";
 import { ImArrowDownLeft2 } from "react-icons/im";
 import { formatDate } from "../../../utils/formateDate";
+import { formatReceivedTime } from "../../../utils/formateReceivedTime";
 
 interface CallHistoryData extends VideoCallData {
     otherUserName: string;
@@ -14,8 +15,11 @@ interface CallHistoryData extends VideoCallData {
 
 export const CallHistory = () => {
     const [callHistory, setCallHistory] = useState<CallHistoryData[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     const dispatch = useAppDispatch();
     const userId = useAppSelector(state => state.user.user?._id);
+
 
     const fetchUserDetails = async (userId: string) => {
         try {
@@ -70,10 +74,20 @@ export const CallHistory = () => {
     return (
         <div className="w-full flex flex-col gap-5 items-center my-10 h-[95vh] overflow-scroll no-scrollbar">
             {callHistory.reverse().map((call, index) => (
-                <div key={index} className="w-[80%] min-h-[90px] rounded-lg bg-[#f4f4f4] p-4">
+                <div key={index} className="w-[80%] min-h-[110px] rounded-lg bg-[#f4f4f4] p-4">
                     <div className="flex items-center gap-3">
-                        <img src={call.otherUserImage} alt="User Avatar" className="w-16 h-16 rounded-full" />
-                        <div>
+                        <div className="relative">
+                            {isLoading && (
+                                <div className="loader"></div>
+                            )}
+                            <img
+                                src={call.otherUserImage}
+                                alt="Profile"
+                                className="h-20 w-20 rounded-full object-cover"
+                                onLoad={() => setIsLoading(false)}
+                                style={{ display: isLoading ? 'none' : 'block', backgroundColor: "#FFF5E1" }}
+                            />
+                        </div>                        <div>
                             <div>
                                 {call.caller === userId ? (
                                     <p>
@@ -83,7 +97,8 @@ export const CallHistory = () => {
                                         </span>
 
                                         <span className="text-[12px]">
-                                            {formatDate(call.createdAt?.toString() || "")}
+                                            {formatReceivedTime(call.createdAt?.toString() || "")}
+
                                         </span>
                                     </p>
                                 ) : (

@@ -499,3 +499,14 @@ export const getUserNotifications = createAsyncThunk("/api/getUserNotifications"
     }
 });
 
+export const checkRefundAvailability = createAsyncThunk("/api/checkRefundAvailability", async() => {
+    try {
+        const response: AxiosResponse = await axios.get(`${API_URL}/check-refund-availability`, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+
+
+

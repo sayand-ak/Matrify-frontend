@@ -8,6 +8,7 @@ import showToast from "../../../components/Toast/Toast";
 import { startConversation } from "../../../services/chatAPI";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import "./interestLogs.css";
 
 interface InterestSend {
     sendTo: string;
@@ -29,6 +30,7 @@ interface InterestListProps {
 
 export default function InterestLogs(interestData: InterestListProps) {
     const [selectedTab, setSelectedTab] = useState<string>("interestSend");
+    const [isLoading, setIsLoading] = useState(true);
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
@@ -85,10 +87,11 @@ export default function InterestLogs(interestData: InterestListProps) {
             showToast("error", "Chat starting failed");
         }
     }
+    
 
     return (
-        <div className="w-full flex flex-col items-center max-h-[85vh] overflow-y-scroll no-scrollbar">
-            <div className="flex justify-around items-center border-b-[1px] border-b-[#dfdfdf] text-[18px] h-[80px] w-full">
+        <div className="w-full flex flex-col items-center max-h-[90vh] overflow-y-scroll no-scrollbar">
+            <div className="flex justify-around items-center border-b-[1px] border-b-[#dfdfdf] text-[18px] min-h-[80px] w-full">
                 <div className="h-full flex-1 flex justify-center hover:bg-[#f4f4f4]">
                     <button
                         className={`opacity-50 h-full flex items-center ${selectedTab === "interestSend" ? "font-semibold border-b-[5px] border-[#E7C68F] opacity-100" : ""}`}
@@ -114,12 +117,21 @@ export default function InterestLogs(interestData: InterestListProps) {
                             userData.interestSend.map((data, index) => (
                                 <div key={index} className="flex items-center gap-6 mb-4 px-5 py-4 border-b-[1px]">
                                     <div className="flex items-center gap-5 w-full">
-                                        <div
-                                            className="h-20 w-20 rounded-full bg-cover bg-center"
-                                            style={{ backgroundImage: `url(${data.image})` }}
-                                        ></div>
+                                        <div className="relative">
+                                                {isLoading && (
+                                                    <div className="loader"></div>
+                                                )}
+                                                <img
+                                                    src={data.image}
+                                                    alt="Profile"
+                                                    className="h-20 w-20 rounded-full object-cover"
+                                                    onLoad={() => setIsLoading(false)}
+                                                    style={{ display: isLoading ? 'none' : 'block', backgroundColor: "#FFF5E1" }}
+                                                />
+                                            </div>
+
                                         <div className="flex flex-col gap-1">
-                                            <p className="font-bold text-[22px]">{data.username} ({new Date().getFullYear() - new Date(data.dob).getFullYear()})</p>
+                                            <p className="font-bold text-[18px]">{data.username} ({new Date().getFullYear() - new Date(data.dob).getFullYear()})</p>
                                             <p className="text-sm text-gray-400">{`Sent on: ${formatDate(interestData.interestSend[index].sendOn.toString())}`}</p>
                                             <p className="text-[#E7C68F] font-semibold text-[15px]">{interestData.interestSend[index].status.toUpperCase()}</p>
                                         </div>
