@@ -41,7 +41,7 @@ export default function Sidebar({ role, items, onClickItem }: SidebarProps) {
     };
 
     return (
-        <div className={`sidebar block bg-[#fff] min-w-[5rem] md:w-[7rem] lg:w-[21rem] min-h-[85vh] z-0`}>
+        <div className={`sidebar block bg-[#fff] min-w-[5rem] md:w-[7rem] lg:w-[21rem] min-h-[85vh] z-0 overflow-y-scroll no-scrollbar`}>
 
             {role != "user"  && <div className="heading flex items-center justify-center lg:justify-start lg:pl-7 h-40 gap-2">
                 <img src="/src/assets/images/logo.png" className="h-14 w-14 xl:h-20 xl:w-20" alt="" />

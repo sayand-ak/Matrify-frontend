@@ -65,6 +65,9 @@ import { FeedbackDiv } from "../../../components/feedbackDiv/FeedbackDiv";
 import { getFeedback } from "../../../services/feedbackAPI";
 import { FeedbackResponse } from "../../../typings/feedback/feedback";
 import { NotificationType } from "../../../typings/notifications/notificationType";
+import { IoWalletOutline } from "react-icons/io5";
+import Wallet from "../Wallet/Wallet";
+
 
 
 
@@ -79,6 +82,7 @@ function Profile() {
     const [showInterestLogs, setShowInterestLogs] = useState<boolean>(false);
     const [showLikedUsers, setShowLikedUsers] = useState<boolean>(false);
     const [showCallHistory, setShowCallHistory] = useState<boolean>(false);
+    const [showWallet, setShowWallet] = useState<boolean>(false);
 
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [showBlockedUsers, setShowBlockedUsers] = useState<boolean>(false);
@@ -168,6 +172,7 @@ function Profile() {
         { name: "Interest Shared", icon: CiPercent, notificationCount: hasInterestRequest },
         { name: "Call logs", icon: PiPhoneCallThin },
         { name: "Payments", icon: HiOutlineCurrencyRupee },
+        { name: "Wallet", icon: IoWalletOutline},
         { name: "Chat", icon: CiChat1, notificationCount: UnreadMessages },
         { name: "Likes", icon: CiHeart },
         { name: "Blocked", icon: MdOutlineBlock },
@@ -212,6 +217,12 @@ function Profile() {
             setShowCallHistory(true);
         } else {
             setShowCallHistory(false);
+        }
+
+        if (itemName === "Wallet") {
+            setShowWallet(true);
+        } else {
+            setShowWallet(false);
         }
         
         if (itemName === "Logout") {
@@ -374,7 +385,7 @@ function Profile() {
 
 
     return (
-        <div className="flex flex-col w-full overflow-hidden relative">
+        <div className="flex flex-col w-full relative">
 
             {/* navbar */}
             <div className="z-10 hidden md:block">
@@ -392,7 +403,7 @@ function Profile() {
             </div>
 
 
-            <div className="flex">
+            <div className="flex overflow-hidden h-[90vh]">
 
                 {/* sidebar in normal view */}
                 <div className={`hidden max-w-[20rem] ${isLoggedUser && "md:flex"}`}>
@@ -407,18 +418,18 @@ function Profile() {
                     //if profile is selected show default profile page
                     showProfile && (
 
-                        <div className="w-full flex bg-[#F5F2EC] flex-col xl:flex-row">
+                        <div className="w-full flex bg-[#F5F2EC] flex-col xl:flex-row overflow-y-scroll no-scrollbar">
 
-                            <div className="w-full flex justify-center py-0 md:py-7">
+                            <div className="w-full flex justify-center py-0 md:py-7 h-[120vh]">
 
-                                <div className={`w-full ${isLoggedUser ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45.1rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
+                                <div className={`w-full ${isLoggedUser ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
 
                                     {/* the cover image div */}
                                     <div className="w-full h-[30%]" style={{ backgroundImage: "url('/src/assets/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
                                         <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${isLoggedUser ? "block" : "hidden"}`} onClick={showSidebar} />
                                     </div>
 
-                                    <div className="w-full h-[33%] relative">
+                                    <div className="w-full h-[30%] relative">
                                         <div
                                             className="rounded-full h-48 w-48 absolute top-[-100px] left-10 border-[5px] border-white z-0"
                                             style={{
@@ -674,7 +685,7 @@ function Profile() {
 
                             {
                                 isLoggedUser && (
-                                    <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 items-start gap-3 md:gap-7 flex-row xl:flex-col flex py-5">
+                                    <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 items-start gap-3 md:gap-7 flex-row xl:flex-col flex py-5 h-[120vh]">
                                         <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-3 rounded-lg w-[90%]">
                                             <h1 className="text-[15px] md:text-[18px] text-center px-2 font-semibold">Complete your profile for exact matches...</h1>
                                             <CircularProgressbar
@@ -781,6 +792,12 @@ function Profile() {
                 {
                     showCallHistory && (
                         <CallHistory/>
+                    )
+                }
+
+                {
+                    showWallet && (
+                        <Wallet/>
                     )
                 }
             </div>

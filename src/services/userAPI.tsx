@@ -508,5 +508,23 @@ export const checkRefundAvailability = createAsyncThunk("/api/checkRefundAvailab
     }
 });
 
+export const refundSubscription = createAsyncThunk("/api/refundSubscription", async({amount, pid}: {amount: number, pid: string}) => {
+    try {
+        const response: AxiosResponse = await axios.post(`${API_URL}/refund-subscription`, {amount: amount, pid: pid}, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
+
+export const fetchWalletData = createAsyncThunk("/api/fetchWalletData", async() => {
+    try {
+        const response: AxiosResponse = await axios.get(`${API_URL}/get-wallet-data`, { withCredentials: true })
+
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});
 
 

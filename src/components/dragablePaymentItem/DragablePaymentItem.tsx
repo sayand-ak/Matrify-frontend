@@ -9,10 +9,9 @@ interface DraggablePaymentItemProps {
     daysLeftText: string;
     statusClass: string;
     formatDate: (dateString: string) => string;
-    status: string;
 }
 
-const DraggablePaymentItem = ({ payment, index, daysLeftText, statusClass, formatDate, status }: DraggablePaymentItemProps) => {
+const DraggablePaymentItem = ({ payment, index, daysLeftText, statusClass, formatDate }: DraggablePaymentItemProps) => {
     return (
         <motion.div
             key={index}
@@ -26,7 +25,7 @@ const DraggablePaymentItem = ({ payment, index, daysLeftText, statusClass, forma
         >
             <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass} bg-[#ebdbbd]`}>
                 <p>
-                    {status} ({daysLeftText})
+                    {payment.status} ({daysLeftText})
                 </p>
                 <p>
                     {payment.pid}

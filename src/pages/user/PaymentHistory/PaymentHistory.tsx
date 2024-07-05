@@ -3,9 +3,10 @@ import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profil
 import { AiOutlineDoubleLeft } from "react-icons/ai";
 import DraggablePaymentItem from "../../../components/dragablePaymentItem/DragablePaymentItem";
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
-import { checkRefundAvailability } from "../../../services/userAPI";
+import { checkRefundAvailability, refundSubscription } from "../../../services/userAPI";
 import { CustomModal } from "../../../components/modal/CustomModal";
 import { BsInfoCircle } from "react-icons/bs";
+import showToast from "../../../components/Toast/Toast";
 
 
 interface RefundData {
@@ -26,6 +27,7 @@ export function PaymentHistory({ userData }: {
     const [refundModalOpen, setRefundModalOpen] = useState(false);
     const [refundData, setRefundData] = useState<RefundData | null>(null);
     const [showRefundPolicies, setShowRefundPolicies] = useState(false);
+    const [alertDiv, setAlertDiv] = useState(false);
 
 
     const dispatch = useAppDispatch();
@@ -67,31 +69,61 @@ export function PaymentHistory({ userData }: {
         setShowRefundPolicies(prevState => !prevState);
     };
 
+    const handleRefundSubmit = async(pid: string) => {
+        try {
+            if(refundData?.balanceAmount) {
+                const response = await dispatch(refundSubscription({amount: refundData?.balanceAmount,pid: pid}));
+                if(response.payload.data) {
+                    showToast("success", "Refund Successful", () => {
+                        window.location.reload();
+                    });
+                } else {
+                    showToast("error", "Refund Failed", () => {
+                        window.location.reload();
+                    })
+                }
+            } 
+            
+        } catch (error) {
+            alert("refund api error")
+        }
+    }
+
     const paymentData = userData?.profile?.subscription?.slice().reverse();
 
     return (
         <>
 
-            {!userData?.profile?.subscribed && (
+            {userData?.profile?.subscription && userData?.profile?.subscription.length == 0 ? (
                 <div className="h-[100vh] w-full flex flex-col items-center pt-28">
                     <img src="../src/assets/images/11110.jpg" alt="" className="h-[50%] w-[50%]" />
                     <p className="text-4xl font-custom font-bold text-[#817a7a81]">Not Subscribed Yet!</p>
                     <a href="/payment" className="bg-[#E7C68F] text-white font-bold px-5 py-2 rounded-lg shadow-md mt-10">SUBSCRIBE</a>
                 </div>
-            )}
-
-            {userData?.profile?.subscribed && (
+            )
+            :
+            (
                 <div className="w-full relative">
+                    
                     {
-                        (activeExpirationDay <= 5 && activeExpirationDay > 0) &&
+                        (activeExpirationDay <= 5 && activeExpirationDay > 0 || !userData?.profile?.subscribed) &&
                         <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
-                            <p className="text-[16px] font-semibold">
-                                Your {activeExpirationType} subscription expires in {activeExpirationDay} days
-                            </p>
+                            {
+                                userData?.profile?.subscription && userData.profile?.subscription.slice(-1)[0].status === "refund" ? (
+                                    <p className="text-[16px] font-semibold">
+                                        Your {activeExpirationType} subscription was refunded
+                                    </p>
+                                ) : (
+                                    <p className="text-[16px] font-semibold">
+                                        Your {activeExpirationType} subscription expires in {activeExpirationDay} days
+                                    </p>
+                                )
+                            }
                             <a href="/payment" className="bg-[#c9ac7a] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
                         </div>
 
                     }
+
                     {
                         (activeExpirationDay <= 0) && (
                             <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
@@ -111,7 +143,6 @@ export function PaymentHistory({ userData }: {
                             const expiresInDate = new Date(payment.expiresIn?.toString() || 0);
                             const isExpired = expiresInDate.getTime() < Date.now();
                             const daysDifference: number | string | null = expiresInDate ? Math.ceil((expiresInDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null;
-                            const status = isExpired ? "Expired" : "Active";
                             const statusClass = isExpired ? "border-b-[1px] bg-[#fff]" : "text-black border-b-[1px] bg-[#fff]";
 
                             let daysLeftText;
@@ -123,7 +154,7 @@ export function PaymentHistory({ userData }: {
                             }
 
                             return (
-                                status === "Active" ? (
+                                payment.status === "active" ? (
 
                                     <div key={index}>
                                         <div
@@ -141,7 +172,6 @@ export function PaymentHistory({ userData }: {
                                                 daysLeftText={daysLeftText}
                                                 statusClass={statusClass}
                                                 formatDate={formatDate}
-                                                status={status}
                                             />
                                             <button
                                                 className="absolute right-0 top-0 h-full w-[100px] -z-10 bg-[#f65555] rounded-r-lg text-white font-semibold font-rubik"
@@ -154,28 +184,6 @@ export function PaymentHistory({ userData }: {
                                         <div className="flex justify-center items-center pb-10 text-[#808080]">
                                             <span className="font-semibold text-[14px]">Credit history</span>
                                             <hr className="flex-grow h-0.5 mx-5" />
-                                        </div>
-                                    </div>
-
-                                ) : (
-                                    <div className={`rounded-lg overflow-hidden mb-10 mx-auto ring-1 ring-gray-200 opacity-[0.6]`} key={index}>
-                                        <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass} text-[#000000bb] bg-[#eeddbc4e]`}>
-                                            <p>
-                                                {status} ({daysLeftText})
-                                            </p>
-                                            <p>
-                                                {payment.pid}
-                                            </p>
-                                        </div>
-                                        <div className="min-h-24 flex flex-col md:flex-row justify-center items-center md:justify-between text-[#000000bb] bg-[#fff] px-10 py-4">
-                                            <div>
-                                                <p className="text-[30px] font-bold ">₹{payment.amount}</p>
-                                                <p className="font-semibold ">{payment.type} Subscription</p>
-                                            </div>
-                                            <div className="flex flex-col text-[16px] justify-center gap-5">
-                                                <p className="">Paid At {formatDate(payment.createdAt?.toString() || "")}</p>
-                                                <p className="">Expires At {formatDate(payment.expiresIn?.toString() || "")}</p>
-                                            </div>
                                         </div>
 
 
@@ -243,6 +251,7 @@ export function PaymentHistory({ userData }: {
                                                                 Back
                                                             </button>
                                                         </div>
+
                                                     </div>
                                                 )}
 
@@ -252,23 +261,73 @@ export function PaymentHistory({ userData }: {
                                                         <div className="flex justify-between w-full">
                                                             <button
                                                                 className="w-fit border-[1px] rounded-lg px-5 py-2 font-semibold bg-[#C8AC79] text-white"
-                                                            // onClick={() => addToWallet()}
+                                                                onClick={() => setAlertDiv(true)}
                                                             >
                                                                 Add to Wallet
                                                             </button>
                                                             <button
                                                                 className="w-fit border-[1px] rounded-lg px-5 py-2 font-semibold text-[#C8AC79] border-[#C8AC79]"
-                                                                onClick={() => setRefundModalOpen(false)}
+                                                                onClick={() => {
+                                                                    setAlertDiv(false)
+                                                                    setRefundModalOpen(false)
+                                                                }}
                                                             >
                                                                 Back
                                                             </button>
                                                         </div>
+
+                                                        {alertDiv && (
+                                                            <div className="flex justify-between items-center text-[15px] px-5 w-full bg-amber-100 border-l-4 border-yellow-700 min-h-[60px] shadow-sm mt-6">
+                                                                <p className="font-semibold text-yellow-700">
+                                                                    Are you sure you want a refund?
+                                                                </p>
+                                                                <div className="space-x-3">
+                                                                    <button 
+                                                                        className="border px-4 py-1 rounded-md hover:bg-gray-200 transition duration-300"
+                                                                        onClick={() => handleRefundSubmit(payment.pid)}
+                                                                    >
+                                                                        Yes
+                                                                    </button>
+                                                                    <button 
+                                                                        className="px-4 py-1 rounded-md bg-gray-200 hover:bg-blue-300 transition duration-300 font-medium"
+                                                                        onClick={() => {
+                                                                            setRefundModalOpen(false)
+                                                                            setAlertDiv(false);
+                                                                        }}
+                                                                    >
+                                                                        No
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+
                                                     </div>
                                                 )}
 
                                             </div>
                                         </CustomModal>
+                                    </div>
 
+                                ) : (
+                                    <div className={`rounded-lg overflow-hidden mb-10 mx-auto ring-1 ring-gray-200 opacity-[0.6]`} key={index}>
+                                        <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass} text-[#000000bb] bg-[#eeddbc4e]`}>
+                                            <p>
+                                                {payment.status} ({daysLeftText})
+                                            </p>
+                                            <p>
+                                                {payment.pid}
+                                            </p>
+                                        </div>
+                                        <div className="min-h-24 flex flex-col md:flex-row justify-center items-center md:justify-between text-[#000000bb] bg-[#fff] px-10 py-4">
+                                            <div>
+                                                <p className="text-[30px] font-bold ">₹{payment.amount}</p>
+                                                <p className="font-semibold ">{payment.type} Subscription</p>
+                                            </div>
+                                            <div className="flex flex-col text-[16px] justify-center gap-5">
+                                                <p className="">Paid At {formatDate(payment.createdAt?.toString() || "")}</p>
+                                                <p className="">Expires At {formatDate(payment.expiresIn?.toString() || "")}</p>
+                                            </div>
+                                        </div>
 
                                     </div>
                                 )

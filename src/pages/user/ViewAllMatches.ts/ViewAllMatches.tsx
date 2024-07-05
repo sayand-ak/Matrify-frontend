@@ -72,9 +72,9 @@ const ViewAllMatches = () => {
                     {
                         selectedFilter.length > 0 ?
 
-                        (selectedFilter.map((user) => (<CarousalItems data={user}/>)))
+                        (selectedFilter.map((user, index) => (<CarousalItems index={index} data={user}/>)))
                         :
-                        (data.map((user) => (<CarousalItems data={user}/>)))
+                        (data.map((user, index) => (<CarousalItems index={index} data={user}/>)))
                     }
 
                 </div>

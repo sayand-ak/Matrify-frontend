@@ -101,6 +101,7 @@ interface SubscriptionArray {
     type: string, 
     amount: number, 
     userId: string,
+    status: string,
     createdAt?: Date,
     expiresIn?: Date
 }

@@ -1,0 +1,36 @@
+.payment-success-container {
+    height: 60vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.payment-success-container video {
+    width: auto;
+    height: 60vh;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.payment-success-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.payment-success-container p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.payment-success-container a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.payment-success-container a:hover {
+    background-color: #0056b3;
+}

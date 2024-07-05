@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import "./Payment.css";
 import React from 'react';
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
-import { createSubscriptionSession, findActiveOffer, getActiveSubscription } from "../../../services/userAPI";
+import { createSubscriptionSession, fetchWalletData, findActiveOffer, getActiveSubscription } from "../../../services/userAPI";
 import { Offer, Subscription } from "../../../typings/user/userTypes";
 import { BsSkipBackward } from "react-icons/bs";
 import { PayButton } from "../../../components/PayButton/PayButton";
 import { Footer } from "../../../components/footer/Footer";
 import RefundPolicyModal from "../../../components/refundPolicyModal/RefundPolicyModal";
+import { WalletType } from "../../../typings/wallet/wallet";
 
 
 interface RefObj {
@@ -24,6 +25,8 @@ function Payment () {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenType, setIsOpenType] = useState<string>("");
+
+    const [walletData, setWalletData] = useState<WalletType | null>(null);
 
 
     const [subscriptionAmt, setSubscriptionAmt] = useState<Subscription>();
@@ -110,6 +113,19 @@ function Payment () {
         }
     }
 
+    const getWalletData = async () => {
+        const response = await dispatch(fetchWalletData());
+        if(response.payload.data) {
+            setWalletData(response.payload.data);
+        } else {
+            alert("wallet api error...");
+        }
+    }
+
+    useEffect(() => {
+        getWalletData();
+    },[dispatch]);
+    
     
 
     return (
