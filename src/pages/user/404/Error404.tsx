@@ -7,7 +7,7 @@ const Error404 = () => {
         <>
             <div
                 className="flex flex-col justify-end items-center h-[80vh]"
-                style={{ backgroundImage: "url(/public/images/404-img.png)", backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
+                style={{ backgroundImage: "url(/images/404-img.png)", backgroundSize: "contain", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}
             >
                 <div className="bg-white bg-opacity-75 rounded-lg text-center">
                     <p className="text-lg mb-4">The page you are trying to reach doesn't exist. It might have been moved or deleted. Please check the URL or go back to the homepage.</p>

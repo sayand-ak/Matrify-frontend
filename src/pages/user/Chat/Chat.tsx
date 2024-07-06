@@ -303,7 +303,7 @@ function Chat() {
                                 </button>
                             </div>
                         </div>
-                        <audio src="/src/assets/audio/racing_into_the_night.mp3" autoPlay={true}></audio>
+                        <audio src="/audio/racing_into_the_night.mp3" autoPlay={true}></audio>
                     </>
                 )
             }
