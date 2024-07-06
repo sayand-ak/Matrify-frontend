@@ -34,23 +34,28 @@ function FamilyDetails() {
         },
         validationSchema: validateFamilyDetails,
         onSubmit: async (values) => {
-            const familyData: FamilyData = {
-                userId:  user && user._id ? user._id : "",
-                familyType: values.famType,
-                familyStats: values.famStatus,
-                familyValue: values.famValue,
-                martialStatus: values.maritalStats,
-                disabilities: values.disabilities,
-                description: values.description
-            }
-            const response = await dispatch(setFamilyData(familyData));
-            
-            if(response.payload.success){
-                showToast("success", "family Details Updated Successfully", () => {
-                    navigate("/setReligiousDetails")
-                })
-            }else{
-                showToast("error", response.payload.message)
+            try {
+                const familyData: FamilyData = {
+                    userId:  user && user._id ? user._id : "",
+                    familyType: values.famType,
+                    familyStats: values.famStatus,
+                    familyValue: values.famValue,
+                    martialStatus: values.maritalStats,
+                    disabilities: values.disabilities,
+                    description: values.description
+                }
+                const response = await dispatch(setFamilyData(familyData));
+                
+                if(response.payload.success){
+                    showToast("success", "family Details Updated Successfully", () => {
+                        navigate("/setReligiousDetails")
+                    })
+                }else{
+                    showToast("error", response.payload.message)
+                }
+                
+            } catch (error) {
+                navigate("/500");
             }
             
         },

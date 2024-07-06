@@ -3,26 +3,32 @@ import { useState, useEffect, useCallback } from "react";
 import { likeUser, userProfile } from "../../../services/userAPI";
 import { UserData } from "../../../typings/user/userTypes";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export function LikedUsers() {
     const curUser = useAppSelector(state => state.user.user);
     const [likedUserData, setLikedUserData] = useState<UserData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     const dispatch = useAppDispatch();
 
     const fetchLikedUserData = useCallback(async () => {
-        if (curUser?.likedProfiles && curUser?.likedProfiles.length > 0) {
-            const users = await Promise.all(
-                curUser.likedProfiles.map(async (user) => {
-                    const userData = await dispatch(userProfile(user));
-                    return userData.payload.data ? userData.payload.data[0] : null;
-                })
-            );
-            setLikedUserData(users.filter(user => user !== null));
-            setIsLoading(false); 
-        } else {
-            setIsLoading(false);
+        try {
+            if (curUser?.likedProfiles && curUser?.likedProfiles.length > 0) {
+                const users = await Promise.all(
+                    curUser.likedProfiles.map(async (user) => {
+                        const userData = await dispatch(userProfile(user));
+                        return userData.payload.data ? userData.payload.data[0] : null;
+                    })
+                );
+                setLikedUserData(users.filter(user => user !== null));
+                setIsLoading(false); 
+            } else {
+                setIsLoading(false);
+            }
+        } catch (error) {
+            navigate("/500");
         }
     }, [curUser, dispatch]);
 
@@ -31,20 +37,24 @@ export function LikedUsers() {
     }, [fetchLikedUserData]);
 
     const unlikeUser = async (userId: string) => {
-        const res = await dispatch(likeUser(userId));
-        if(res.payload.data){
-            const user = localStorage.getItem('user');
-            if(user) {
-                const parsedData = JSON.parse(user);
-
-                if (parsedData) {
-                    parsedData.likedProfiles = res.payload.data; 
-                }
-                
-                localStorage.setItem('user', JSON.stringify(parsedData));
-            }   
-            setLikedUserData(prev => prev.filter(user => user._id !== userId));
-
+        try {
+            const res = await dispatch(likeUser(userId));
+            if(res.payload.data){
+                const user = localStorage.getItem('user');
+                if(user) {
+                    const parsedData = JSON.parse(user);
+    
+                    if (parsedData) {
+                        parsedData.likedProfiles = res.payload.data; 
+                    }
+                    
+                    localStorage.setItem('user', JSON.stringify(parsedData));
+                }   
+                setLikedUserData(prev => prev.filter(user => user._id !== userId));
+    
+            }
+        } catch (error) {
+            navigate("/500");
         }
 
     }

@@ -21,25 +21,30 @@ function SpiritualityDetails() {
         },
         validationSchema: validateSpiritualityDetails,
         onSubmit: async(values) => {
-            const religionData: ReligionData = {
-                userId: user?._id || "",
-                religion: values.religion,
-                cast: values.cast,
-                subcast: values.subcast,
+            try {
+                const religionData: ReligionData = {
+                    userId: user?._id || "",
+                    religion: values.religion,
+                    cast: values.cast,
+                    subcast: values.subcast,
+                }
+                
+                const response = await dispatch(addReligion(religionData));
+                if (response.payload.success) {
+                    showToast("success", "Religion added successfully", () => {
+                        navigate("/collectDocs");
+                    })
+                }else{
+                    showToast("error", "Something went wrong")
+                }
+                console.log(values);
+                // Handle form submission with validated values
+                console.log("Profession Form submitted with values:", values);
+                // You can perform additional actions like API calls here
+                
+            } catch (error) {
+                navigate("/500");
             }
-            
-            const response = await dispatch(addReligion(religionData));
-            if (response.payload.success) {
-                showToast("success", "Religion added successfully", () => {
-                    navigate("/collectDocs");
-                })
-            }else{
-                showToast("error", "Something went wrong")
-            }
-            console.log(values);
-            // Handle form submission with validated values
-            console.log("Profession Form submitted with values:", values);
-            // You can perform additional actions like API calls here
         },
     });
 

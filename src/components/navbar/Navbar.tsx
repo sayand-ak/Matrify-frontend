@@ -9,6 +9,8 @@ import { searchPartner, saveSearchData, getUserNotifications } from "../../servi
 import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
 import { NotificationType } from "../../typings/notifications/notificationType";
+import { TbAlignRight } from "react-icons/tb";
+
 
 
 interface NavbarProps {
@@ -22,6 +24,8 @@ export default function Navbar({page}: NavbarProps){
     const [value] = useDebounce(searchData, 1000);
     const [searchUserIds, setSearchUserIds] = useState<string[] | []>([]);
     const [notifications, setNotifications] = useState<NotificationType | null>(null);
+
+    const [isVisible, setIsVisible] = useState(true);
 
     const dispatch = useAppDispatch();
 
@@ -141,6 +145,13 @@ export default function Navbar({page}: NavbarProps){
       }
       
     const navigate = useNavigate();
+
+    const toggleVisibility = () => {
+        setIsVisible(!isVisible);
+    };
+
+
+
     return (
            
             <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent z-10 relative">
@@ -180,109 +191,211 @@ export default function Navbar({page}: NavbarProps){
                         </div>
                     }
 
-                    {  page!="landing" &&  
-                        <div className={`md:flex items-center gap-10 justify-end hidden`}>
-                            {
-                                page == "home" && 
-                                <form 
-                                    action="#" 
-                                    className={`relative flex px-2 py-1 items-center ${page === "home" && "hover:text-white"} text-[#ffffff73] rounded-t-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
-                                    onSubmit={handleSaveSearchData}
+                    {  page !="landing" &&  
+                        <><div className={`md:flex items-center gap-10 justify-end hidden`}>
+                        {page == "home" &&
+                            <form
+                                action="#"
+                                className={`relative flex px-2 py-1 items-center ${page === "home" && "hover:text-white"} text-[#ffffff73] rounded-t-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
+                                onSubmit={handleSaveSearchData}
+                            >
+                                <IoSearch className="text-[22px]" />
+
+                                <input
+                                    type="text"
+                                    placeholder="Search by username"
+                                    className="w-[343px] h-[40px] px-4 outline-none bg-transparent"
+                                    onFocus={handleSearchFocus}
+                                    onBlur={handleSearchBlur}
+                                    onChange={(e) => {
+                                        handleSearch(e.target.value);
+                                    } }
+                                    value={search} />
+
+                                <div
+                                    className="absolute scale-y-0 transition-transform top-[48px] left-0 min-h-14 max-h-[40vh] w-[382px] overflow-y-scroll no-scrollbar bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
+
+                                    style={{
+                                        transitionDuration: '0.2s',
+                                        transformOrigin: 'top',
+                                        boxShadow: 'rgba(0, 0, 0, 0.15) 0px 3px 3px 0px'
+                                    }}
+                                    ref={searchRef}
                                 >
-                                    <IoSearch className="text-[22px]"/>
+                                    <span className="text-[#fff] flex items-center px-2 font-poppins">
+                                        {search.length <= 0 && (
+                                            <div className="flex flex-col gap-3 w-full h-full">
+                                                {selector?.searchHistory.length === 0 ? (
+                                                    <span className="flex items-center gap-3">
+                                                        <FaHistory className="text-gray-300 text-[14px]" />
+
+                                                        <p>No Search yet</p>
+                                                    </span>
+                                                ) : (
+                                                    selector?.searchHistory?.map((searchHistory, index) => (
+                                                        <a
+                                                            key={index}
+                                                            className="flex gap-5 items-center cursor-pointer w-fill hover:bg-[#ffffff3b] py-1 px-2"
+                                                            onClick={() => { setSearch(searchHistory.text); } }
+                                                        >
+                                                            <FaHistory className="text-gray-300 text-[14px]" />
+
+                                                            {searchHistory.text}
+                                                        </a>
+                                                    ))
+                                                )}
+                                            </div>
+                                        )}
+                                        {search.length > 0 && (
+                                            <div className="flex flex-col gap-2 w-full">
+                                                {value.length > 0 ? (
+                                                    value.map(user => (
+                                                        <a href={`/profile/${user._id}`} key={user._id}>
+                                                            <div
+                                                                className="flex gap-5 items-center hover:bg-[#ffffff3b] my-2 py-2 px-4"
+                                                            >
+                                                                <img src={user.image} className="h-14 w-14 rounded-full" alt="" />
+                                                                <p>{user.username}</p>
+                                                            </div>
+                                                        </a>
+                                                    ))
+                                                ) : (
+                                                    <div className="h-full w-full flex items-center gap-4">
+                                                        <BiInfoCircle className="text-gray-300 text-[24px]" />
+                                                        <p>No match found!</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </span>
+
+                                </div>
+
+                            </form>}
+
+
+                    </div>
+
+                    
+                    <TbAlignRight
+                        className="text-gray-200 text-[40px] hover:bg-[#00000030] hover:shadow-xl rounded-full p-2 cursor-pointer block md:hidden"
+                        onClick={toggleVisibility}
+                    />
+
+                    <div className={`bg-white rounded-lg overflow-hidden absolute top-16 right-6 transition-transform duration-300 ease-in-out ${!isVisible ? "translate-x-[120%]" : "translate-x-0"} md:hidden w-[70vw] h-auto flex flex-col`}>
+
+                        <ul className={`flex flex-col gap-2 w-full font-semibold ${page == "home" ? "text-[#00000073]" : "text-[#000]" } text-[13px]`}>
+                            <li className={`${page === "home" && "text-black"} cursor-pointer hover:bg-gray-200 pl-5 py-1`}>
+                                <a href="/home">Home</a>
+                            </li>
+                            <li className={`${page === "home" && "text-black"} cursor-pointer hover:bg-gray-200 pl-5 py-1`}>About</li>
+                            <li className={`${page === "home" && "text-black"} cursor-pointer hover:bg-gray-200 pl-5 py-1`}>Blog</li>
+                            <li className={`${page === "home" && "text-black"} cursor-pointer hover:bg-gray-200 pl-5 py-1`}>Gallery</li>
+                            <li className={`${page === "home" && "text-black"} cursor-pointer hover:bg-gray-200 pl-5 py-1`}>Contact</li>
+                        </ul>
+
+                        {page == "home" &&
+                            <form
+                                action="#"
+                                className={`relative flex flex-col py-1 items-center ${page === "home" && "hover:text-black"} text-[#ffffff73] rounded-t-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
+                                onSubmit={handleSaveSearchData}
+                            >
+                                <div className="flex items-center bg-gray-200 w-full px-2">
+                                    <IoSearch className="text-[20px]" />
 
                                     <input
                                         type="text"
                                         placeholder="Search by username"
-                                        className="w-[343px] h-[40px] px-4 outline-none bg-transparent"
+                                        className=" h-[35px] px-4 outline-none bg-transparent"
                                         onFocus={handleSearchFocus}
                                         onBlur={handleSearchBlur}
                                         onChange={(e) => {
-                                            handleSearch(e.target.value)
-                                        }}
-                                        value={search}
-                                    />
-
-                                    <div
-                                        className="absolute scale-y-0 transition-transform top-[48px] left-0 min-h-14 max-h-[40vh] w-[382px] overflow-y-scroll no-scrollbar bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
-
-                                        style={{
-                                            transitionDuration: '0.2s',
-                                            transformOrigin: 'top',
-                                            boxShadow: 'rgba(0, 0, 0, 0.15) 0px 3px 3px 0px'
-                                        }}
-                                        ref={searchRef}
-                                    >
-                                        <span className="text-[#fff] flex items-center px-2 font-poppins">
-                                            {search.length <=0 && (
-                                                <div className="flex flex-col gap-3 w-full h-full">
-                                                    {selector?.searchHistory.length === 0 ? (
-                                                        <span className="flex items-center gap-3">
-                                                            <FaHistory className="text-gray-300 text-[14px]"/>
-
-                                                            <p>No Search yet</p>
-                                                        </span>
-                                                    ) : (
-                                                        selector?.searchHistory?.map((searchHistory, index) => (
-                                                            <a 
-                                                                key={index} 
-                                                                className="flex gap-5 items-center cursor-pointer w-fill hover:bg-[#ffffff3b] py-1 px-2"
-                                                                onClick={() => {setSearch(searchHistory.text)}}
-                                                            >
-                                                                <FaHistory className="text-gray-300 text-[14px]"/>
-
-                                                                {searchHistory.text}
-                                                            </a>
-                                                        ))
-                                                    )}
-                                                </div>
-                                            )}
-                                             {
-                                                search.length > 0 &&(
-                                                    <div className="flex flex-col gap-2 w-full">
-                                                        {value.length > 0 ? (
-                                                            value.map(user => (
-                                                                <a href={`/profile/${user._id}`} key={user._id} >
-                                                                    <div 
-                                                                        className="flex gap-5 items-center hover:bg-[#ffffff3b] my-2 py-2 px-4"
-                                                                    >
-                                                                        <img src={user.image} className="h-14 w-14 rounded-full" alt="" />
-                                                                        <p>{user.username}</p>
-                                                                    </div>
-                                                                </a>
-                                                            ))
-                                                        ) : (
-                                                            <div className="h-full w-full flex items-center gap-4">
-                                                                <BiInfoCircle className="text-gray-300 text-[24px]"/>
-                                                                <p>No match found!</p>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    )
-                                                }
-                                        </span>
-
-                                    </div>
-
-                                </form>
-                            }
-
-                            <a href={`/profile/${selector?._id}`}>
-                                <div
-                                    className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
-                                    style={{
-                                        backgroundImage: selector?.image ? `url(${selector.image})` : 'none'
-                                    }}
-                                >
-                                     {totalNotificationsCount > 0 ? (
-                                        <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
-                                            {totalNotificationsCount}
-                                        </div>
-                                    ) : null}
+                                            handleSearch(e.target.value);
+                                        } }
+                                        value={search} />
                                 </div>
-                            </a>
 
-                        </div>
+                                <div
+                                    className="scale-y-0 transition-transform top-[48px] left-0 min-h-14 max-h-[40vh] w-full overflow-y-scroll no-scrollbar bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
+
+                                    style={{
+                                        transitionDuration: '0.2s',
+                                        transformOrigin: 'top',
+                                        boxShadow: 'rgba(0, 0, 0, 0.15) 0px 3px 3px 0px'
+                                    }}
+                                    ref={searchRef}
+                                >
+                                    <span className="text-[#fff] flex items-center px-2 font-poppins">
+                                        {search.length <= 0 && (
+                                            <div className="flex flex-col gap-3 w-full h-full">
+                                                {selector?.searchHistory.length === 0 ? (
+                                                    <span className="flex items-center gap-3">
+                                                        <FaHistory className="text-gray-300 text-[14px]" />
+
+                                                        <p>No Search yet</p>
+                                                    </span>
+                                                ) : (
+                                                    selector?.searchHistory?.map((searchHistory, index) => (
+                                                        <a
+                                                            key={index}
+                                                            className="flex gap-5 items-center cursor-pointer w-fill hover:bg-[#ffffff3b] py-1 px-2"
+                                                            onClick={() => { setSearch(searchHistory.text); } }
+                                                        >
+                                                            <FaHistory className="text-gray-300 text-[14px]" />
+
+                                                            {searchHistory.text}
+                                                        </a>
+                                                    ))
+                                                )}
+                                            </div>
+                                        )}
+                                        {search.length > 0 && (
+                                            <div className="flex flex-col gap-2 w-full">
+                                                {value.length > 0 ? (
+                                                    value.map(user => (
+                                                        <a href={`/profile/${user._id}`} key={user._id}>
+                                                            <div
+                                                                className="flex gap-5 items-center hover:bg-[#ffffff3b] my-2 py-2 px-4"
+                                                            >
+                                                                <img src={user.image} className="h-14 w-14 rounded-full" alt="" />
+                                                                <p>{user.username}</p>
+                                                            </div>
+                                                        </a>
+                                                    ))
+                                                ) : (
+                                                    <div className="h-full w-full flex items-center gap-4">
+                                                        <BiInfoCircle className="text-gray-300 text-[24px]" />
+                                                        <p>No match found!</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </span>
+
+                                </div>
+
+                            </form>}
+                        
+                    </div>
+
+
+                    <a href={`/profile/${selector?._id}`}>
+                            <div
+                                className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
+                                style={{
+                                    backgroundImage: selector?.image ? `url(${selector.image})` : 'none'
+                                }}
+                            >
+                                {totalNotificationsCount > 0 ? (
+                                    <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
+                                        {totalNotificationsCount}
+                                    </div>
+                                ) : null}
+                            </div>
+                        </a>
+                    </>
+
+
                     }           
                 </div>
             </div>

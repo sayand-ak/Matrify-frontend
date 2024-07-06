@@ -11,13 +11,13 @@
 
 @media (max-width: 700px) {
     .banner {
-        background-position: -600px 0;
+        background-position: -400px 0;
     }
 }
 
 @media (min-width: 701px) and (max-width: 1000px) {
     .banner {
-        background-position: -300px 0;
+        background-position: -100px 0;
     }
 }
 

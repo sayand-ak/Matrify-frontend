@@ -10,6 +10,7 @@ import { addFeedback } from "../../services/feedbackAPI";
 import { Loader } from "../loader/Loader";
 import showToast from "../Toast/Toast";
 import { FeedbackResponse } from "../../typings/feedback/feedback";
+import { useNavigate } from "react-router-dom";
 
 interface FeedbackDivProps {
     matchSend: InterestSend[] | undefined;
@@ -27,6 +28,7 @@ export function FeedbackDiv({ matchSend, matchReceived, userFeedback }: Feedback
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const curUserId = useAppSelector((state) => state.user.user?._id);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -35,17 +37,22 @@ export function FeedbackDiv({ matchSend, matchReceived, userFeedback }: Feedback
         matchReceived?.forEach((item) => interestUserIds.add(item.sendBy));
 
         const fetchUsers = async () => {
-            const userIds = Array.from(interestUserIds);
-            const users = await Promise.all(userIds.map(async (id) => {
-                const response = await dispatch(userProfile(id));
-                return response.payload.data[0];
-            }));
-            const options = users.map((user: any) => ({
-                id: user._id,
-                username: user.username,
-                image: user.image,
-            }));
-            setUserOptions(options);
+            try {
+                const userIds = Array.from(interestUserIds);
+                const users = await Promise.all(userIds.map(async (id) => {
+                    const response = await dispatch(userProfile(id));
+                    return response.payload.data[0];
+                }));
+                const options = users.map((user: any) => ({
+                    id: user._id,
+                    username: user.username,
+                    image: user.image,
+                }));
+                setUserOptions(options);
+                
+            } catch (error) {
+                navigate("/500");
+            }
         };
 
         fetchUsers();
@@ -70,30 +77,33 @@ export function FeedbackDiv({ matchSend, matchReceived, userFeedback }: Feedback
         },
         validationSchema: validateFeedback,
         onSubmit: async(values) => {
-
-            const formData = new FormData();
-            formData.append("userId", curUserId || "")
-            formData.append('partnerId', values.partner);
-            formData.append('story', values.story);
-            if (values.image) {
-                formData.append('file', values.image);
+            try {
+                const formData = new FormData();
+                formData.append("userId", curUserId || "")
+                formData.append('partnerId', values.partner);
+                formData.append('story', values.story);
+                if (values.image) {
+                    formData.append('file', values.image);
+                }
+    
+                setLoading(true);
+                const response = await dispatch(addFeedback(formData));
+    
+                if(response.payload.success) {
+                    showToast("success", "Feedback added successfully!");
+                    setIsModalOpen(false);
+                    formik.resetForm();
+                    setSelectedUser(null);
+                    setImageUrl(null);
+                    setImageFile(null);
+                } else {
+                    showToast("error", "Failed to add feedback. Please try again later.");
+                }
+                setLoading(false);
+                
+            } catch (error) {
+                navigate("/500");
             }
-
-            setLoading(true);
-            const response = await dispatch(addFeedback(formData));
-
-            if(response.payload.success) {
-                showToast("success", "Feedback added successfully!");
-                setIsModalOpen(false);
-                formik.resetForm();
-                setSelectedUser(null);
-                setImageUrl(null);
-                setImageFile(null);
-            } else {
-                showToast("error", "Failed to add feedback. Please try again later.");
-            }
-            setLoading(false);
-            
         },
     });
     return (

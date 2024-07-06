@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FilterSliderItem } from "../FilterSliderItem/FilterSliderItem";
 import { getPossibleFilterValues } from "../../services/userAPI";
 import { useAppDispatch } from "../../hooks/useTypedSelectors";
+import { useNavigate } from "react-router-dom";
 
 interface FilterSliderProps {
     matchKey: string;
@@ -14,6 +15,8 @@ export function FilterSlider ({ matchKey, handleFilterItemClick, selectedFilterI
     const [filterSliderItems, setFilterSliderItems] = useState<string[]>([]);
 
     const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (selectedFilterItem) {
@@ -28,9 +31,14 @@ export function FilterSlider ({ matchKey, handleFilterItemClick, selectedFilterI
 
     
     const handleGetFilterSliderItems = useCallback(async() => {
-        const response = await dispatch(getPossibleFilterValues(matchKey));        
-        setFilterSliderItems(response.payload.data[0].values);
-        setInitialFilterItems(response.payload.data[0].values);
+        try {
+            const response = await dispatch(getPossibleFilterValues(matchKey));        
+            setFilterSliderItems(response.payload.data[0].values);
+            setInitialFilterItems(response.payload.data[0].values);
+            
+        } catch (error) {
+            navigate("/500");
+        }
     }, [dispatch, matchKey]);
 
     useEffect(() => {

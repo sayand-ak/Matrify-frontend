@@ -158,8 +158,12 @@ function Profile() {
     }, [notifications])
     
     const handleGetNotifications = useCallback(async() => {
-      const response = await dispatch(getUserNotifications());
-      setNotifications(response.payload.data);
+        try {
+            const response = await dispatch(getUserNotifications());
+            setNotifications(response.payload.data);
+        } catch (error) {
+            navigate("/500");
+        }
       
     }, [dispatch])
 
@@ -234,27 +238,31 @@ function Profile() {
             
     useEffect(() => {
         const fetchUserData = async () => {
-            if (id) {
-                const response = await dispatch(userProfile(id));
-
-                if (response.payload.success) {
-                    const data = response.payload.data;
-
-                    setUserData({
-                        profile: data[0],
-                        profession: data[1],
-                        family: data[2],
-                    });
-
-                    if (userData?.profile?._id === curUser?._id) {
-                        setIsLoggedUser(true);
+            try {
+                if (id) {
+                    const response = await dispatch(userProfile(id));
+    
+                    if (response.payload.success) {
+                        const data = response.payload.data;
+    
+                        setUserData({
+                            profile: data[0],
+                            profession: data[1],
+                            family: data[2],
+                        });
+    
+                        if (userData?.profile?._id === curUser?._id) {
+                            setIsLoggedUser(true);
+                        } else {
+                            setIsLoggedUser(false);
+                        }
+    
                     } else {
-                        setIsLoggedUser(false);
+                        alert("profile api calling error")
                     }
-
-                } else {
-                    alert("profile api calling error")
                 }
+            } catch (error) {
+                navigate("/500");
             }
         }
         fetchUserData();
@@ -282,9 +290,14 @@ function Profile() {
     // useEffect fetch feedback data
     useEffect(()=>{
         async function getFeedbackDetails(){
-            const res = await dispatch(getFeedback());
-            if(res.payload.data){
-                setUserFeedback(res.payload.data);
+            try {
+                const res = await dispatch(getFeedback());
+                if(res.payload.data){
+                    setUserFeedback(res.payload.data);
+                }
+
+            } catch (error) {
+                navigate("/500");
             }
         }
 
@@ -293,14 +306,18 @@ function Profile() {
 
 
     const handleAddPreferences = async () => {
-        if (/^[a-zA-Z\s]+$/.test(preferences)) {
-            setPreferencesError("");
-            const response = await dispatch(addPreferences(preferences));
-
-            window.location.reload();
-            console.log(response);
-        } else {
-            setPreferencesError("Please enter only characters.");
+        try {
+            if (/^[a-zA-Z\s]+$/.test(preferences)) {
+                setPreferencesError("");
+                const response = await dispatch(addPreferences(preferences));
+    
+                window.location.reload();
+                console.log(response);
+            } else {
+                setPreferencesError("Please enter only characters.");
+            }
+        } catch (error) {
+            navigate("/500");
         }
     };
 
@@ -309,44 +326,56 @@ function Profile() {
     }
 
     async function handleSendInterest() {
-        if (sendInterestButtonLabel == "Send interest" && curUser?.subscribed) {
-            const response = await dispatch(sendInterest(id || ""));
-
-            if (response.payload.success) {
-                setSendInterestButtonLabel("Waiting to Accept...");
+        try {
+            if (sendInterestButtonLabel == "Send interest" && curUser?.subscribed) {
+                const response = await dispatch(sendInterest(id || ""));
+    
+                if (response.payload.success) {
+                    setSendInterestButtonLabel("Waiting to Accept...");
+                }
+            } else {
+                showToast("error", "You are not subscribed , please subscribe to send interest")
             }
-        } else {
-            showToast("error", "You are not subscribed , please subscribe to send interest")
+        } catch (error) {
+            navigate("/500");
         }
     }
 
     async function handleBlockUser() {
-        if (userData?.profile?._id) {
-            const response = await dispatch(blockUser(userData?.profile?._id))
-            if (response.payload.success) {
-                console.log("block response", response.payload.data);
-
-                dispatch(setUserCredentials(response.payload.data))
-                showToast('success', 'User blocked successfully')
-            } else {
-                showToast('error', 'Something went wrong',)
+        try {
+            if (userData?.profile?._id) {
+                const response = await dispatch(blockUser(userData?.profile?._id))
+                if (response.payload.success) {
+                    console.log("block response", response.payload.data);
+    
+                    dispatch(setUserCredentials(response.payload.data))
+                    showToast('success', 'User blocked successfully')
+                } else {
+                    showToast('error', 'Something went wrong',)
+                }
             }
+        } catch (error) {
+            navigate("/500");
         }
     }
 
     async function handleUnblockUser() {
-        if (userData?.profile?._id) {
-            const response = await dispatch(unblockUser(userData?.profile?._id))
-            if (response.payload.success) {
-                console.log("unblock response", response.payload.data)
-                dispatch(setUserCredentials(response.payload.data))
-                showToast('success', 'User unblocked successfully')
-            } else {
-                showToast('error', 'Something went wrong', () => {
-                    window.location.reload()
+        try {
+            if (userData?.profile?._id) {
+                const response = await dispatch(unblockUser(userData?.profile?._id))
+                if (response.payload.success) {
+                    console.log("unblock response", response.payload.data)
+                    dispatch(setUserCredentials(response.payload.data))
+                    showToast('success', 'User unblocked successfully')
+                } else {
+                    showToast('error', 'Something went wrong', () => {
+                        window.location.reload()
+                    }
+                    )
                 }
-                )
             }
+        } catch (error) {
+            navigate("/500");
         }
     }
 
@@ -361,25 +390,29 @@ function Profile() {
     }, [userData, curUser])
 
     async function handleLikeUser() {
-        if (userData?.profile?._id) {
-            const response = await dispatch(likeUser(userData?.profile?._id));
-            if(response) {
-                const user = localStorage.getItem('user');
-                if(user) {
-                    const parsedData = JSON.parse(user);
-
-                    if (parsedData) {
-                        parsedData.likedProfiles = response.payload.data; 
-                    }
-                    
-                    console.log(parsedData)
-                    localStorage.setItem('user', JSON.stringify(parsedData));
-                }                
-
-                setLikeBtnColor(prevColor => (prevColor === "#F1E5D1" ? "#FF0000" : "#F1E5D1"));
-                setIsPinging(true);
-                setTimeout(() => setIsPinging(false), 500);
+        try {
+            if (userData?.profile?._id) {
+                const response = await dispatch(likeUser(userData?.profile?._id));
+                if(response) {
+                    const user = localStorage.getItem('user');
+                    if(user) {
+                        const parsedData = JSON.parse(user);
+    
+                        if (parsedData) {
+                            parsedData.likedProfiles = response.payload.data; 
+                        }
+                        
+                        console.log(parsedData)
+                        localStorage.setItem('user', JSON.stringify(parsedData));
+                    }                
+    
+                    setLikeBtnColor(prevColor => (prevColor === "#F1E5D1" ? "#FF0000" : "#F1E5D1"));
+                    setIsPinging(true);
+                    setTimeout(() => setIsPinging(false), 500);
+                }
             }
+        } catch (error) {
+            navigate("/500");
         }
     }
 

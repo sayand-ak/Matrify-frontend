@@ -45,46 +45,61 @@ export default function InterestLogs(interestData: InterestListProps) {
 
     useEffect(() => {
         async function fetchData() {
-            if (selectedTab === "interestSend" && interestData.interestSend.length > 0) {
-                const users = await Promise.all(
-                    interestData.interestSend.map(async (interest) => {
-                        const response = await dispatch(userProfile(interest.sendTo));
-                        return response.payload.data[0];
-                    })
-                );
-                setUserData((prevState) => ({ ...prevState, interestSend: users }));
-            } else if (selectedTab === "interestReceived" && interestData.interestReceived.length > 0) {
-                const users = await Promise.all(
-                    interestData.interestReceived.map(async (interest) => {
-                        const response = await dispatch(userProfile(interest.sendBy));
-                        return response.payload.data[0];
-                    })
-                );
-                setUserData((prevState) => ({ ...prevState, interestReceived: users }));
+            try {
+                if (selectedTab === "interestSend" && interestData.interestSend.length > 0) {
+                    const users = await Promise.all(
+                        interestData.interestSend.map(async (interest) => {
+                            const response = await dispatch(userProfile(interest.sendTo));
+                            return response.payload.data[0];
+                        })
+                    );
+                    setUserData((prevState) => ({ ...prevState, interestSend: users }));
+                } else if (selectedTab === "interestReceived" && interestData.interestReceived.length > 0) {
+                    const users = await Promise.all(
+                        interestData.interestReceived.map(async (interest) => {
+                            const response = await dispatch(userProfile(interest.sendBy));
+                            return response.payload.data[0];
+                        })
+                    );
+                    setUserData((prevState) => ({ ...prevState, interestReceived: users }));
+                }
+                
+            } catch (error) {
+                navigate("/500");
             }
         }
         fetchData();
     }, [selectedTab, interestData, dispatch]);
 
     async function handleStatusChange(userId: string, status: string) {
-        if(user?.subscribed){
-            const response = await dispatch(updateInterestStatus({targetUserId: userId.toString(), status: status}));
-            if (response.payload.success) {
-                showToast("success", "Interest status updated successfully");
-            }else{
-                showToast("error", "Interest status updating failed");
+        try {
+            if(user?.subscribed){
+                const response = await dispatch(updateInterestStatus({targetUserId: userId.toString(), status: status}));
+                if (response.payload.success) {
+                    showToast("success", "Interest status updated successfully");
+                }else{
+                    showToast("error", "Interest status updating failed");
+                }
+            } else {
+                showToast("error", "Please subscribe to use this feature")
             }
-        } else {
-            showToast("error", "Please subscribe to use this feature")
+            
+        } catch (error) {
+            navigate("/500");
         }
     }
 
     async function handleStartChat(senderId: string, receiverId: string) {
-        const response = await dispatch(startConversation({senderId: senderId, receiverId: receiverId}));
-        if (response.payload.success) {
-            navigate("/chat");
-        }else{
-            showToast("error", "Chat starting failed");
+        try {
+            const response = await dispatch(startConversation({senderId: senderId, receiverId: receiverId}));
+            if (response.payload.success) {
+                navigate("/chat");
+            }else{
+                showToast("error", "Chat starting failed");
+            }
+            
+        } catch (error) {
+            navigate("/500");
         }
     }
     

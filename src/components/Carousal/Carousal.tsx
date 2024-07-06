@@ -8,6 +8,7 @@ import { UserData } from "../../typings/user/userTypes";
 import { useAppDispatch } from "../../hooks/useTypedSelectors";
 import { getMatches } from "../../services/userAPI";
 import { ContentLoader } from "../loader/ContentLoader";
+import { useNavigate } from "react-router-dom";
 
 
 interface HomeProp {
@@ -25,6 +26,8 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const dispatch = useAppDispatch();
+
+    const navigate = useNavigate()
     
 
 
@@ -58,56 +61,66 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                 console.log(matchBase, matchKey, matchData);
                 
                 const response = await dispatch(getMatches({matchBase, matchKey, matchData}));
-                const data = response.payload.data;
-                setData(data);
-                setIsLoaded(true);
+                if(response.payload.data.length > 0) {
+                    const data = response.payload.data;
+                    setData(data);
+                    setIsLoaded(true);
+                    
+                }
             } catch (error) {
-                console.error("Error fetching data:", error);
+                navigate("/500");
             }
         }
     }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
     
 
     
-    const ref = useIntersectionObserver(fetchData, { threshold: 0.5 });
+    const ref = useIntersectionObserver(fetchData, { threshold: 0.1 });
 
     return (
         <div 
             className="flex flex-col justify-center gap-5 min-h-[25rem] relative bg-[#F5F2EC] w-full overflow-hidden"
             ref={ref}
         >
-            <div className="flex w-full items-center justify-between px-[5rem] h-10">
+            <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
                 <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
                 <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
                     view all <MdKeyboardDoubleArrowRight />
                 </a>
             </div>
+
             {
-                isLoaded ? (
-                    <div
-                        className="carousal-container w-fit pl-20"
-                        style={{
-                            transition: "transform 1s",
-                            transform: `translateX(${translateValue}%)`,
-                        }}
-                        ref={carousalRef}
-                    >
-                        {
-                            data.map((user, index) => (
-                                
-                                <CarousalItems data={user} index={index}/>  
-                            ))
-                        }
-                    </div>
+                data.length > 0 ? (
+                    isLoaded ? (
+                        <div
+                            className="carousal-container w-fit pl-20"
+                            style={{
+                                transition: "transform 1s",
+                                transform: `translateX(${translateValue}%)`,
+                            }}
+                            ref={carousalRef}
+                        >
+                            {
+                                data.map((user, index) => (
+                                    
+                                    <CarousalItems data={user} index={index}/>  
+                                ))
+                            }
+                        </div>
+                    ) : (
+                        <div
+                        className="carousal-container flex gap-10 w-fit pl-20"
+                        >
+                            <ContentLoader/>
+                            <ContentLoader/>
+                            <ContentLoader/>
+                            <ContentLoader/>
+                            <ContentLoader/>
+                        </div>
+                    )
                 ) : (
-                    <div
-                    className="carousal-container flex gap-10 w-fit pl-20"
-                    >
-                        <ContentLoader/>
-                        <ContentLoader/>
-                        <ContentLoader/>
-                        <ContentLoader/>
-                        <ContentLoader/>
+                    <div>
+                        No data found
                     </div>
                 )
             }

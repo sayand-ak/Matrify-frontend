@@ -14,6 +14,8 @@ import { UserData } from "../../../typings/user/userTypes";
 import { useNavigate } from "react-router-dom";
 import { changeCallStatus } from "../../../services/videoCallApi";
 import { NotificationType } from "../../../typings/notifications/notificationType";
+import showToast from "../../../components/Toast/Toast";
+import { ToastContainer } from "react-toastify";
 
 function Chat() {
     const [currentChat, setCurrentChat] = useState<Message[]>([]);
@@ -30,10 +32,28 @@ function Chat() {
 
     const curUser = useAppSelector(state => state.user.user);
 
+    const [curUserData, setCurUserData] = useState<UserData>({} as UserData);
+
+
+    
     const dispatch = useAppDispatch();
     
     const navigate = useNavigate();
-
+    
+    useEffect(() => {
+        async function fetchUserData () {
+            try {
+                const userData = await dispatch(userProfile(curUser?._id as string));
+                if(userData.payload?.success){                    
+                    setCurUserData(userData.payload.data[0]);
+                }
+                
+            } catch (error) {
+                navigate("/500");
+            }
+        }
+        fetchUserData()
+    }, [dispatch]);
 
     // Convert chat object to Map if needed
     const chatMap = useMemo(() => {
@@ -46,8 +66,12 @@ function Chat() {
     }, [notifications]);
     
     const handleGetNotifications = useCallback(async() => {
-      const response = await dispatch(getUserNotifications());
-      setNotifications(response.payload.data);
+        try {
+            const response = await dispatch(getUserNotifications());
+            setNotifications(response.payload.data);
+        } catch (error) {
+            navigate("/500");
+        }
       
     }, [dispatch])
 
@@ -57,11 +81,15 @@ function Chat() {
 
     useEffect(() => {
         async function fetchConversations() {
-            const response = await dispatch(getConversations(userId || ""));
-            if (response.payload?.success) {
-                setConversations(response.payload.data);
-            } else {
-                alert("Chat conversation API error!");
+            try {
+                const response = await dispatch(getConversations(userId || ""));
+                if (response.payload?.success) {
+                    setConversations(response.payload.data);
+                } else {
+                    showToast("error", "Chat conversation API error!");
+                }
+            } catch (error) {
+                navigate("/500");
             }
         }
         fetchConversations();
@@ -113,86 +141,105 @@ function Chat() {
     
 
     async function handleMenuItemClick(conversationId: string) {
-        setActiveConversationId(conversationId)
-        const response = await dispatch(getMessages(conversationId));
-        if (response.payload?.success) {
-            setCurrentChat(response.payload.data);
-            setIsChatSelected(true);
-            setConversationId(conversationId);
-        } else {
-            alert("Failed to load messages");
+        try {
+            setActiveConversationId(conversationId)
+            const response = await dispatch(getMessages(conversationId));
+            if (response.payload?.success) {
+                setCurrentChat(response.payload.data);
+                setIsChatSelected(true);
+                setConversationId(conversationId);
+            } else {
+                showToast("error", "Failed to load messages");
+            }
+            
+        } catch (error) {
+            navigate("/500");
         }
     }
     
     async function handleSendMessage(data: MessageData) {
-        const formData = new FormData();        
+        try {
+            const formData = new FormData();        
+        
+            // Add common fields to FormData
+            formData.append('conversationId', conversationId);
+            formData.append('sender', userId || "");
+        
+            if ('value' in data) {
+                // Regular text message
+                formData.append('type', 'text');
+                formData.append('value', data.value);
+            } else if ('file' in data && data.type == "audio") {
+                // Audio or file message
+                formData.append('type', 'audio');
+                formData.append('file', data.file);
+            } else if ('file' in data && data.type == "image") {
+                formData.append("type", "image");
+                formData.append("file", data.file);
+            }
     
-        // Add common fields to FormData
-        formData.append('conversationId', conversationId);
-        formData.append('sender', userId || "");
-    
-        if ('value' in data) {
-            // Regular text message
-            formData.append('type', 'text');
-            formData.append('value', data.value);
-        } else if ('file' in data && data.type == "audio") {
-            // Audio or file message
-            formData.append('type', 'audio');
-            formData.append('file', data.file);
-        } else if ('file' in data && data.type == "image") {
-            formData.append("type", "image");
-            formData.append("file", data.file);
-        }
-
-        const response = await dispatch(sendMessages(formData));
-        if (response.payload?.success) {
-            const sentMessage = response.payload.data;
-            setCurrentChat([...currentChat, sentMessage]);
-    
-            // Emit socket message if necessary
-            const receiverId = conversations.find(
-                conversation => conversation._id === conversationId
-            )?.members.find(
-                member => member !== userId
-            );
-            socket?.emit("sendMessage", {
-                senderId: userId || "",
-                receiverId: receiverId,
-                data: data, 
-            });
-        } else {
-            alert("Failed to send message");
+            const response = await dispatch(sendMessages(formData));
+            if (response.payload?.success) {
+                const sentMessage = response.payload.data;
+                setCurrentChat([...currentChat, sentMessage]);
+        
+                // Emit socket message if necessary
+                const receiverId = conversations.find(
+                    conversation => conversation._id === conversationId
+                )?.members.find(
+                    member => member !== userId
+                );
+                socket?.emit("sendMessage", {
+                    senderId: userId || "",
+                    receiverId: receiverId,
+                    data: data, 
+                });
+            } else {
+                navigate("/500")
+            }
+            
+        } catch (error) {
+            navigate("/500");
         }
     }
 
 
     async function handleAcceptCall(){
-        if(roomId) {
-            const response = await dispatch(changeCallStatus({roomId: roomId, status: "accepted"}));
-            if(response.payload?.success) {
-                socket.emit('join-room', {callerId: userId , receiverId:  callingUser._id, roomId: roomId});
+        try {
+            if(roomId) {
+                const response = await dispatch(changeCallStatus({roomId: roomId, status: "accepted"}));
+                if(response.payload?.success) {
+                    socket.emit('join-room', {callerId: userId , receiverId:  callingUser._id, roomId: roomId});
+                } else {
+                    showToast("error", "Failed to accept call");
+                }
             } else {
-                alert("Failed to accept call");
+                showToast("error","Failed to join room");
             }
-        } else {
-            alert("Failed to join room");
+            
+        } catch (error) {
+            navigate("/500")
         }
     }  
 
     async function handleRejectCall() {
-        if(roomId) {
-            const response = await dispatch(changeCallStatus({roomId: roomId, status: "rejected"}));
-            if(response.payload?.success) {
-                setShowCallNotifier(false);
+        try {
+            if(roomId) {
+                const response = await dispatch(changeCallStatus({roomId: roomId, status: "rejected"}));
+                if(response.payload?.success) {
+                    setShowCallNotifier(false);
+                } else {
+                    showToast("error", "Failed to reject call");
+                }
             } else {
-                alert("Failed to reject call");
+                showToast("error", "Failed to leave room");
             }
-        } else {
-            alert("Failed to leave room");
+        } catch (error) {
+            navigate("/500");
         }
     }
 
-    if (curUser && !curUser.subscribed) {
+    if (!curUserData.subscribed) {
         return (
             <div className="h-[100vh] w-[100vw] flex items-center justify-center">
                 <div className="max-w-md bg-white p-8 rounded-lg shadow-lg">
@@ -202,7 +249,7 @@ function Chat() {
                         <a href="/payment" className="bg-[#C2A170] hover:bg-[#b38641] text-white font-bold py-2 px-4 rounded">
                             Subscribe Now
                         </a>
-                        <a href={`/profile/${curUser._id}`} className="border-[1px] border-[#C2A170]  text-[#C2A170] font-bold py-2 px-4 rounded">
+                        <a href={`/profile/${curUserData._id}`} className="border-[1px] border-[#C2A170]  text-[#C2A170] font-bold py-2 px-4 rounded">
                             Back
                         </a>
                     </div>
@@ -260,6 +307,8 @@ function Chat() {
                     </>
                 )
             }
+
+            <ToastContainer />
             
         </div>
     );

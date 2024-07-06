@@ -29,21 +29,26 @@ function ProfessionDetails() {
         },
         validationSchema: validateProfessionDetails,
         onSubmit: async(values) => {
-            const professionData: ProfessionData = {
-                userId:  user && user._id ? user._id : "",
-                education: values.highestEducation,
-                empStatus: values.employmentStatus,
-                occupation: values.occupation,
-                annualIncome: Number(values.annualIncome),
-            }
-            const response = await dispatch(setProfessionData(professionData));
-
-            if(response.payload.success){
-                showToast("success", "Profession Details Updated Successfully", () => {
-                    navigate("/setFamilyDetails")
-                })
-            }else{
-                showToast("error", response.payload.message)
+            try {
+                const professionData: ProfessionData = {
+                    userId:  user && user._id ? user._id : "",
+                    education: values.highestEducation,
+                    empStatus: values.employmentStatus,
+                    occupation: values.occupation,
+                    annualIncome: Number(values.annualIncome),
+                }
+                const response = await dispatch(setProfessionData(professionData));
+    
+                if(response.payload.success){
+                    showToast("success", "Profession Details Updated Successfully", () => {
+                        navigate("/setFamilyDetails")
+                    })
+                }else{
+                    showToast("error", response.payload.message)
+                }
+                
+            } catch (error) {
+                navigate("/500");
             }
         },
     });

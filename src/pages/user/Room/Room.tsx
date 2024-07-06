@@ -77,7 +77,7 @@ function Room() {
             socket.emit('call-user', { callerId, offer });
             setRemoteUserId(callerId);
         } catch (error) {
-            console.error("Error handling new user joined:", error);
+            navigate("/500");
         }
     }, [createOffer]);
 
@@ -92,7 +92,7 @@ function Room() {
                 console.log("call accept error --------");
             }
         } catch (error) {
-            console.log("error in incoming call --------", error);
+            navigate("/500");
         }
     }, [createAnswer]);
 
@@ -104,7 +104,7 @@ function Room() {
                 console.error("Invalid signaling state for setting remote answer:", peer.signalingState);
             }
         } catch (error) {
-            console.error("Error handling call accepted:", error);
+            navigate("/500");
         }
     }, [peer, setRemoteAns]);
 
@@ -117,7 +117,7 @@ function Room() {
             setMyStream(stream);
             sendStream(stream);
         } catch (error) {
-            console.log(error, "--------------------------");
+            navigate("/500");
         }
     }, [sendStream]);
 
@@ -160,22 +160,32 @@ function Room() {
     };
 
     const handleRejectCall = useCallback(async () => {
-        const response = await dispatch(getCallStatus(roomId.id || ""));
-        if (response.payload.data.status === "rejected") {
-            showToast("info", "Call rejected", () => {
-                navigate("/chat");
-            });
-        } else if (response.payload.data.status === "ended") {
-            showToast("info", "Call ended", () => {
-                navigate("/chat");
-            });
+        try {
+            const response = await dispatch(getCallStatus(roomId.id || ""));
+            if (response.payload.data.status === "rejected") {
+                showToast("info", "Call rejected", () => {
+                    navigate("/chat");
+                });
+            } else if (response.payload.data.status === "ended") {
+                showToast("info", "Call ended", () => {
+                    navigate("/chat");
+                });
+            }
+            
+        } catch (error) {
+            navigate("/500");
         }
     }, [dispatch, navigate, roomId.id]);
 
     const fetchUserData = useCallback(async () => {
-        const response = await dispatch(userProfile(remoteUserId || ""));
-        if (response.payload.data) {
-            setRemoteUsername(response.payload.data[0].username);
+        try {
+            const response = await dispatch(userProfile(remoteUserId || ""));
+            if (response.payload.data) {
+                setRemoteUsername(response.payload.data[0].username);
+            }
+            
+        } catch (error) {
+            navigate("/500");
         }
     }, [remoteUserId, dispatch]);
 

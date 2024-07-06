@@ -1,6 +1,8 @@
 import { useEffect, Suspense, lazy, FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { UserPrivateRoute } from './UserPrivateRouter';
+import Error404 from '../../pages/user/404/Error404';
+import Error500 from '../../pages/user/500/Error500';
 
 // Lazy load components
 const Landing = lazy(() => import('../../pages/user/Landing/Landing'));
@@ -37,7 +39,7 @@ export const UserRoutes: FC = () => {
                 <Route path='/register' element={<SignUp />} />
                 <Route path='/setProfile' element={<SetProfile />} />
 
-                <Route path='/*' element={<UserPrivateRoute />} >
+                <Route element={<UserPrivateRoute />} >
                     <Route path='home' element={<Home />} />
                     <Route path='setProfile' element={<SetProfile />} />
                     <Route path='setProfession' element={<ProfessionDetails />} />
@@ -54,6 +56,9 @@ export const UserRoutes: FC = () => {
                 </Route>
 
                 <Route path='/resetPassword/:email/:token' element={<ResetPassword />} />
+
+                <Route path='/500' element={<Error500 />} />
+                <Route path='/*' element={<Error404 />} />
             </Routes>
         </Suspense>
     );

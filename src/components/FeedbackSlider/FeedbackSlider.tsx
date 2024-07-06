@@ -3,18 +3,25 @@ import { useAppDispatch } from "../../hooks/useTypedSelectors";
 import { getAllFeedback } from "../../services/feedbackAPI";
 import { FeedbackResponse } from "../../typings/feedback/feedback";
 import "./Feedback.css";
+import { useNavigate } from "react-router-dom";
 
 export function FeedbackSlider() {
     const [feedbackList, setFeedbackList] = useState<FeedbackResponse[]>([]);
     const [currentIndex] = useState<number>(0);
     const dispatch = useAppDispatch();
     const sliderRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchFeedback = async () => {
-            const response = await dispatch(getAllFeedback());
-            if (response.payload.success) {
-                setFeedbackList(response.payload.data);
+            try {
+                const response = await dispatch(getAllFeedback());
+                if (response.payload.success) {
+                    setFeedbackList(response.payload.data);
+                }
+                
+            } catch (error) {
+                navigate("/500");
             }
         };
 

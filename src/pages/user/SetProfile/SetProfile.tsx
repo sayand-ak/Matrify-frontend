@@ -41,7 +41,7 @@ function SetProfile() {
                         setCities(cities.map((city:{city_name:string}) => city.city_name));
                     }
                 } catch (error) {
-                    console.error("Error fetching cities data:", error);
+                    showToast("error", "Error fetching cities");
                 }
             }
         };
@@ -64,39 +64,44 @@ function SetProfile() {
 
         validationSchema: profileSchema,
         onSubmit: async(values) => {  
-            //set to loading state
-            setLoading(true);
-            
-            //create form data
-            const formData = new FormData();
-
-            //appending data to form data
-            for (const [key, value] of Object.entries(values)) {
-                formData.append(key, value);
+            try {
+                //set to loading state
+                setLoading(true);
+                
+                //create form data
+                const formData = new FormData();
+    
+                //appending data to form data
+                for (const [key, value] of Object.entries(values)) {
+                    formData.append(key, value);
+                }
+                if(selector){
+                    formData.append("id", selector?._id);
+                }
+    
+                //checking if image is uploaded 
+                if (imageFile) {
+                    formData.append("image", imageFile); 
+                }
+                
+                //get the response from the api
+                const response = await dispatch(setProfile(formData));
+                            
+               if(response.payload.success){
+                    setLoading(false);
+                    showToast("success", "Profile updated successfully", () => {
+                        navigate("/setProfession");
+                    });
+                }else{
+                    setLoading(false);
+                    showToast("error", "Something went wrong", () => {
+                        navigate("/setProfile");
+                    });
+               }
+        
+            } catch (error) {
+                navigate("/500");
             }
-            if(selector){
-                formData.append("id", selector?._id);
-            }
-
-            //checking if image is uploaded 
-            if (imageFile) {
-                formData.append("image", imageFile); 
-            }
-            
-            //get the response from the api
-            const response = await dispatch(setProfile(formData));
-                        
-           if(response.payload.success){
-                setLoading(false);
-                showToast("success", "Profile updated successfully", () => {
-                    navigate("/setProfession");
-                });
-            }else{
-                setLoading(false);
-                showToast("error", "Something went wrong", () => {
-                    navigate("/setProfile");
-                });
-           }
         },
     });
 

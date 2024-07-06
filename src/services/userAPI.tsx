@@ -66,7 +66,7 @@ axiosInstance.interceptors.response.use((response) => {
             } catch (error) {
                 return Promise.reject(error);
             }
-        }
+        } 
         // console.log("user error response interceptor");
         return Promise.reject(error);
 });
@@ -527,4 +527,11 @@ export const fetchWalletData = createAsyncThunk("/api/fetchWalletData", async() 
     }
 });
 
-
+export const walletPayment = createAsyncThunk("/api/walletPayment", async({ subId, type, amount, userId }: { subId: string, type: string, amount: number, userId: string }) => {
+    try {
+        const response: AxiosResponse = await axios.post(`${API_URL}/wallet-payment`, { subId, type, amount, userId }, { withCredentials: true })
+        return response.data;
+    }catch(error) {
+        return (error as Error).response?.data;
+    }
+});

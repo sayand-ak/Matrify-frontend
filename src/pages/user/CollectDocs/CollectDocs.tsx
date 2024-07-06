@@ -39,30 +39,35 @@ function CollectDocs() {
     };
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (!educationDocs) {
-            setEducationError("Please select education-related documents");
-        }
-        else if (!professionDocs) {
-            setProfessionError("Please select profession-related documents");
-        }
-        else{
-            const formData = new FormData();
-            formData.append("id", user?._id || "");
-
-            formData.append('educationDocs', educationDocs);
-            formData.append('professionDocs', professionDocs);
-
-            const response = await dispatch(addDocs(formData));
-
-            if(response.payload.success){
-                showToast("success", "Documents added successfully", () => {
-                    navigate("/home");
-                })
-            }else{
-                showToast("error", "Failed to add documents");
+        try {
+            e.preventDefault();
+    
+            if (!educationDocs) {
+                setEducationError("Please select education-related documents");
             }
+            else if (!professionDocs) {
+                setProfessionError("Please select profession-related documents");
+            }
+            else{
+                const formData = new FormData();
+                formData.append("id", user?._id || "");
+    
+                formData.append('educationDocs', educationDocs);
+                formData.append('professionDocs', professionDocs);
+    
+                const response = await dispatch(addDocs(formData));
+    
+                if(response.payload.success){
+                    showToast("success", "Documents added successfully", () => {
+                        navigate("/home");
+                    })
+                }else{
+                    showToast("error", "Failed to add documents");
+                }
+            }
+            
+        } catch (error) {
+            navigate("/500")
         }
     };
 

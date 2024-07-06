@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import "./Payment.css";
 import React from 'react';
 import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
-import { createSubscriptionSession, fetchWalletData, findActiveOffer, getActiveSubscription } from "../../../services/userAPI";
+import { createSubscriptionSession, fetchWalletData, findActiveOffer, getActiveSubscription, walletPayment } from "../../../services/userAPI";
 import { Offer, Subscription } from "../../../typings/user/userTypes";
 import { BsSkipBackward } from "react-icons/bs";
 import { PayButton } from "../../../components/PayButton/PayButton";
-import { Footer } from "../../../components/footer/Footer";
 import RefundPolicyModal from "../../../components/refundPolicyModal/RefundPolicyModal";
-import { WalletType } from "../../../typings/wallet/wallet";
+import PaymentSelector from "../../../components/PaymentSelector/PaymentSelector";
+import { useNavigate } from "react-router-dom";
+import showToast from "../../../components/Toast/Toast";
 
 
 interface RefObj {
@@ -26,13 +27,17 @@ function Payment () {
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenType, setIsOpenType] = useState<string>("");
 
-    const [walletData, setWalletData] = useState<WalletType | null>(null);
+    const [showPaymentOption, setShowPaymentOption] = useState(false);
+    const [selectedMethod, setSelectedMethod] = useState('');
+    const [onlineOptionURL, setOnlineOptionURL] = useState<string>("");
 
+    const [subscriptionAmt, setSubscriptionAmt] = useState<Subscription | null>(null);
+    const [subscriptionType, setSubscriptionType] = useState<string>("");
+    const [selectedSubscriptionAmt, setSelectedSubscriptionAmt] = useState<number | null>(null);
 
-    const [subscriptionAmt, setSubscriptionAmt] = useState<Subscription>();
-
-    const [offers, setOffers] = useState<Offer | null>();
-    const selector = useAppSelector((state) => state.user.user)
+    const [offers, setOffers] = useState<Offer | null>(null);
+    const selector = useAppSelector((state) => state.user.user);
+    const navigate = useNavigate();
 
     const tickSvg = <svg width="28" height="16" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M-1.28785e-05 10.4497L7.20947 17.6592L9.03603 15.8326L1.82654 8.62314L-1.28785e-05 10.4497Z" fill="black"/>
@@ -40,23 +45,31 @@ function Payment () {
                         <path d="M28.1799 0.341797L14.5095 14.0057L9.12654 8.62275L7.29993 10.4494L14.5095 17.6589L30 2.16841L28.1799 0.341797Z" fill="#D39316"/>
                     </svg>
 
-
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         async function fetchActiveSubscription(){
-            const response = await dispatch(getActiveSubscription());
-            
-            setSubscriptionAmt(response.payload.data)
-            const offers = await dispatch(findActiveOffer());
-            setOffers(offers.payload.data);
-
+            try {
+                const response = await dispatch(getActiveSubscription());
+                if (response.payload.data) {
+                    setSubscriptionAmt(response.payload.data);
+                    const offers = await dispatch(findActiveOffer());
+                    if (offers.payload.data) {
+                        setOffers(offers.payload.data);
+                    } else {
+                        setOffers(null);
+                    }
+                } else {
+                    alert("No active subscription");
+                    setSubscriptionAmt(null);
+                }
+            } catch (error) {
+                navigate("/500");
+            }
         }
-        
-        fetchActiveSubscription()
-    },[dispatch]);    
-
-
+        fetchActiveSubscription();
+    }, [dispatch]);
+    
 
     function activeOption(selected: string) {
         const refs:RefObj = {
@@ -75,58 +88,101 @@ function Payment () {
     }
 
     async function handleSubscriptionPayments(subscriptionType: string, userId: string){
-        switch(subscriptionType){
-            case "weekly" : {
-                if(subscriptionAmt?.amount.weekly){
-                    const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount:subscriptionAmt?.amount.weekly, userId: userId}))
-                    
-                    if(response.payload.data){
-                        window.location.href = response.payload.data;
-                    } else {
-                        alert("payment error");
+        try {
+            setSubscriptionType(subscriptionType);
+            setIsOpenType(subscriptionType
+                
+            )
+            switch(subscriptionType){
+                case "weekly" : {
+                    if(subscriptionAmt?.amount.weekly){
+                        setSelectedSubscriptionAmt(subscriptionAmt?.amount.weekly)
+                        const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount:subscriptionAmt?.amount.weekly, userId: userId}))
+                        
+                        if(response.payload.data){
+                            setOnlineOptionURL(response.payload.data);
+                            getWalletData(subscriptionAmt?.amount.weekly, response.payload.data)
+                        } else {
+                            alert("payment error");
+                        }
                     }
+                    break;
                 }
-                break;
-            }
-            case "monthly" : {
-                if(subscriptionAmt?.amount.monthly){
-                    const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount: subscriptionAmt?.amount.monthly , userId: userId}))
-                    if(response.payload.data){
-                        window.location.href = response.payload.data;
-                    } else {
-                        alert("payment error");
+                case "monthly" : {
+                    if(subscriptionAmt?.amount.monthly){
+                        setSelectedSubscriptionAmt(subscriptionAmt?.amount.weekly)
+    
+                        const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount: subscriptionAmt?.amount.monthly , userId: userId}))
+                        if(response.payload.data){
+                            setOnlineOptionURL(response.payload.data);
+                            getWalletData(subscriptionAmt?.amount.monthly, response.payload.data)
+                        } else {
+                            alert("payment error");
+                        }
                     }
+                    break;
                 }
-                break;
-            }
-            case "yearly" : {
-                if(subscriptionAmt?.amount.yearly){
-                    const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount: subscriptionAmt?.amount.yearly , userId: userId}))
-                    if(response.payload.data){
-                        window.location.href = response.payload.data;
-                    } else{
-                        alert("payment error");
+                case "yearly" : {
+                    if(subscriptionAmt?.amount.yearly){
+                        setSelectedSubscriptionAmt(subscriptionAmt?.amount.weekly)
+    
+                        const response = await dispatch(createSubscriptionSession({subId: subscriptionAmt._id || "", type: subscriptionType, amount: subscriptionAmt?.amount.yearly , userId: userId}))
+                        if(response.payload.data){
+                            setOnlineOptionURL(response.payload.data);
+                            getWalletData(subscriptionAmt?.amount.yearly, response.payload.data)
+                        } else{
+                            alert("payment error");
+                        }
                     }
+                    break;
                 }
-                break;
             }
+
+        } catch (error) {
+            navigate("/500");
+        }
+    }    
+    
+    const getWalletData = async (amount: number, url: string) => {
+        try {
+            const response = await dispatch(fetchWalletData());
+            if (response.payload.data) {
+                const data = response.payload.data;
+                
+                if (data.balance > amount) {
+                    setShowPaymentOption(true);
+                } else {
+                    window.location.href = url;
+                }
+            } else {
+                alert("wallet api error...");
+            }
+        } catch (error) {
+            navigate("/500");
         }
     }
 
-    const getWalletData = async () => {
-        const response = await dispatch(fetchWalletData());
-        if(response.payload.data) {
-            setWalletData(response.payload.data);
-        } else {
-            alert("wallet api error...");
-        }
-    }
 
-    useEffect(() => {
-        getWalletData();
-    },[dispatch]);
-    
-    
+    const submitSelectedPayment = async() => {
+        try {
+            if (selectedMethod === 'wallet') {
+                if(subscriptionAmt != null && subscriptionAmt._id && selectedSubscriptionAmt){
+                    const response = await dispatch(walletPayment({subId: subscriptionAmt._id || "", type: subscriptionType, amount: selectedSubscriptionAmt, userId: selector?._id as string}))
+                    if(response.payload.data) {
+                        navigate(`/paymentSuccess/${subscriptionType}`)
+                    } else {
+                        showToast("error", "Payment failed", () => {
+                            window.location.reload();
+                        });
+                    }
+                }
+            } else if (selectedMethod === 'online') {
+                window.location.href = onlineOptionURL;
+            }
+        } catch (error) {
+            navigate("/500");
+        }
+    };
 
     return (
         <div className="min-h-[100vh] font-rubik">
@@ -147,7 +203,7 @@ function Payment () {
                 >You will be able to access advance interaction features</p>
 
                 {
-                    offers?.status === "active" &&
+                    offers && offers?.status === "active" &&
                     <p className="text-[35px] font-bold text-[#C59D77]">Get {offers?.offerPercentage}% off on our {offers?.title}</p>
                 }
                 
@@ -288,6 +344,21 @@ function Payment () {
 
             </div>
 
+            {
+            
+                showPaymentOption && (
+                    <PaymentSelector 
+                        setShowPaymentOption={setShowPaymentOption}
+                        setSelectedMethod={setSelectedMethod}
+                        selectedMethod={selectedMethod}
+                        submitSelectedPayment={submitSelectedPayment}
+                    />
+                )
+            }
+
+            
+
+            {/* refund policy modal */}
             <RefundPolicyModal 
                 isOpen={isOpen} 
                 setIsOpen={setIsOpen} 
@@ -295,7 +366,6 @@ function Payment () {
                 onRequestClose={() => {}}
             />
 
-            <Footer/>
         </div>
     )
 }

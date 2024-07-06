@@ -4,22 +4,28 @@ import { userProfile } from "../../../services/userAPI";
 import { UserData } from "../../../typings/user/userTypes";
 import { formatDate } from "../../../utils/formateDate";
 import { MdBlock } from "react-icons/md"; // Import block icon
+import { useNavigate } from "react-router-dom";
 
 export function BlockedUsers() {
     const curUser = useAppSelector(state => state.user.user);
     const [blockedUserDetails, setBlockedUserDetails] = useState<UserData[]>([]);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchBlockedUsers() {
-            if (curUser?.blockedUsers && curUser.blockedUsers.length > 0) {
-                const userDetails = await Promise.all(
-                    curUser.blockedUsers.map(async (blockedUser) => {
-                        const response = await dispatch(userProfile(blockedUser.user));
-                        return response.payload.data[0];
-                    })
-                );
-                setBlockedUserDetails(userDetails);
+            try {
+                if (curUser?.blockedUsers && curUser.blockedUsers.length > 0) {
+                    const userDetails = await Promise.all(
+                        curUser.blockedUsers.map(async (blockedUser) => {
+                            const response = await dispatch(userProfile(blockedUser.user));
+                            return response.payload.data[0];
+                        })
+                    );
+                    setBlockedUserDetails(userDetails);
+                }
+            } catch (error) {
+                navigate("/500")
             }
         }
 

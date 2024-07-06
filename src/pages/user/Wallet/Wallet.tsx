@@ -3,16 +3,23 @@ import { WalletType } from "../../../typings/wallet/wallet";
 import { useAppDispatch } from "../../../hooks/useTypedSelectors";
 import { fetchWalletData } from "../../../services/userAPI";
 import { formatDate } from "../../../utils/formateDate";
+import { useNavigate } from "react-router-dom";
 
 const Wallet = () => {
     const [walletData, setWalletData] = useState<WalletType | null>(null);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getWalletData() {
-            const data = await dispatch(fetchWalletData());
-            if(data.payload.data) {
-                setWalletData(data.payload.data);
+            try {
+                const data = await dispatch(fetchWalletData());
+                if(data.payload.data) {
+                    setWalletData(data.payload.data);
+                }
+                
+            } catch (error) {
+                navigate("/500");
             }
         }
         getWalletData();
@@ -39,33 +46,22 @@ const Wallet = () => {
             <div className="max-w-[60vw] mx-auto ">
                 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
                 <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-2 opacity-25">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-16 h-16">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m2 0a2 2 0 110 4H7a2 2 0 110-4m12 0H5m7-6v12" />
-                        </svg>
-                    </div>
                     <h2 className="text-xl font-semibold mb-2">Balance</h2>
-                    <p className="text-4xl font-bold">₹{walletData.balance.toFixed(2)}</p>
+                    <p className="text-3xl font-bold">₹{walletData.balance.toFixed(2)}</p>
                 </div>
+
                 <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-2 opacity-25">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-16 h-16">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v8m4-4H8" />
-                        </svg>
-                    </div>
                     <h2 className="text-xl font-semibold mb-2">Total Income</h2>
-                    <p className="text-4xl font-bold">₹{totalIncome?.toFixed(2)}</p>
+                    <p className="text-3xl font-bold">₹{totalIncome?.toFixed(2)}</p>
                 </div>
+
                 <div className="bg-gradient-to-r from-red-500 to-red-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-2 opacity-25">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-16 h-16">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12H9m2-6h2m-2 6v6m4-12a2 2 0 110 4H7a2 2 0 110-4m12 0H5m2 6h6m2 0v6" />
-                        </svg>
-                    </div>
                     <h2 className="text-xl font-semibold mb-2">Total Expenses</h2>
-                    <p className="text-4xl font-bold">₹{totalExpenses?.toFixed(2)}</p>
+                    <p className="text-3xl font-bold">₹{totalExpenses?.toFixed(2)}</p>
                 </div>
+
             </div>
                 
                 <div className="bg-white rounded-lg shadow-md p-6">

@@ -14,6 +14,9 @@ import { newCall } from "../../services/videoCallApi";
 import { socket } from "../../services/socket";
 import { IoMdArrowBack } from "react-icons/io";
 import { SocketContext } from "../../context/socketContext";
+import { useNavigate } from "react-router-dom";
+import showToast from "../Toast/Toast";
+import { ToastContainer } from "react-toastify";
 
 
 interface ChatBoxProps {
@@ -33,7 +36,9 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
     const dispatch = useAppDispatch();
     const { usersOnline } = useContext(SocketContext);
     
-    const curUser = useAppSelector(state => state.user.user);
+    const curUser = useAppSelector((state) => state.user.user);
+
+    const navigate = useNavigate();
 
     // const navigate = useNavigate();
     
@@ -48,9 +53,13 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
     
     // Fetching user data
     const fetchUserData = useCallback(async (friendId: string) => {
-        if (friendId) {
-          const response = await dispatch(userProfile(friendId));
-          setUser(response.payload.data[0]);
+        try {
+            if (friendId) {
+              const response = await dispatch(userProfile(friendId));
+              setUser(response.payload.data[0]);
+            }
+        } catch (error) {
+            navigate("/500");
         }
     }, [dispatch]);
 
@@ -72,7 +81,7 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
 
 
     
-    async function handleSendMessageAndSetMessage(data: MessageData) {        
+    async function handleSendMessageAndSetMessage(data: MessageData) {       
         if(data.type == "text") {
             handleSendMessage({type: "text", value: data.value});
         } else if(data.type == "audio") {
@@ -88,21 +97,25 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
     }
 
     async function handleVideoCall () {
-        if (curUser?._id && user?._id) {
-            const videoCallData: VideoCallData = {
-                caller: curUser?._id,
-                receiver: user?._id,
-            }
-            const newVideoCall = await dispatch(newCall(videoCallData));
-            if(newVideoCall.payload.success) {
-                const callData = newVideoCall.payload.data;
-                socket.emit('join-room', {callerId: callData.caller, receiverId: callData.receiver, roomId: callData.roomId});
-                
+        try {
+            if (curUser?._id && user?._id) {
+                const videoCallData: VideoCallData = {
+                    caller: curUser?._id,
+                    receiver: user?._id,
+                }
+                const newVideoCall = await dispatch(newCall(videoCallData));
+                if(newVideoCall.payload.success) {
+                    const callData = newVideoCall.payload.data;
+                    socket.emit('join-room', {callerId: callData.caller, receiverId: callData.receiver, roomId: callData.roomId});
+                    
+                } else {
+                    showToast("error","video call backend error...")
+                }
             } else {
-                alert("video call backend error...")
+                showToast ("error", "sender or receiver not found....")
             }
-        } else {
-            alert ("sender or receiver not found....")
+        } catch (error) {
+            navigate("/500");
         }
     }
 
@@ -161,6 +174,7 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
                     </p>
                 </div>
             )}
+            <ToastContainer/>
         </div>
     );
 }

@@ -7,6 +7,7 @@ import { checkRefundAvailability, refundSubscription } from "../../../services/u
 import { CustomModal } from "../../../components/modal/CustomModal";
 import { BsInfoCircle } from "react-icons/bs";
 import showToast from "../../../components/Toast/Toast";
+import { useNavigate } from "react-router-dom";
 
 
 interface RefundData {
@@ -29,8 +30,9 @@ export function PaymentHistory({ userData }: {
     const [showRefundPolicies, setShowRefundPolicies] = useState(false);
     const [alertDiv, setAlertDiv] = useState(false);
 
-
     const dispatch = useAppDispatch();
+
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -56,7 +58,7 @@ export function PaymentHistory({ userData }: {
             }
             setRefundModalOpen(true);
         } catch (error) {
-            alert("refund api error")
+            navigate("/500");
         }
     }
 
@@ -85,7 +87,7 @@ export function PaymentHistory({ userData }: {
             } 
             
         } catch (error) {
-            alert("refund api error")
+            navigate("/500");
         }
     }
 
@@ -105,38 +107,26 @@ export function PaymentHistory({ userData }: {
             (
                 <div className="w-full relative">
                     
-                    {
-                        (activeExpirationDay <= 5 && activeExpirationDay > 0 || !userData?.profile?.subscribed) &&
+                    {activeExpirationDay <= 0 && (
                         <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
-                            {
-                                userData?.profile?.subscription && userData.profile?.subscription.slice(-1)[0].status === "refund" ? (
-                                    <p className="text-[16px] font-semibold">
-                                        Your {activeExpirationType} subscription was refunded
-                                    </p>
-                                ) : (
-                                    <p className="text-[16px] font-semibold">
-                                        Your {activeExpirationType} subscription expires in {activeExpirationDay} days
-                                    </p>
-                                )
-                            }
+                            <p className="text-[18px] font-semibold text-red-700 ">
+                                {activeExpirationDay === 0
+                                    ? `Your ${activeExpirationType} subscription expired today`
+                                    : `Your ${activeExpirationType} subscription expired ${Math.abs(activeExpirationDay)} day(s) ago`
+                                }
+                            </p>
                             <a href="/payment" className="bg-[#c9ac7a] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
                         </div>
+                    )}
 
-                    }
-
-                    {
-                        (activeExpirationDay <= 0) && (
-                            <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
-                                <p className="text-[18px] font-semibold text-red-700 ">
-                                    {activeExpirationDay === 0
-                                        ? `Your ${activeExpirationType} subscription expired today`
-                                        : `Your ${activeExpirationType} subscription expired ${Math.abs(activeExpirationDay)} day(s) ago`
-                                    }
-                                </p>
-                                <a href="/payment" className="bg-[#c9ac7a] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
-                            </div>
-                        )
-                    }
+                    {activeExpirationDay > 0 && (
+                        <div className="bg-red-100 border-l-4 border-red-700 text-red-700 p-4 flex items-center justify-between w-full px-14 min-h-20" role="alert">
+                            <p className="text-[16px] font-semibold">
+                                Your {activeExpirationType} subscription expires in {activeExpirationDay} days
+                            </p>
+                            <a href="/payment" className="bg-[#c9ac7a] text-white font-bold px-5 py-2 rounded-lg shadow-md">SUBSCRIBE</a>
+                        </div>
+                    )}
 
                     <div className="w-full p-12 h-[90vh] overflow-scroll no-scrollbar">
                         {paymentData?.map((payment, index) => {

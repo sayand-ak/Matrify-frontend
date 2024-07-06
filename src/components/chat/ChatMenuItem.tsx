@@ -7,6 +7,7 @@ import { userProfile } from "../../services/userAPI";
 import { MdBlock } from "react-icons/md";
 import "./chat.css"
 import { SocketContext } from "../../context/socketContext";
+import { useNavigate } from "react-router-dom";
 
 
 interface ChatMenuItemsProps {
@@ -22,8 +23,15 @@ export function ChatMenuItems({ conversation, userId, notificationCount }: ChatM
 
     const {usersOnline} = useContext(SocketContext);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         async function fetchUserData() {
+            try {
+                
+            } catch (error) {
+                navigate("/500");
+            }
             const friendId = conversation?.members.find((member: string) => member !== userId);
             if (friendId) {
                 const response = await dispatch(userProfile(friendId));

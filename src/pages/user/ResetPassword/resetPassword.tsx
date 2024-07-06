@@ -16,11 +16,15 @@ function ResetPassword() {
 
     useEffect(() => {
         const fetchTokenValidation = async () => {
-            if (params.token) {
-                const response = await dispatch(validateToken(params.token));
-                if (response.payload.success) {
-                    setUserId(response.payload.user)
-                } 
+            try {
+                if (params.token) {
+                    const response = await dispatch(validateToken(params.token));
+                    if (response.payload.success) {
+                        setUserId(response.payload.user)
+                    } 
+                }
+            } catch (error) {
+                navigate("/500");
             }
         };
 
@@ -29,14 +33,19 @@ function ResetPassword() {
 
         
     async function handleResetPassword(userId: string, newPassword: string) {
-        const response = await dispatch(resetPassword({userId: userId, newPassword: newPassword}));
-        if(response.payload.success){
-            showToast('success', 'Password reset successful!', () => {
-                navigate('/login');
-            });
-            
-        }else{
-            showToast('error', 'Password reset failed!');
+        try {
+            const response = await dispatch(resetPassword({userId: userId, newPassword: newPassword}));
+            if(response.payload.success){
+                showToast('success', 'Password reset successful!', () => {
+                    navigate('/login');
+                });
+                
+            }else{
+                showToast('error', 'Password reset failed!');
+            }
+
+        } catch (error) {
+            navigate("/500");
         }
 
     }

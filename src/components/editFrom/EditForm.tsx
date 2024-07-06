@@ -9,6 +9,7 @@ import { handleImageChange } from "../../utils/handleImageChange";
 import { MdEdit } from "react-icons/md";
 import { states } from "indian_address";
 import { UserFamily, UserProfession, UserProfile } from "../../typings/Profile/professionDataType";
+import { useNavigate } from "react-router-dom";
 
 
 interface EditModalProp {
@@ -33,12 +34,11 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
     const [editMsg, setEditMsg] = useState<string>("");
 
     const [isVisible, setIsVisible] = useState(true);
-
-
-
     const selector = useAppSelector((state) => state.user.user);
 
     const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,7 +51,7 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
                         setCities(cities.map((city:{city_name:string}) => city.city_name));
                     }
                 } catch (error) {
-                    console.error("Error fetching cities data:", error);
+                    navigate("/500");
                 }
             }
         };
@@ -87,33 +87,37 @@ export function EditFormModal({userData: userData, isModalOpen: isModalOpen, set
           },
 
         validationSchema: editProfileSchema,
-        onSubmit: async(values) => {              
-            //create form data
-            const formData = new FormData();
-
-            //appending data to form data
-            for (const [key, value] of Object.entries(values)) {
-                formData.append(key, value);
-            }
-            if(selector){
-                formData.append("id", selector?._id);
-            }
-
-            //checking if image is uploaded 
-            if (imageFile) {
-                formData.append("edit_image", imageFile); 
-            }
+        onSubmit: async(values) => {       
+            try {
+                //create form data
+                const formData = new FormData();
+    
+                //appending data to form data
+                for (const [key, value] of Object.entries(values)) {
+                    formData.append(key, value);
+                }
+                if(selector){
+                    formData.append("id", selector?._id);
+                }
+    
+                //checking if image is uploaded 
+                if (imageFile) {
+                    formData.append("edit_image", imageFile); 
+                }
+                
+               const response = await dispatch(editProfile(formData));
             
-           const response = await dispatch(editProfile(formData));
-        
-           if(response.payload.success){
-                setEditStats("success");
-                setEditMsg(response.payload.message);
-           }else{
-                setEditStats("error");
-                setEditMsg(response.payload.message);
-           }
-           
+               if(response.payload.success){
+                    setEditStats("success");
+                    setEditMsg(response.payload.message);
+               }else{
+                    setEditStats("error");
+                    setEditMsg(response.payload.message);
+               }
+                
+            } catch (error) {
+                navigate("/500");
+            }       
         },
     });
 

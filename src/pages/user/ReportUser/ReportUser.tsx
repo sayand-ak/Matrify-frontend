@@ -44,8 +44,12 @@ function ReportUser () {
 
     useEffect(() => {
         async function getUserData() {
-            const response = await dispatch(userProfile(reportedUserId.id as string));
-            setUserData(response.payload.data[0]);
+            try {
+                const response = await dispatch(userProfile(reportedUserId.id as string));
+                setUserData(response.payload.data[0]);
+            } catch (error) {
+                navigate("/500");
+            }
         }
         getUserData()
     }, [dispatch, reportedUserId])

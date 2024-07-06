@@ -97,38 +97,43 @@ function SignUp() {
     }
 
 
-    async function handleRegisterSubmit(){        
-        if(!uname || !phone || !password){
-            setRePasswordErr("Please fill all the fields");
-        } else {
-            setRePasswordErr("");
-            const response = await dispatch(signupUserAsync(phone));
-            
-            if(response.payload.success){
+    async function handleRegisterSubmit() { 
+        try {
+            if(!uname || !phone || !password){
+                setRePasswordErr("Please fill all the fields");
+            } else {
+                setRePasswordErr("");
+                const response = await dispatch(signupUserAsync(phone));
                 
-                const otpConfig = onSignInSubmit(submitBtn.current);
-                
-                if (otpConfig) {
-                    console.log("recaptche rendered");
+                if(response.payload.success){
                     
-                    otpConfig.recaptchaVerifier.render();
-                    setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
+                    const otpConfig = onSignInSubmit(submitBtn.current);
                     
-                    //setting timer
-                    const { interval, remainingTime } = startTimer();
-                    if (remainingTime !== null) {
-                        setRemainingTime(remainingTime);
-                        setTimerInterval(interval);
-                    }                    
-                    setIsModalOpen(true);
-    
-                } else{
-                    console.log("error");
+                    if (otpConfig) {
+                        console.log("recaptche rendered");
+                        
+                        otpConfig.recaptchaVerifier.render();
+                        setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
+                        
+                        //setting timer
+                        const { interval, remainingTime } = startTimer();
+                        if (remainingTime !== null) {
+                            setRemainingTime(remainingTime);
+                            setTimerInterval(interval);
+                        }                    
+                        setIsModalOpen(true);
+        
+                    } else{
+                        console.log("error");
+                    }
+                }else{
+                    showToast("error", response.payload.message);
                 }
-            }else{
-                showToast("error", response.payload.message);
             }
-        }
+            
+        } catch (error) {
+            navigate("/500");
+        }       
     }
     
 
@@ -155,7 +160,6 @@ function SignUp() {
                     showToast("error", "Invalid OTP");
                 }
             } catch (error) {
-                console.log(error);
                 showToast("error", "Invalid OTP. Check OTP and try again.");
             }
         } else {
@@ -183,7 +187,7 @@ function SignUp() {
                 alert("Firebase error");
             }
         } catch (error) {
-            console.log(error);
+            navigate("/500");
         }
     }
     

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FilterSlider } from "../../../components/FilterSlider/FilterSlider";
 import { Footer } from "../../../components/footer/Footer";
 import Navbar from "../../../components/navbar/Navbar"
@@ -18,6 +18,8 @@ const ViewAllMatches = () => {
     
     const dispatch = useAppDispatch();
 
+    const navigate = useNavigate();
+
 
     const fetchData = useCallback(async () => {
         try {            
@@ -29,7 +31,7 @@ const ViewAllMatches = () => {
             const data = response.payload.data;
             setData(data);
         } catch (error) {
-            console.error("Error fetching data:", error);
+            navigate("/500");
         }
     }, [dispatch, params]);
 
@@ -38,17 +40,19 @@ const ViewAllMatches = () => {
     }, [fetchData]);
 
     async function handleFilterItemClick(item: string) {
-        setSelectedFilterItem(item);
-        const response = await dispatch(getMatches({
-            matchBase: params.matchBase || "", 
-            matchKey: params.matchKey || "", 
-            matchData: item || ""
-        }));
-
-        if(response.payload.data) {
-            setSelectedFilter(response.payload.data);
-        } else {
-            alert("No matches found")
+        try {
+            setSelectedFilterItem(item);
+            const response = await dispatch(getMatches({
+                matchBase: params.matchBase || "", 
+                matchKey: params.matchKey || "", 
+                matchData: item || ""
+            }));
+    
+            if(response.payload.data) {
+                setSelectedFilter(response.payload.data);
+            }
+        } catch (error) {
+            navigate("/500");
         }
     };
     
