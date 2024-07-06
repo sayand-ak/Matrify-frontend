@@ -67,6 +67,7 @@ import { FeedbackResponse } from "../../../typings/feedback/feedback";
 import { NotificationType } from "../../../typings/notifications/notificationType";
 import { IoWalletOutline } from "react-icons/io5";
 import Wallet from "../Wallet/Wallet";
+import ProfileTabs from "../../../components/ProfileTab/ProfileTabs";
 
 
 
@@ -418,7 +419,7 @@ function Profile() {
 
 
     return (
-        <div className="flex flex-col w-full relative">
+        <div className="flex flex-col w-full relative font-rubik">
 
             {/* navbar */}
             <div className="z-10 hidden md:block">
@@ -458,11 +459,11 @@ function Profile() {
                                 <div className={`w-full ${isLoggedUser ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
 
                                     {/* the cover image div */}
-                                    <div className="w-full h-[30%]" style={{ backgroundImage: "url('/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+                                    <div className="w-full h-[20%] md:h-[25%]" style={{ backgroundImage: "url('/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
                                         <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${isLoggedUser ? "block" : "hidden"}`} onClick={showSidebar} />
                                     </div>
 
-                                    <div className="w-full h-[30%] relative">
+                                    <div className="w-full h-[30%] md:h-[25%] relative">
                                         <div
                                             className="rounded-full h-48 w-48 absolute top-[-100px] left-10 border-[5px] border-white z-0"
                                             style={{
@@ -508,130 +509,86 @@ function Profile() {
 
 
                                         {/* if the profile is for user show edit btn and if its for match show match options */}
-                                        {
-                                            isLoggedUser ? (
+                                        {isLoggedUser ? (
+                                            <button
+                                                className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#C2A170] border-[#C2A170] border-solid rounded-3xl hover:bg-[#C2A170] hover:text-white"
+                                                onClick={() => setIsModalOpen(true)}
+                                            >
+                                                Edit profile
+                                            </button>
+                                        ) : (
+                                            <div className="absolute flex items-center gap-5 right-4 md:right-10 top-5 font-semibold text-[#C2A170]">
                                                 <button
-                                                    className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#C2A170] border-[#C2A170] border-solid rounded-3xl hover:bg-[#C2A170] hover:text-white"
-                                                    onClick={() => setIsModalOpen(true)}
+                                                    className="border-[1px] text-[15px] h-10 rounded-lg px-3 border-[#c2a17085]"
+                                                    onClick={handleSendInterest}
                                                 >
-                                                    Edit profile
+                                                    {sendInterestButtonLabel}
                                                 </button>
-                                            ) : (
 
-                                                <div className="absolute flex items-center gap-5 right-4 md:right-10 top-5 font-semibold text-[#C2A170]">
-                                                    <button
-                                                        className="border-[1px] text-[15px] h-10 rounded-lg px-3 border-[#c2a17085]"
-                                                        onClick={handleSendInterest}
-                                                    >
-                                                        {sendInterestButtonLabel}
-                                                    </button>
-
-                                                    <button onClick={() => setShowMoreOptions(!showMoreOptions)}>
-                                                        <MoreOptionsBtn />
-                                                    </button>
-                                                    
-                                                    {
-                                                        showMoreOptions &&
-                                                        <div className="w-56 rounded-md bg-[#f4f4f4] shadow-md min-h-20 absolute right-0 top-14 showMoreOptions-visible transition-opacity">
-                                                            <IoMdArrowDropup className="absolute top-[-21px] right-0 text-[35px] text-[#f4f4f4]" />
+                                                <button onClick={() => setShowMoreOptions(!showMoreOptions)}>
+                                                    <MoreOptionsBtn />
+                                                </button>
+                                                
+                                                {
+                                                    showMoreOptions &&
+                                                    <div className="w-56 rounded-md bg-[#f4f4f4] shadow-md min-h-20 absolute right-0 top-14 showMoreOptions-visible transition-opacity">
+                                                        <IoMdArrowDropup className="absolute top-[-21px] right-0 text-[35px] text-[#f4f4f4]" />
 
 
-                                                            <ul className="pl-3 pt-2 flex flex-col gap-4 text-[#969393]">
-                                                                {
-                                                                    curUser?.blockedUsers?.some((data) => data.user === userData?.profile?._id) ?
-                                                                        (<li className="flex items-center gap-3 cursor-pointer hover:text-green-500">
-                                                                            <CgUnblock className="text-[23px]" />
-                                                                            <button onClick={handleUnblockUser}>
-                                                                                Unblock user
+                                                        <ul className="pl-3 pt-2 flex flex-col gap-4 text-[#969393]">
+                                                            {
+                                                                curUser?.blockedUsers?.some((data) => data.user === userData?.profile?._id) ?
+                                                                    (<li className="flex items-center gap-3 cursor-pointer hover:text-green-500">
+                                                                        <CgUnblock className="text-[23px]" />
+                                                                        <button onClick={handleUnblockUser}>
+                                                                            Unblock user
+                                                                        </button>
+                                                                    </li>
+                                                                    ) : (
+                                                                        <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
+                                                                            <MdBlock className="text-[23px]" />
+                                                                            <button onClick={handleBlockUser}>
+                                                                                Block user
                                                                             </button>
                                                                         </li>
-                                                                        ) : (
-                                                                            <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
-                                                                                <MdBlock className="text-[23px]" />
-                                                                                <button onClick={handleBlockUser}>
-                                                                                    Block user
-                                                                                </button>
-                                                                            </li>
-                                                                        )
-                                                                }
-                                                                <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
-                                                                    <MdReportGmailerrorred className="text-[23px]" />
-                                                                    <a href={`/reportUser/${userData?.profile?._id}`}>
-                                                                        Report user
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    }
+                                                                    )
+                                                            }
+                                                            <li className="flex items-center gap-3 cursor-pointer hover:text-red-500">
+                                                                <MdReportGmailerrorred className="text-[23px]" />
+                                                                <a href={`/reportUser/${userData?.profile?._id}`}>
+                                                                    Report user
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                }
 
-                                                </div>
+                                            </div>
 
-                                            )
-                                        }
+                                        )}
 
                                         {/* Edit form modal */}
-                                        {
-                                            selectedTab === "profile" && (
+                                        {selectedTab === "profile" && (
                                                 <EditFormModal
                                                     userData={userData}
                                                     isModalOpen={isModalOpen}
                                                     setIsModalOpen={setIsModalOpen}
                                                 />
-                                            )
-                                        }
-                                        {
-                                            selectedTab === "family" && (
+                                        )}
+                                        {selectedTab === "family" && (
                                                 <EditFamilyFormModal
                                                     userData={userData}
                                                     isModalOpen={isModalOpen}
                                                     setIsModalOpen={setIsModalOpen}
                                                 />
-                                            )
-                                        }
+                                        )}
 
                                     </div>
 
                                     {/* tab for navigating between profile data */}
-                                    <div className="w-full flex justify-center border-b-[2px]">
-                                        <ul className="flex justify-between font-semibold text-[16px] w-full px-5 md:px-16 py-1">
-                                            <li>
-                                                <a
-                                                    href=""
-                                                    className={`${selectedTab === "profile" && "border-b-[5px] border-[#E8C68F]"} cursor-pointer`}
-                                                    onClick={(e) => handleTabSelect("profile", e)}
-                                                >
-                                                    About
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a
-                                                    className={`${selectedTab === "profession" && "border-b-[5px] border-[#E8C68F]"} cursor-pointer`}
-                                                    onClick={(e) => handleTabSelect("profession", e)}
-                                                >
-                                                    Profession
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a
-                                                    className={`${selectedTab === "family" && "border-b-[5px] border-[#E8C68F]"} cursor-pointer`}
-                                                    onClick={(e) => handleTabSelect("family", e)}
-                                                >
-                                                    Family
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a
-                                                    className={`${selectedTab === "preferences" && "border-b-[5px] border-[#E8C68F]"} cursor-pointer`}
-                                                    onClick={(e) => handleTabSelect("preferences", e)}
-                                                >
-                                                    Preferences
-                                                </a>
-                                            </li>
-                                        </ul>
+                                    <ProfileTabs selectedTab={selectedTab} handleTabSelect={handleTabSelect}/>
 
-                                    </div>
-
-                                    <div className="w-full bg-[#ffffff] min-h-[40%] flex items-center">
+                                    <div className="w-full bg-[#ffffff] h-[50%] flex items-center">
 
                                         {/* actual profile data */}
                                         {selectedTab === 'profile' && (
@@ -718,7 +675,7 @@ function Profile() {
 
                             {
                                 isLoggedUser && (
-                                    <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 items-start gap-3 md:gap-7 flex-row xl:flex-col flex py-5 h-[120vh]">
+                                    <div className="w-full xl:w-[35%] xl:py-7 px-2 md:px-7 xl:px-0 gap-3 md:gap-7 flex flex-col md:flex-row xl:flex-col items-center md:items-start py-5 min-h-[15rem]">
                                         <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-3 rounded-lg w-[90%]">
                                             <h1 className="text-[15px] md:text-[18px] text-center px-2 font-semibold">Complete your profile for exact matches...</h1>
                                             <CircularProgressbar
@@ -735,7 +692,7 @@ function Profile() {
                                         </div>
 
                                         {(userData?.profile?.preferences.length || 0) < 5 &&
-                                            (<div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
+                                            (<div className="progress-card min-h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
                                                 <h1 className="text-[15px] md:text-[18px] text-center font-semibold">Add your Preferences</h1>
                                                 <button
                                                     className={`border-[5px] border-[#EAC991] rounded-full ${isFormVisible ? 'hidden' : ''}`}
@@ -779,60 +736,44 @@ function Profile() {
                                             </div>)
                                         }
 
-                                        {
-                                            hasAcceptedInterest && (
-                                                <div>
-                                                    <FeedbackDiv matchSend={userData && userData.profile?.interestSend} matchReceived={userData && userData.profile?.interestReceived} userFeedback={userFeedback}/>
-                                                </div>
-                                            )
-                                        }
+                                        {hasAcceptedInterest && (
+                                            <div>
+                                                <FeedbackDiv matchSend={userData && userData.profile?.interestSend} matchReceived={userData && userData.profile?.interestReceived} userFeedback={userFeedback}/>
+                                            </div>
+                                        )}
 
                                     </div>
                                 )
                             }
                         </div>
-
-
                     )
                 }
 
-                {
-                    //if payment section is selected payment history page is displayed
+                {//if payment section is selected payment history page is displayed
                     showPayment && (
                         <PaymentHistory userData={userData} />
-                    )
-                }
+                )}
 
-                {
-                    //if interest log section is selected payment history page is displayed
+                {//if interest log section is selected payment history page is displayed
                     showInterestLogs && (
                         <InterestLogs interestSend={userData?.profile?.interestSend || []} interestReceived={userData?.profile?.interestReceived || []} />
-                    )
-                }
+                )}
 
-                {
-                    showBlockedUsers && (
+                {showBlockedUsers && (
                         <BlockedUsers />
-                    )
-                }
+                )}
 
-                {
-                    showLikedUsers && (
+                {showLikedUsers && (
                         <LikedUsers/>
-                    )
-                }
+                )}
 
-                {
-                    showCallHistory && (
+                {showCallHistory && (
                         <CallHistory/>
-                    )
-                }
+                )}
 
-                {
-                    showWallet && (
+                {showWallet && (
                         <Wallet/>
-                    )
-                }
+                )}
             </div>
             <ToastContainer />
 

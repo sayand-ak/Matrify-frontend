@@ -80,7 +80,7 @@ function Landing(){
                     <div className="banner1_img flex-1 min-h-[40vh] rounded-r-[50px] overflow-hidden"></div>
 
                     <div className="banner1_content flex-1 flex flex-col items-center justify-center font-quote py-10 font-rubik">
-                        <div className="w-full md:w-[90%] flex flex-col gap-8">
+                        <div className="w-[90%] md:w-[90%] flex flex-col gap-8">
                             <h1 className="text-[35px] md:text-[50px] font-quote font-semibold leading-tight">Choose by interest, location and other relevant features</h1>
                             <p className="text-[18px] md:text-xl">Customize your partner search with filter like hobbies, location and more.Find your suitable match.</p>
                         </div>

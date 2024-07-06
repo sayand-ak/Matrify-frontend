@@ -108,7 +108,7 @@ export function FeedbackDiv({ matchSend, matchReceived, userFeedback }: Feedback
     });
     return (
         userFeedback ? (
-        <div className="progress-card bg-[#fbfbfb] flex flex-col justify-center items-center gap-4 rounded-lg w-[260px] p-4 text-center shadow-lg">
+        <div className="progress-card mx-auto bg-[#fbfbfb] flex flex-col justify-center items-center gap-4 rounded-lg w-[90%] md:w-[260px] p-4 text-center shadow-lg">
             <h2 className="text-xl font-semibold text-gray-700">Your Success Story</h2>
             <div className="mt-4">
                 <p className="mt-2 text-sm text-gray-600">{userFeedback.story}</p>
