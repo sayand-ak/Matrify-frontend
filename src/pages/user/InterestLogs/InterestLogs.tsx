@@ -167,7 +167,7 @@ export default function InterestLogs(interestData: InterestListProps) {
                         ) : (
                             <div 
                                 className="h-[500px] opacity-75 flex justify-center items-end" 
-                                style={{backgroundImage: `url("/src/assets/images/5225086.jpg")`, backgroundPosition: "center", backgroundSize: "contain", backgroundRepeat: "no-repeat"}}
+                                style={{backgroundImage: `url("/images/5225086.jpg")`, backgroundPosition: "center", backgroundSize: "contain", backgroundRepeat: "no-repeat"}}
                             >
                                 <p className="font-semibold text-2xl font-custom text-[#9c9994b9]">No interest requests sent yet!</p>
                             </div>
@@ -222,7 +222,7 @@ export default function InterestLogs(interestData: InterestListProps) {
                         ) : (
                             <div 
                                 className="h-[500px] opacity-75 flex justify-center items-end" 
-                                style={{backgroundImage: `url("/src/assets/images/5225086.jpg")`, backgroundPosition: "center", backgroundSize: "contain", backgroundRepeat: "no-repeat"}}
+                                style={{backgroundImage: `url("/images/5225086.jpg")`, backgroundPosition: "center", backgroundSize: "contain", backgroundRepeat: "no-repeat"}}
                             >
                                 <p className="font-semibold text-2xl font-custom text-[#9c9994b9]">No interest requests received yet!</p>
                             </div>

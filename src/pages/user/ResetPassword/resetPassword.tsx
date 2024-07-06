@@ -97,14 +97,14 @@ function ResetPassword() {
 
                 <div
                 className="image-container h-[250px] md:h-full md:flex-1 flex justify-center items-center"
-                style={{ backgroundImage: `url(${"/src/assets/images/security-amico.png"})`, backgroundSize: "contain"}}
+                style={{ backgroundImage: `url(${"/images/security-amico.png"})`, backgroundSize: "contain"}}
                 ></div>
                 <ToastContainer/>
 
             </div>
             :
             <div>
-                <img src="/src/assets/images/404.png" alt="" height={"500px"} width={"500px"} />
+                <img src="/images/404.png" alt="" height={"500px"} width={"500px"} />
                 <p className='text-2xl font-semibold text-center text-[#BA68C8]'>Sorry! Link was expired</p>
             </div>
         }

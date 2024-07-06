@@ -124,7 +124,7 @@ export const CallHistory = () => {
                 ))) : (
                     <div 
                         className="h-[500px] w-[500px] opacity-75 flex justify-center items-end" 
-                        style={{backgroundImage: `url("/src/assets/images/5350264.jpg")`, backgroundPosition: "center", backgroundSize: "cover", backgroundRepeat: "no-repeat"}}
+                        style={{backgroundImage: `url("/images/5350264.jpg")`, backgroundPosition: "center", backgroundSize: "cover", backgroundRepeat: "no-repeat"}}
                     >
                         <p className="font-semibold text-2xl font-custom text-[#9c9994b9]">No call yet!</p>
                     </div>

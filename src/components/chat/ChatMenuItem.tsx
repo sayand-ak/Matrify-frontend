@@ -49,7 +49,7 @@ export function ChatMenuItems({ conversation, userId, notificationCount }: ChatM
         <div className="h-[90px] px-5 my-2 flex items-center gap-5 hover:bg-[#e0e2e5] cursor-pointer">
             <div
                 className="h-[4rem] w-[5rem] rounded-full"
-                style={{ backgroundImage: `url(${user?.image ? user.image : '../src/assets/images/profile.png'})`, backgroundSize: "cover" }}
+                style={{ backgroundImage: `url(${user?.image ? user.image : '/images/profile.png'})`, backgroundSize: "cover" }}
             ></div>
             <div className="menu-item flex justify-between w-full items-center h-full">
                 <div>

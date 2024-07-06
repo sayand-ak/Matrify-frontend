@@ -8,7 +8,7 @@ function PaymentSuccess() {
     return (
         <div className="payment-success-container">
             <video autoPlay muted>
-                <source src="../src/assets/videos/Checkmark.mp4"  type="video/mp4" />
+                <source src="/videos/Checkmark.mp4"  type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
             <h1>Congrats! {type?.toUpperCase()} subscription added...</h1>

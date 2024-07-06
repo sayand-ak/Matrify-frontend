@@ -161,7 +161,7 @@ function ProfessionDetails() {
 
                 <div
                     className="image-container h-[250px] md:h-full md:flex-1 flex justify-center items-center"
-                    style={{ backgroundImage: `url(${"../src/assets/images/profession.jpg"})`}}
+                    style={{ backgroundImage: `url(${"/images/profession.jpg"})`}}
                 >
                 </div>
                 

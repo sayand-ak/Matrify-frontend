@@ -18,7 +18,7 @@ export function QuoteBanner() {
 
             <div
                 className="quote-image min-h-[20rem] w-full flex-1 lg:w-1/2 lg:rounded-l-[60px]"
-                style={{backgroundImage: "url(../src/assets/images/banner2.jpg)", backgroundSize: "cover", backgroundPosition: "center"}}
+                style={{backgroundImage: "url(/images/banner2.jpg)", backgroundSize: "cover", backgroundPosition: "center"}}
             >
             </div>
         </div>

@@ -132,7 +132,7 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
 
                             <div
                                 className="h-[4rem] w-[4rem] rounded-full"
-                                style={{ backgroundImage: `url(${user?.image ? user.image : "../src/assets/images/businesswoman-posing.jpg"})`, backgroundSize: "cover" }}
+                                style={{ backgroundImage: `url(${user?.image ? user.image : "/images/businesswoman-posing.jpg"})`, backgroundSize: "cover" }}
                             ></div>
                             <div>
                                 <h1 className="text-[20px] font-semibold">{user?.username}</h1>
@@ -165,7 +165,7 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
             ) : (
                 <div
                     className="h-full opacity-80 flex-col justify-end md:pb-[5rem] lg:pb-[3rem] gap-4 items-center hidden md:flex bg-[#f0ece5]"
-                    style={{ backgroundImage: "url('../src/assets/images/2193-removebg.png')", backgroundSize: "contain", backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
+                    style={{ backgroundImage: "url('/images/2193-removebg.png')", backgroundSize: "contain", backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
                 >
                     <p className="text-2xl lg:text-4xl items-center font-gillroy text-[#000000b2]">Know each other, and love each other</p>
                     <p className="text-[#0000007e] text-lg flex items-center gap-2">

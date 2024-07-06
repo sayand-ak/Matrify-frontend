@@ -198,7 +198,7 @@ export function FeedbackDiv({ matchSend, matchReceived, userFeedback }: Feedback
                                 <div
                                     className="relative rounded-xl w-[250px] h-[250px] md:w-full md:h-[300px]"
                                     style={{
-                                        backgroundImage: `url(${imageUrl ? imageUrl : "../src/assets/images/image_label.png"})`,
+                                        backgroundImage: `url(${imageUrl ? imageUrl : "/images/image_label.png"})`,
                                         backgroundSize: "contain",
                                         backgroundRepeat: "no-repeat",
                                         backgroundPosition: "center"

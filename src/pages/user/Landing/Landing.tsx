@@ -13,15 +13,15 @@ import { FeedbackSlider } from "../../../components/FeedbackSlider/FeedbackSlide
 
 function Landing(){
     const verifyImg: LandingCardProps = {
-        img: "../src/assets/images/shield_1161388.png",
+        img: "/images/shield_1161388.png",
         caption: "100% Verified Profiles"
     };
     const securityImg: LandingCardProps = {
-        img: "../src/assets/images/security_11632064.png",
+        img: "/images/security_11632064.png",
         caption: "Enhanced Privacy Settings"
     };
     const matchImg: LandingCardProps = {
-        img: "../src/assets/images/circuit_677389.png",
+        img: "/images/circuit_677389.png",
         caption: "Intelligent Matchmaking System"
     };
   

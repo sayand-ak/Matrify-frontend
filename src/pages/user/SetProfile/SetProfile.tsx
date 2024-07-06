@@ -383,7 +383,7 @@ function SetProfile() {
                     className="relative rounded-full w-[250px] h-[250px] md:w-[350px] md:h-[350px] border-[1px] border-[#c4c1c1]"
                         style={{
                         backgroundImage: `url(${
-                            imageUrl ? imageUrl : "../src/assets/images/profile.png"
+                            imageUrl ? imageUrl : "/images/profile.png"
                         })`,
                         backgroundSize: "cover",
                         }}
@@ -397,7 +397,7 @@ function SetProfile() {
                     <div
                         className="bg-white rounded-full h-[60px] w-[60px] absolute bottom-2 right-9 flex"
                         style={{
-                            backgroundImage: `url(${"../src/assets/images/plus_9202063.png"})`,
+                            backgroundImage: `url(${"/images/plus_9202063.png"})`,
                             backgroundSize: "cover",
                         }}
                     ></div>

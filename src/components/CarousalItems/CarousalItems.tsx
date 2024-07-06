@@ -54,7 +54,7 @@ export function CarousalItems({ data, index }: CarousalItemsProps) {
             >
                 <div
                     className="relative h-[280px] w-[250px] bg-[#ebe3d48d] rounded-lg overflow-hidden"
-                    style={{ backgroundImage: `url(${data.image ? data.image : "../src/assets/images/profile.png"})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                    style={{ backgroundImage: `url(${data.image ? data.image : "/images/profile.png"})`, backgroundSize: "cover", backgroundPosition: "center" }}
                 >
                     <div className="absolute bottom-0 text-white  w-full h-16 bg-gradient-to-b from-[#00000055] to-[#000000] pl-5">
                         <div className="flex gap-1 items-center font-semibold text-[20px]">

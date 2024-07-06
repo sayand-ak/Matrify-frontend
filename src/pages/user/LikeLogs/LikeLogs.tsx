@@ -97,7 +97,7 @@ export function LikedUsers() {
             ) : (
                 <div 
                     className="h-full w-full opacity-60 text-[30px] font-gillroy flex justify-center items-end pb-[5rem] font-semibold text-[#a18356]"
-                    style={{backgroundImage: "url('/src/assets/images/28530.jpg')", backgroundSize: '40rem', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
+                    style={{backgroundImage: "url('/images/28530.jpg')", backgroundSize: '40rem', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
                 >
                     No Likes yet
                 </div>

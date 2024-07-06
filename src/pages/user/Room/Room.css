@@ -3,7 +3,7 @@
 .caller-div{
     box-shadow: rgba(9, 9, 9, 0.707) 0px 22px 70px 4px;
     border: 1px solid rgb(50, 49, 49);
-    background-image: url("../src/assets/profile.png");
+    background-image: url("/images/profile.png");
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;

@@ -146,7 +146,7 @@ function CollectDocs() {
                 <div
                     className="image-container h-[700px] md:h-full md:flex-1 flex items-start pt-10 text-[#b5b4b4]"
                     style={{
-                        backgroundImage: `url(${"../src/assets/images/welcomePage.jpg"})`,
+                        backgroundImage: `url(${"/images/welcomePage.jpg"})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center" ,
                     }}

@@ -194,7 +194,7 @@ function Payment () {
 
             <div className="flex flex-col items-center gap-5 pt-5">
                 <div className="flex items-center gap-2">
-                    <img src="../src/assets/images/logo.png"className="h-[5rem] md:h-[5rem] lg:h-[6rem]" alt="" />
+                    <img src="/images/logo.png"className="h-[5rem] md:h-[5rem] lg:h-[6rem]" alt="" />
                     <h2 className="logo-heading text-[3rem] md:text-[3.5rem] lg:text-[4rem] font-semibold">MATRIFY</h2>
                 </div>
                 <h2 className="text-center text-[1.5rem] md:text-[2.2rem] lg:text-[3.5rem]">Select your plan and Upgrade to Premium</h2>

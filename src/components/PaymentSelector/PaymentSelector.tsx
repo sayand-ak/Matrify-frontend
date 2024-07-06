@@ -29,7 +29,7 @@ const PaymentSelector = ({setShowPaymentOption, setSelectedMethod, selectedMetho
                 transition={{ type: "spring", stiffness: 50 }}
             >     
                 <div>
-                    <img src="../src/assets/images/payment_select.jpg" alt="" />
+                    <img src="/images/payment_select.jpg" alt="" />
                     <RiCloseFill 
                         className="text-black absolute top-5 right-5 text-[30px]"
                         onClick={() => setShowPaymentOption(false)}

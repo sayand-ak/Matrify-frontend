@@ -231,7 +231,7 @@ function FamilyDetails() {
 
                 <div
                     className="image-container h-[250px] md:h-full md:flex-1 flex"
-                    style={{ backgroundImage: `url(${"../src/assets/images/family.jpg"})` }}
+                    style={{ backgroundImage: `url(${"/images/family.jpg"})` }}
                 >
                     <div className="flex flex-col items-center justify-center w-full p-5 h-full md:h-full">
                         

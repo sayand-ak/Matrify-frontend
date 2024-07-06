@@ -98,7 +98,7 @@ export function PaymentHistory({ userData }: {
 
             {userData?.profile?.subscription && userData?.profile?.subscription.length == 0 ? (
                 <div className="h-[100vh] w-full flex flex-col items-center pt-28">
-                    <img src="../src/assets/images/11110.jpg" alt="" className="h-[50%] w-[50%]" />
+                    <img src="/images/11110.jpg" alt="" className="h-[50%] w-[50%]" />
                     <p className="text-4xl font-custom font-bold text-[#817a7a81]">Not Subscribed Yet!</p>
                     <a href="/payment" className="bg-[#E7C68F] text-white font-bold px-5 py-2 rounded-lg shadow-md mt-10">SUBSCRIBE</a>
                 </div>
@@ -181,7 +181,7 @@ export function PaymentHistory({ userData }: {
                                         <CustomModal isOpen={refundModalOpen} onRequestClose={() => setRefundModalOpen(false)}>
                                             <div
                                                 className="h-[400px] w-full relative"
-                                                style={{ backgroundImage: "url(../src/assets/images/11060.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+                                                style={{ backgroundImage: "url(/images/11060.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
                                             >
                                                 <button className="absolute right-5 top-5" onClick={handleInfoClick}>
                                                     <BsInfoCircle className="text-[20px]" />

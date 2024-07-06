@@ -4,37 +4,37 @@
 
 @font-face {
     font-family: "font-btn";
-    src: url('./assets/fonts/Work_Sans/WorkSans-VariableFont_wght.ttf') format('truetype'); ;
+    src: url('/fonts/Work_Sans/WorkSans-VariableFont_wght.ttf') format('truetype'); ;
 }
 
 @font-face {
     font-family: "poppins";
-    src: url('./assets/fonts/Poppins/Poppins-Regular.ttf');
+    src: url('/fonts/Poppins/Poppins-Regular.ttf');
 }
 
 @font-face {
     font-family: "roboto";
-    src: url('./assets/fonts/Roboto/Roboto-Regular.ttf');
+    src: url('/fonts/Roboto/Roboto-Regular.ttf');
 }
 
 @font-face {
     font-family: "montserrat";
-    src: url('./assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
+    src: url('/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
 }
 
 @font-face {
     font-family: "varela";
-    src: url('./assets/fonts/Varela_Round/VarelaRound-Regular.ttf');
+    src: url('/fonts/Varela_Round/VarelaRound-Regular.ttf');
 }
 
 @font-face {
     font-family: "lexend_Deca";
-    src: url('./assets/fonts/Lexend_Deca/LexendDeca-VariableFont_wght.ttf');
+    src: url('/fonts/Lexend_Deca/LexendDeca-VariableFont_wght.ttf');
 }
 
 @font-face {
     font-family: "rubik";
-    src: url('./assets/fonts/Rubik/Rubik-VariableFont_wght.ttf');
+    src: url('/fonts/Rubik/Rubik-VariableFont_wght.ttf');
 }
 
 .loader {

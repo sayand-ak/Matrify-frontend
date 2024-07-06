@@ -458,7 +458,7 @@ function Profile() {
                                 <div className={`w-full ${isLoggedUser ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
 
                                     {/* the cover image div */}
-                                    <div className="w-full h-[30%]" style={{ backgroundImage: "url('/src/assets/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+                                    <div className="w-full h-[30%]" style={{ backgroundImage: "url('/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
                                         <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${isLoggedUser ? "block" : "hidden"}`} onClick={showSidebar} />
                                     </div>
 
@@ -466,7 +466,7 @@ function Profile() {
                                         <div
                                             className="rounded-full h-48 w-48 absolute top-[-100px] left-10 border-[5px] border-white z-0"
                                             style={{
-                                                backgroundImage: `url(${userData?.profile?.image ?? "../../src/assets/images/profile.png"})`,
+                                                backgroundImage: `url(${userData?.profile?.image ?? "/images/profile.png"})`,
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center',
                                                 backgroundColor: "#f4f4f4"
@@ -707,7 +707,7 @@ function Profile() {
                                                         }
                                                     </div>) :
                                                     (<div className="w-full h-full flex flex-col justify-center items-center">
-                                                        <img src="/src/assets/images/empty.png" alt="" className="h-3/4 w-1/4 opacity-[0.7]" />
+                                                        <img src="/images/empty.png" alt="" className="h-3/4 w-1/4 opacity-[0.7]" />
                                                         <p className="text-gray-400">No preferences added</p>
                                                     </div>)
                                             )}

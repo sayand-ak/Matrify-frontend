@@ -4,7 +4,7 @@
     z-index: -1;
     min-height: 100vh;
     width: 100vw;
-    background-image: url(../../../src/assets/images/view-love-friendly-sun-female.jpg);
+    background-image: url(/images/view-love-friendly-sun-female.jpg);
     background-size: cover;
     background-repeat: no-repeat;
 }

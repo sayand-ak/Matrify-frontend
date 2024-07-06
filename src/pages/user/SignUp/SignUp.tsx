@@ -306,7 +306,7 @@ function SignUp() {
                     </form>
                 </div>
 
-                <div className="image-container h-[250px] md:h-full md:flex-1 flex items-end" style={{ backgroundImage: `url(${'../src/assets/images/married-couple-holding-hands-silhouette.jpg'})` }}>
+                <div className="image-container h-[250px] md:h-full md:flex-1 flex items-end" style={{ backgroundImage: `url(${'/images/married-couple-holding-hands-silhouette.jpg'})` }}>
                     <div className="flex flex-col items-center justify-between w-full p-5 h-full md:h-[180px]">
                         <h1 className="text-white text-2xl font-semibold font-gillroy md:text-3xl">Get Start with MATRIFY</h1>
                         <p className="text-white text-sm font-gillroy hidden md:block">

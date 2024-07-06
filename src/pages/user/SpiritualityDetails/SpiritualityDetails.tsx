@@ -141,7 +141,7 @@ function SpiritualityDetails() {
 
                 <div
                     className="image-container min-h-[400px] md:h-full flex items-end"
-                    style={{ backgroundImage: `url(${"../src/assets/images/spirituality.jpg"})`, backgroundSize: 'cover'}}
+                    style={{ backgroundImage: `url(${"/images/spirituality.jpg"})`, backgroundSize: 'cover'}}
                 >
                     <div className="flex flex-col justify-end item-center w-full p-5 h-full md:h-[100px]">
                         <h1 className="text-[#5d5c5ce6] text-center text-lg font-semibold font-gillroy md:text-2xl">

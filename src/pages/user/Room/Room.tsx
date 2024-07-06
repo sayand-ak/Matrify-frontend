@@ -211,7 +211,7 @@ function Room() {
                 <div
                     className="bg-[#000] h-[100%] w-[100%] flex items-center"
                     style={{
-                        backgroundImage: !remoteStream ? "url('/src/assets/images/profile copy.png')" : "none",
+                        backgroundImage: !remoteStream ? "url('/images/profile copy.png')" : "none",
                         backgroundSize: "contain",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "center"
