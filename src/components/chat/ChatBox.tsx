@@ -36,7 +36,7 @@ export function ChatBox({ currentChat, isChatSelected, setIsChatSelected, handle
     const dispatch = useAppDispatch();
     const { usersOnline } = useContext(SocketContext);
     
-    const curUser = useAppSelector((state) => state.user.user);
+    const curUser = useAppSelector(state => state.user.user);
 
     const navigate = useNavigate();
 

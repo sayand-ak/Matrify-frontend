@@ -32,7 +32,7 @@ export function Login() {
                 showToast("success", "Login Successful", () => {
                     localStorage.setItem("adminAccess",response.payload.access);
                     localStorage.setItem("adminRefresh",response.payload.refresh);
-                    dispatch(setAdminCredentials(response));
+                    dispatch(setAdminCredentials(response.payload.data));
                     navigate("/admin/home");
                 })
             } else {
