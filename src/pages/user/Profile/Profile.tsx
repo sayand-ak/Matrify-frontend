@@ -437,7 +437,7 @@ function Profile() {
             </div>
 
 
-            <div className="flex overflow-hidden h-[90vh]">
+            <div className="flex overflow-hidden min-h-[90vh]">
 
                 {/* sidebar in normal view */}
                 <div className={`hidden max-w-[20rem] ${isLoggedUser && "md:flex"}`}>
