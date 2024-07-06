@@ -27,7 +27,6 @@ export function Login() {
         onSubmit: async (values: AdminLoginType) => {
         try {
             const response = await dispatch(loginAdminAsync(values)) 
-            console.log(response)
             if (response.payload) {
                 showToast("success", "Login Successful", () => {
                     localStorage.setItem("adminAccess",response.payload.access);
