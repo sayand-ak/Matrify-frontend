@@ -1,6 +1,6 @@
 @font-face {
     font-family: "gillroy";
-    src: url(../../../assets/fonts/gilroy/Gilroy-Regular.ttf);
+    src: url(/fonts/gilroy/Gilroy-Regular.ttf);
 }
 
 .image-container{

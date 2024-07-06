@@ -295,7 +295,10 @@ function Login() {
                     </form>
                 </div>
 
-                <div className="image-container h-1/4 md:h-full md:flex-1" style={{ backgroundImage: `url(${'../src/assets/images/wedding-rings-black-white.jpg'})` }}>
+                <div 
+                    className="image-container h-1/4 md:h-full md:flex-1" 
+                    style={{ backgroundImage: `url(${'/images/wedding-rings-black-white.jpg'})` }}
+                >
                     <div className="flex flex-col items-center justify-between h-full w-full p-5">
                         <h1 className="text-[#dfdede] text-3xl font-semibold font-gillroy md:pt-12">Welcome to Matrify</h1>
                         <p className="text-white text-sm font-gillroy hidden md:block">
