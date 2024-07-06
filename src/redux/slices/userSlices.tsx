@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserState } from "../../typings/user/userTypes";
+import { userLogin } from "../../services/userAPI";
 
-const getStoredUserInfo = () => {
+const getStoredUserInfo = (): UserState['user'] | null => {
     try {
         const storedInfo = localStorage.getItem('user');
         return storedInfo ? JSON.parse(storedInfo) : null;
@@ -20,7 +21,7 @@ const userSlice = createSlice({
     name: 'user',
     initialState: userInitialState,
     reducers: {
-        setUserCredentials: (state, action) => {
+        setUserCredentials: (state, action: PayloadAction<UserState['user']>) => {
             state.user = action.payload;
             localStorage.setItem('user', JSON.stringify(action.payload))
         },
@@ -29,10 +30,21 @@ const userSlice = createSlice({
             localStorage.removeItem('user')
         },
     },
-    extraReducers() {
-       
-    },
-});
+    extraReducers(builder) {
+        builder.addCase(userLogin.pending, (state) => {
+            state.status = "loading"
+            state.error = null
+        })
+        builder.addCase(userLogin.fulfilled, (state, action) => {
+            state.status = "success"
+            state.user = action.payload
+            state.error = null
+        })
+        builder.addCase(userLogin.rejected, (state, action) => {
+            state.status = "rejected"
+            state.error = action.error.message
+        })
+}});
 
 export const { setUserCredentials, userLogout } = userSlice.actions;
 

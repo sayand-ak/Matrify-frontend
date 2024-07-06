@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loginAdminAsync } from "../../services/adminAPI";
 import { AdminState } from "../../typings/admin/loginType";
 
-const getStoredAdminInfo = () => {
+const getStoredAdminInfo = (): AdminState['admin'] | null => {
     try {
         const storedInfo = localStorage.getItem('admin');
         return storedInfo ? JSON.parse(storedInfo) : null;
@@ -21,7 +21,7 @@ const adminSlice = createSlice({
     name: 'admin',
     initialState: adminInitialState,
     reducers: {
-        setAdminCredentials: (state, action) => {
+        setAdminCredentials: (state, action: PayloadAction<AdminState['admin']>) => {
             state.admin = action.payload;
             localStorage.setItem('admin', JSON.stringify(action.payload))
         },
