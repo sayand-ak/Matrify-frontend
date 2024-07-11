@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import { ConfirmationResult, signInWithPhoneNumber } from "firebase/auth";
 import showToast from "../../../components/Toast/Toast";
 import { startTimer } from "../../../utils/timer";
+import { Loader } from "../../../components/loader/Loader";
 
 declare global {
     interface Window {
@@ -30,6 +31,7 @@ function SignUp() {
     const [phoneErr, setPhoneErr] = useState("");
     const [passwordErr, setPasswordErr] = useState("");
     const [rePasswordErr, setRePasswordErr] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const [ confirmationResult, setConfirmationResult ] = useState<ConfirmationResult>();
 
@@ -98,6 +100,7 @@ function SignUp() {
 
 
     async function handleRegisterSubmit() { 
+        setIsLoading(true)
         try {
             if(!uname || !phone || !password){
                 setRePasswordErr("Please fill all the fields");
@@ -106,11 +109,12 @@ function SignUp() {
                 const response = await dispatch(signupUserAsync(phone));
                 
                 if(response.payload.success){
+
+                    setIsLoading(false);
                     
                     const otpConfig = onSignInSubmit(submitBtn.current);
                     
                     if (otpConfig) {
-                        console.log("recaptche rendered");
                         
                         otpConfig.recaptchaVerifier.render();
                         setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
@@ -121,15 +125,16 @@ function SignUp() {
                             setRemainingTime(remainingTime);
                             setTimerInterval(interval);
                         }                    
-                        setIsModalOpen(true);
+                        setIsModalOpen(false);
         
                     } else{
-                        console.log("error");
+                        console.log("error otp config");
                     }
                 }else{
                     showToast("error", response.payload.message);
                 }
             }
+            setIsLoading(false);
             
         } catch (error) {
             navigate("/500");
@@ -138,6 +143,7 @@ function SignUp() {
     
 
     async function handleOTPVerification(){
+        setIsLoading(true)
         if(otp.length === 6 && confirmationResult){
             try {
                 const result = await confirmationResult.confirm(otp);
@@ -150,6 +156,7 @@ function SignUp() {
                     }));
     
                     if(response.payload.success){
+                        setIsLoading(false)
                         showToast("success", response.payload.message, () => {
                             navigate("/login");
                         });
@@ -159,6 +166,7 @@ function SignUp() {
                 } else {
                     showToast("error", "Invalid OTP");
                 }
+                setIsLoading(false)
             } catch (error) {
                 showToast("error", "Invalid OTP. Check OTP and try again.");
             }
@@ -290,10 +298,10 @@ function SignUp() {
                                 id="signupBtn"
                                 type="button" 
                                 ref={submitBtn}
-                                className="w-[200px] signup px-5 py-2  md:mt-5 rounded-md bg-[#1B2931] text-white font-semibold"
+                                className="w-[200px] signup px-5 py-2  md:mt-5 rounded-md bg-[#1B2931] text-white font-semibold flex items-center justify-center"
                                 onClick={handleRegisterSubmit}
                             >
-                                Sign Up
+                                {isLoading ? <Loader dimension={40}/> : "Signup"}
                             </button>
 
                             <p className="text-black text-sm font-gillroy py-3 block md:hidden">
@@ -356,7 +364,7 @@ function SignUp() {
                             className="w-1/2 px-5 py-3 rounded-md bg-[#1B2931] text-white font-semibold hover:bg-[#999999]"
                             onClick={handleOTPVerification}
                         >
-                        Verify
+                            {isLoading ? <Loader dimension={40}/> : "Verify"}
                         </button>
                         <button 
                             className="w-1/2 border-[#1B2931] border-[1px] rounded-md"

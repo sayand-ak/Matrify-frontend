@@ -50,7 +50,7 @@ export function Login() {
 
             <div className="form-div flex-1 h-full relative">
                 <form onSubmit={formik.handleSubmit} className="h-full flex flex-col items-center justify-center gap-10">
-                    <img src="/src/assets/images/MATRIFY-removebg-preview.png" alt="" className="absolute top-5 h-[250px] w-[250px]" />
+                    <img src="/MATRIFY-removebg-preview.png" alt="" className="absolute top-5 h-[250px] w-[250px]" />
                     <div className="pt-28">
                         <h1 className="text-3xl font-bold font-gillroy">Welcome back</h1>
                         <p className="text-sm text-center pt-2">Please sign in to continue</p>
@@ -91,7 +91,7 @@ export function Login() {
 
             <div 
                 className="image-div flex-1 items-end py-20 h-full hidden md:flex"
-                style={{ backgroundImage: `url(${"../src/assets/images/665.jpg"})`, backgroundSize: 'cover', backgroundPosition: "center"}}
+                style={{ backgroundImage: `url(${"/665.jpg"})`, backgroundSize: 'cover', backgroundPosition: "center"}}
             >
                 {/* <h1 className="w-full h-fit bg-red-500 ">Unlock Your Power. Secure the Future.</h1> */}
             </div>
