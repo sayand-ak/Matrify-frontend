@@ -13,6 +13,7 @@ import { setUserCredentials } from "../../../redux/slices/userSlices";
 import showToast from "../../../components/Toast/Toast";
 import { ToastContainer } from "react-toastify";
 import { CustomModal } from "../../../components/modal/CustomModal";
+import { Loader } from "../../../components/loader/Loader";
 
 
 function Login() {
@@ -25,6 +26,8 @@ function Login() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [forgotEmail, setForgotEmail] = useState("");
     const [forgotEmailError, setForgotEmailError] = useState("");
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -75,6 +78,7 @@ function Login() {
     async function handleLoginSubmit() {
         try {
             console.log("hello from login")
+            setIsLoading(true);
             if (type != "email" && type != "phone") {
                 setDataError("Invalid email or phone number");
             } else if (!validatePassword(password)) {
@@ -83,6 +87,7 @@ function Login() {
                 const response = await dispatch(userLogin({ data, password }));
                 if (response.payload?.success) {
                     showToast("success", "Login successful", () => {
+                        setIsLoading(false)
                         dispatch(setUserCredentials(response.payload.user));
 
                         localStorage.setItem("userAccess", response.payload.access);
@@ -262,7 +267,7 @@ function Login() {
                                 className="w-[200px] px-5 py-2 rounded-md bg-[#1b2931] text-white font-semibold"
                                 onClick={handleLoginSubmit}
                             >
-                                Login
+                                {isLoading ? <Loader dimension={40}/> : "Login"}
                             </button>
 
                             <div className="flex items-center gap-2 w-full">
