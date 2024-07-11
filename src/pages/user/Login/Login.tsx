@@ -74,6 +74,7 @@ function Login() {
 
     async function handleLoginSubmit() {
         try {
+            console.log("hello from login")
             if (type != "email" && type != "phone") {
                 setDataError("Invalid email or phone number");
             } else if (!validatePassword(password)) {
