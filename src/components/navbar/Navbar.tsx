@@ -1,18 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { IoSearch } from "react-icons/io5";
-import { LegacyRef, useEffect, useRef, useState } from "react";
+import { LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { Users } from "../../typings/user/userTypes";
-import { searchPartner, saveSearchData } from "../../services/userAPI";
+import { searchPartner, saveSearchData, getUserNotifications } from "../../services/userAPI";
 import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
-// import { NotificationType } from "../../typings/notifications/notificationType";
 import { NavbarToggleDiv } from "../NavbarToggleDiv/NavbarToggleDiv";
 import { MdOutlineMoreVert } from "react-icons/md";
-
-
+import { NotificationType } from "../../typings/notifications/notificationType";
 
 interface NavbarProps {
     page: string;
@@ -24,7 +22,7 @@ export default function Navbar({page}: NavbarProps){
     const [searchData, setSearchData] = useState<Users[]>([]);
     const [value] = useDebounce(searchData, 1000);
     const [searchUserIds, setSearchUserIds] = useState<string[] | []>([]);
-    // const [notifications, setNotifications] = useState<NotificationType | null>(null);
+    const [notifications, setNotifications] = useState<NotificationType | null>(null);
 
     const [isHovered, setIsHovered] = useState(false);
 
@@ -34,46 +32,46 @@ export default function Navbar({page}: NavbarProps){
     const selector = useAppSelector(state => state.user.user);
 
     // Convert chat object to Map if needed
-    // const chatMap = useMemo(() => {
-    //     if (notifications && notifications.chat) {
-    //         return notifications.chat instanceof Map
-    //             ? notifications.chat
-    //             : new Map(Object.entries(notifications.chat));
-    //     }
-    //     return new Map();
-    // }, [notifications]);
+    const chatMap = useMemo(() => {
+        if (notifications && notifications.chat) {
+            return notifications.chat instanceof Map
+                ? notifications.chat
+                : new Map(Object.entries(notifications.chat));
+        }
+        return new Map();
+    }, [notifications]);
 
      // Compute the number of unread messages
-    //  const unreadMessagesCount = useMemo(() => {
-    //     let count = 0;
-    //     for (const value of chatMap.values()) {
-    //         if (value > 1) {
-    //             count += value;
-    //         }
-    //     }
-    //     return count;
-    // }, [chatMap]);
+     const unreadMessagesCount = useMemo(() => {
+        let count = 0;
+        for (const value of chatMap.values()) {
+            if (value > 1) {
+                count += value;
+            }
+        }
+        return count;
+    }, [chatMap]);
 
     // Compute the number of interest requests
-    // const interestRequestsCount = useMemo(() => {
-    //     return notifications?.interestReceived.length ?? 0;
-    // }, [notifications]);
+    const interestRequestsCount = useMemo(() => {
+        return notifications?.interestReceived.length ?? 0;
+    }, [notifications]);
 
-    // // Total notifications count
-    // const totalNotificationsCount = useMemo(() => {
-    //     return unreadMessagesCount + interestRequestsCount;
-    // }, [unreadMessagesCount, interestRequestsCount]);
+    // Total notifications count
+    const totalNotificationsCount = useMemo(() => {
+        return unreadMessagesCount + interestRequestsCount;
+    }, [unreadMessagesCount, interestRequestsCount]);
 
-    // const handleGetNotifications = useCallback(async() => {
-    //   const response = await dispatch(getUserNotifications());     
+    const handleGetNotifications = useCallback(async() => {
+      const response = await dispatch(getUserNotifications());     
        
-    //   setNotifications(response.payload.data);
+      setNotifications(response.payload.data);
       
-    // }, [dispatch, notifications])
+    }, [dispatch, notifications])
 
-    // useEffect(() => {
-    //   handleGetNotifications();
-    // }, [handleGetNotifications]);
+    useEffect(() => {
+      handleGetNotifications();
+    }, []);
 
 
     useEffect(() => {
@@ -289,11 +287,11 @@ export default function Navbar({page}: NavbarProps){
                                     />
                                 </div>
 
-                                {/* {totalNotificationsCount > 0 ? (
+                                {totalNotificationsCount > 0 ? (
                                     <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
                                         {totalNotificationsCount}
                                     </div>
-                                ) : null} */}
+                                ) : null}
                             </a>
 
                             <MdOutlineMoreVert 

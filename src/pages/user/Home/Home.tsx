@@ -167,17 +167,21 @@ function Home() {
             >
                 <div className=" h-full flex flex-col items-center ">
                     <h1 className="subscription-alert-heading text-[30px] text-[#0000009f] font-bold">Subscription Alert!!!</h1>
-                    <img src="../src/assets/images/credit-card-concept-landing-page.png" className="h-[300px] w-auto" />
+                    <img src="/credit-card-concept-landing-page.png" className="h-[300px] w-auto" />
                     <p className="px-12 text-[18px]">You are not subscribed. Please subscribe to access our advance contact and matching features.</p>
                     <div className="flex w-full justify-around pt-10">
                         <a 
-                        href="/payment"
+                            href="/payment"
                             className="bg-[#deba72] p-2 rounded-lg text-white font-semibold cursor-pointer shadow-sm"
-                        >Subscribe</a>
+                        >
+                            Subscribe
+                        </a>
                         <a 
                             className="border border[2px] border-[#deba72] text-[#deba72] font-semibold px-4 py-2 rounded-lg cursor-pointer"
                             onClick={handleModalClose}
-                        >Cancel</a>
+                        >
+                            Cancel
+                        </a>
                     </div>
                 </div>
             </div>
