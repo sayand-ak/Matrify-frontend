@@ -128,7 +128,7 @@ function SignUp() {
                             setRemainingTime(remainingTime);
                             setTimerInterval(interval);
                         }                    
-                        setIsModalOpen(true);
+                        setIsModalOpen(false);
         
                     } else{
                         console.log("error otp config");
