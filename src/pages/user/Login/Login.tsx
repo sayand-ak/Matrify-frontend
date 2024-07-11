@@ -264,7 +264,7 @@ function Login() {
                         <div className="flex flex-col items-center gap-2 w-full">
                             <button
                                 type="button"
-                                className="w-[200px] px-5 py-2 mx-auto rounded-md bg-[#1b2931] text-white font-semibold"
+                                className="w-[200px] px-5 py-2 flex items-center justify-center rounded-md bg-[#1b2931] text-white font-semibold"
                                 onClick={handleLoginSubmit}
                             >
                                 {isLoading ? <Loader dimension={40}/> : "Login"}
