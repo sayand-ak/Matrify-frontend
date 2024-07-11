@@ -63,15 +63,17 @@ export default function Navbar({page}: NavbarProps){
     const totalNotificationsCount = useMemo(() => {
         return unreadMessagesCount + interestRequestsCount;
     }, [unreadMessagesCount, interestRequestsCount]);
+
     const handleGetNotifications = useCallback(async() => {
-      const response = await dispatch(getUserNotifications());      
+      const response = await dispatch(getUserNotifications());     
+       
       setNotifications(response.payload.data);
       
     }, [dispatch, notifications])
 
     useEffect(() => {
       handleGetNotifications();
-    }, []);
+    }, [handleGetNotifications]);
 
 
     useEffect(() => {
