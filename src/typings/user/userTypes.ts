@@ -122,3 +122,21 @@ export interface InterestReceived {
     status: string;
 }
 
+export interface AggregateFilterResult {
+    dob: Date[];
+    district: string[];
+    state: string[];
+    motherTongue: string[];
+    occupation: string[];
+    education: string[];
+    empStatus: string[];
+    annualIncome: number[];
+    familyType: string[];
+    familyStats: string[];
+    familyValue: string[];
+    martialStatus: string[];
+    disabilities: string[];
+    cast: string[];
+    religion: string[];
+    subcast: string[];
+  }

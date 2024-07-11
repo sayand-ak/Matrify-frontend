@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-const useIntersectionObserver = (callback: () => void, options?: IntersectionObserverInit) => {
+const useIntersectionObserver = (callback: () => void) => {
+    const options: IntersectionObserverInit = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 1.0, 
+    };
     const [isIntersecting, setIsIntersecting] = useState(false);
     console.log(isIntersecting, "intersection");
     
@@ -11,7 +16,7 @@ const useIntersectionObserver = (callback: () => void, options?: IntersectionObs
             (entries) => {
                 if (entries[0].isIntersecting) {
                     setIsIntersecting(true);
-                    callback();
+                    callback()
                 } else {
                     setIsIntersecting(false);
                 }
@@ -28,7 +33,7 @@ const useIntersectionObserver = (callback: () => void, options?: IntersectionObs
                 observer.unobserve(ref.current );
             }
         };
-    }, [callback, options]);
+    }, [callback]);
 
     return ref;
 };

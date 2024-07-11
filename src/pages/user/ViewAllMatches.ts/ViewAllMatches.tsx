@@ -70,15 +70,15 @@ const ViewAllMatches = () => {
                 <FilterSlider matchKey={params.matchKey || ""} handleFilterItemClick={handleFilterItemClick} selectedFilterItem={selectedFilterItem}/>
             </div>
 
-            <div className="w-full flex justify-center py-10">
+            <div className="w-full flex justify-center py-10 z-[-1000]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-14 lg:grid-cols-4  w-fit">
                     
                     {
                         selectedFilter.length > 0 ?
 
-                        (selectedFilter.map((user, index) => (<CarousalItems index={index} data={user}/>)))
+                        (selectedFilter.map((user, index) => (<CarousalItems index={index} data={user} key={index}/>)))
                         :
-                        (data.map((user, index) => (<CarousalItems index={index} data={user}/>)))
+                        (data.map((user, index) => (<CarousalItems index={index} data={user} key={index}/>)))
                     }
 
                 </div>

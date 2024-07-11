@@ -125,7 +125,7 @@ export default function InterestLogs(interestData: InterestListProps) {
                 </div>
             </div>
 
-            <div className="interest-logs w-[65%] rounded-lg p-4">
+            <div className="interest-logs w-full md:w-[65%] rounded-lg p-4">
                 {selectedTab === "interestSend" ? (
                     <>
                         {userData.interestSend.length > 0 ? (

@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { UserPrivateRoute } from './UserPrivateRouter';
 import Error404 from '../../pages/user/404/Error404';
 import Error500 from '../../pages/user/500/Error500';
+import { PageLoader } from '../../components/loader/PageLoader';
 
 // Lazy load components
 const Landing = lazy(() => import('../../pages/user/Landing/Landing'));
@@ -30,9 +31,7 @@ export const UserRoutes: FC = () => {
 
 
     return (
-        <Suspense fallback={<div className='h-[100vh] w-[100vw] flex justify-center items-center text-[20px]'>
-            <img src="../src/assets/svg/Ripple@1x-1.0s-200px-200px.svg" alt="" className='h-50 w-50' />
-        </div>}>
+        <Suspense fallback={<PageLoader/>}>
             <Routes>
                 <Route path='/' element={<Landing />} />
                 <Route path="/login" element={<Login />} />

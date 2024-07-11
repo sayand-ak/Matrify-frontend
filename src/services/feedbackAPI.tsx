@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const FEEDBACK_API_URL = "http://localhost:4000/api/feedback";
+const FEEDBACK_API_URL = process.env.FEEDBACK_API_URL
 
 
  export const addFeedback = createAsyncThunk("/api/addFeedback", async(formData: FormData) => {

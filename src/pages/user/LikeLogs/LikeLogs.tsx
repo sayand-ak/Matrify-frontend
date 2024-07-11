@@ -66,7 +66,7 @@ export function LikedUsers() {
                 <div className="w-full flex flex-col items-center justify-center pt-10">
                     {likedUserData.map((user) => (
                         <div 
-                            key={user._id} className="flex items-center justify-between gap-10 p-2 border-b px-14 w-3/4 hover:bg-gray-200"
+                            key={user._id} className="flex items-center justify-between gap-10 p-2 border-b px-0 md:px-14 w-3/4 hover:bg-gray-200"
                         >
                            <div className="flex gap-5 items-center">
                                 <div className="relative">

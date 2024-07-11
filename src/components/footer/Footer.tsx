@@ -14,7 +14,7 @@ export function Footer() {
     return (
         <div className="bg-black min-h-[50vh] flex items-center" >
 
-            <ul className="footer-container flex gap-12 flex-wrap">
+            <ul className="footer-container flex gap-[30px] flex-wrap">
                 <li className="w-[fit-content] flex items-center">
                     <img src="/images/MATRIFY-removebg-preview.png" alt="" className="h-[10rem] w-[10rem] md:h-[20rem] md:w-[20rem]"/>
                 </li>
@@ -89,7 +89,7 @@ export function Footer() {
                     </ul>
                 </li>
 
-                <li className="pt-8 flex-1 px-5">
+                <li className="pt-8 flex-1 pl-5">
                     <h1 className="text-[#b7b6b6] text-lg py-6 font-semibold">Testimonials</h1>
                     <ul className="testimonials-links text-[#b7b6b6] flex flex-col gap-2 justify-center">
                         <li className="text-[#b7b6b6] text-md flex flex-col">
@@ -105,7 +105,7 @@ export function Footer() {
                     </ul>
                 </li>
 
-                <li className="pt-8 mb-10 flex-1 px-3">
+                <li className="pt-8 mb-10 flex-2 pl-5">
                     <h1 className="text-[#b7b6b6] text-xs py-6 pb-12 font-semibold flex items-center gap-2">
                         <MdEmail/> Stay upto date on latest from MATRIFY
                     </h1>

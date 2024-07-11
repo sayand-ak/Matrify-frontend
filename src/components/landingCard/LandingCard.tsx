@@ -19,7 +19,7 @@ export function LandingCard({img, caption, index = 1}: LandingCardProps) {
             }
       }}
       viewport={{ once: true }}>
-        <div className="landing-card flex flex-col justify-around min-h-[45vh]  w-[70vw] md:w-[30vw] lg:w-[20vw] overflow-hidden py-2">
+        <div className="landing-card flex flex-col justify-around min-h-[45vh]  w-[90vw] md:w-[30vw] lg:w-[20vw] overflow-hidden py-2 hover:scale-105 transition-all duration-500 ease-in-out bg-white rounded-2xl shadow-lg shadow-gray-500/50">
             <div className="card-image-div flex items-center justify-center flex-2 py-3">
                 <img src={img} alt="" className="card-img h-[10rem] md:h-[14rem]"/>
             </div>

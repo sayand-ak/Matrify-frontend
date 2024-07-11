@@ -119,16 +119,16 @@ export function FeedbackDiv({ matchSend, matchReceived, userFeedback }: Feedback
         </div>
     ) : (
         
-        <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-4 rounded-lg w-[260px] p-4 text-center shadow-lg">
+        <div className="progress-card h-[12rem] md:h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-4 rounded-lg w-[90%] mx-auto md:mx-0 p-4 text-center shadow-lg">
             <h2 className="text-xl font-semibold text-gray-700">Share Your Success Story</h2>
             <p className="text-sm text-gray-600">
                 We would love to hear about your journey. Share your success story to inspire others!
             </p>
             <button 
-                className="mt-4 px-4 py-2 bg-[#cfb281] text-white rounded-lg hover:bg-[#bca275]"
+                className="mt-4 px-2 py-1 bg-[#cfb281] text-white rounded-lg hover:bg-[#bca275]"
                 onClick={() => setIsModalOpen(true)}
             >
-                Add Success Story
+                Add your's
             </button>
 
             <CustomModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>

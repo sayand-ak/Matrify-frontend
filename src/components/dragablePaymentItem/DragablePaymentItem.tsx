@@ -23,7 +23,7 @@ const DraggablePaymentItem = ({ payment, index, daysLeftText, statusClass, forma
             dragElastic={2} 
             className={`rounded-lg overflow-hidden w-full mx-auto ring-1 ring-gray-200`}
         >
-            <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass} bg-[#ebdbbd]`}>
+            <div className={`relative flex flex-row items-center justify-between px-5 md:px-10 font-bold h-14 ${statusClass} bg-[#ebdbbd]`}>
                 <p>
                     {payment.status} ({daysLeftText})
                 </p>

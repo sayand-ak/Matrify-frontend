@@ -8,7 +8,6 @@ import { UserData } from "../../typings/user/userTypes";
 import { useAppDispatch } from "../../hooks/useTypedSelectors";
 import { getMatches } from "../../services/userAPI";
 import { ContentLoader } from "../loader/ContentLoader";
-import { useNavigate } from "react-router-dom";
 
 
 interface HomeProp {
@@ -26,8 +25,6 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const dispatch = useAppDispatch();
-
-    const navigate = useNavigate()
     
 
 
@@ -56,30 +53,38 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     };
 
     const fetchData = useCallback(async () => {
+        //change here
         if (!isLoaded) {
             try {
-                console.log(matchBase, matchKey, matchData);
                 
                 const response = await dispatch(getMatches({matchBase, matchKey, matchData}));
                 if(response.payload.data.length > 0) {
                     const data = response.payload.data;
+                    console.log(data);
+                    
+                    
                     setData(data);
                     setIsLoaded(true);
-                    
+                } else {
+                    setData([])
                 }
             } catch (error) {
-                navigate("/500");
+                console.log("error")
             }
         }
     }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
     
 
     
-    const ref = useIntersectionObserver(fetchData, { threshold: 0.1 });
+    const ref = useIntersectionObserver(fetchData);
+    
+    if (data.length === 0 && isLoaded) {
+        return null; // Return null to render nothing when data is empty and loaded
+    }
 
     return (
         <div 
-            className="flex flex-col justify-center gap-5 min-h-[25rem] relative bg-[#F5F2EC] w-full overflow-hidden"
+            className={`carousal-container-child ${data.length > 0 ? "h-[25rem]" : "h-0"} relative w-full overflow-hidden flex flex-col justify-center gap-5`}
             ref={ref}
         >
             <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
@@ -90,18 +95,18 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
             </div>
 
             {
-                data.length > 0 ? (
+                data.length > 0 && (
                     isLoaded ? (
                         <div
                             className="carousal-container w-fit pl-20"
                             style={{
-                                transition: "transform 1s",
+                                transition: "transform 0.5s",
                                 transform: `translateX(${translateValue}%)`,
                             }}
                             ref={carousalRef}
                         >
                             {
-                                data.map((user, index) => (
+                                data.slice(0, 5).map((user, index) => (
                                     
                                     <CarousalItems data={user} index={index}/>  
                                 ))
@@ -118,11 +123,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                             <ContentLoader/>
                         </div>
                     )
-                ) : (
-                    <div>
-                        No data found
-                    </div>
-                )
+                ) 
             }
            
 

@@ -43,24 +43,25 @@ const Wallet = () => {
 
     return (
         <div className="min-h-[90vh] w-full bg-gray-100 p-6">
-            <div className="max-w-[60vw] mx-auto ">
+            <div className="w-[80vw] md:w-[60vw] mx-auto">
                 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 
-                <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
-                    <h2 className="text-xl font-semibold mb-2">Balance</h2>
-                    <p className="text-3xl font-bold">₹{walletData.balance.toFixed(2)}</p>
+                <div className="bg-gradient-to-br min-h-[150px] from-[#BC9063] to-[#F8CC87] rounded-xl shadow-lg text-white relative overflow-hidden hover:scale-110 transition-all duration-200 p-7">
+                    <h2 className="text-xl font-semibold mb-5">Balance</h2>
+                    <p className="text-4xl font-bold">₹{walletData.balance.toFixed(2)}</p>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
-                    <h2 className="text-xl font-semibold mb-2">Total Income</h2>
-                    <p className="text-3xl font-bold">₹{totalIncome?.toFixed(2)}</p>
+                <div className="bg-gradient-to-br from-[#BC9063] to-[#F8CC87] rounded-xl shadow-lg p-7 text-white relative overflow-hidden hover:scale-110 transition-all duration-200">
+                    <h2 className="text-xl font-semibold mb-5">Total Income</h2>
+                    <p className="text-4xl font-bold">₹{totalIncome?.toFixed(2)}</p>
                 </div>
 
-                <div className="bg-gradient-to-r from-red-500 to-red-700 rounded-xl shadow-lg p-6 text-white relative overflow-hidden">
-                    <h2 className="text-xl font-semibold mb-2">Total Expenses</h2>
-                    <p className="text-3xl font-bold">₹{totalExpenses?.toFixed(2)}</p>
+                <div className="bg-gradient-to-br from-[#BC9063] to-[#F8CC87] rounded-xl shadow-lg p-7 text-white relative overflow-hidden hover:scale-110 transition-all duration-200">
+                    <h2 className="text-xl font-semibold mb-5">Total Expenses</h2>
+                    <p className="text-4xl font-bold">₹{totalExpenses?.toFixed(2)}</p>
                 </div>
+
 
             </div>
                 
@@ -78,7 +79,7 @@ const Wallet = () => {
                             <tbody>
                                 {walletData.transactions.map((transaction) => (
                                     <tr key={transaction._id} className="border-b border-gray-200 hover:bg-gray-50">
-                                        <td className="p-3 text-sm text-gray-700">
+                                        <td className="p-3 text-sm text-gray-700 py-5">
                                             {formatDate(new Date(transaction.createdAt || "").toString())}
                                         </td>
                                         <td className="p-3 text-sm text-gray-700 capitalize">

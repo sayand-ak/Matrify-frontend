@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const CONVERSATION_API_URL = "http://localhost:4000/api/conversation";
-const MESSAGE_API_URL = "http://localhost:4000/api/message";
+
+const CONVERSATION_API_URL = process.env.CONVERSATION_API_URL;
+const MESSAGE_API_URL = process.env.MESSAGE_API_URL;
 
 
 export const getConversations = createAsyncThunk("/api/conversation/getConversations", async (userId: string) => {

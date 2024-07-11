@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { UserData } from "../../typings/user/userTypes"
+import { useEffect, useState } from "react";
 
 interface CarousalItemsProps {
     data: UserData;
@@ -7,6 +8,12 @@ interface CarousalItemsProps {
 }
 
 export function CarousalItems({ data, index }: CarousalItemsProps) {
+    const [animateState, setAnimateState] = useState(false);
+
+    useEffect(() => {
+        // Trigger animation on initial mount
+        setAnimateState(true);
+    }, []);
 
     function calculateAgeInYears(dobString: string): number | null {
 
@@ -40,16 +47,19 @@ export function CarousalItems({ data, index }: CarousalItemsProps) {
         className="card"
         initial={{
             opacity: 0,
-            x: 100
+            x: 100,
         }}
-        whileInView={{
+        animate={{
             opacity: 1,
-            x: 0, 
+            x: 0,
             transition: {
-            duration: 1,
-            delay: 0.5 * index 
-            }
-    }}>
+                duration: 1,
+                delay: 0.5 * index,
+            },
+        }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        style={{ visibility: animateState ? "visible" : "hidden" }}
+        >
             <a href={`/profile/${data._id}`}
             >
                 <div

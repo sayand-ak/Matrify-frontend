@@ -128,7 +128,7 @@ export function PaymentHistory({ userData }: {
                         </div>
                     )}
 
-                    <div className="w-full p-12 h-[90vh] overflow-scroll no-scrollbar">
+                    <div className="w-full p-5 md:p-12 h-[90vh] overflow-scroll no-scrollbar">
                         {paymentData?.map((payment, index) => {
                             const expiresInDate = new Date(payment.expiresIn?.toString() || 0);
                             const isExpired = expiresInDate.getTime() < Date.now();
@@ -300,7 +300,7 @@ export function PaymentHistory({ userData }: {
 
                                 ) : (
                                     <div className={`rounded-lg overflow-hidden mb-10 mx-auto ring-1 ring-gray-200 opacity-[0.6]`} key={index}>
-                                        <div className={`relative flex flex-col md:flex-row items-center justify-between px-10 font-bold h-14 ${statusClass} text-[#000000bb] bg-[#eeddbc4e]`}>
+                                        <div className={`relative flex flex-row items-center justify-between px-5 md:px-10 font-bold h-14 ${statusClass} text-[#000000bb] bg-[#eeddbc4e]`}>
                                             <p>
                                                 {payment.status} ({daysLeftText})
                                             </p>
@@ -308,7 +308,7 @@ export function PaymentHistory({ userData }: {
                                                 {payment.pid}
                                             </p>
                                         </div>
-                                        <div className="min-h-24 flex flex-col md:flex-row justify-center items-center md:justify-between text-[#000000bb] bg-[#fff] px-10 py-4">
+                                        <div className="min-h-24 flex md:flex-row justify-center items-center md:justify-between text-[#000000bb] bg-[#fff] px-10 py-4">
                                             <div>
                                                 <p className="text-[30px] font-bold ">₹{payment.amount}</p>
                                                 <p className="font-semibold ">{payment.type} Subscription</p>

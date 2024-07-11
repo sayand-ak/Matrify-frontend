@@ -1,5 +1,10 @@
 .carousal-container {
     display: flex;
-    gap: 25px; /* Adjust based on your desired spacing */
+    gap: 35px; /* Adjust based on your desired spacing */
     scroll-behavior: smooth; /* Optional for smooth scrolling */
+}
+
+.carousal-container-child {
+    background-color: rgba(208, 196, 181, 0.331);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }

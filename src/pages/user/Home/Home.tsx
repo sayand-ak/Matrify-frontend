@@ -11,15 +11,39 @@ import { motion } from "framer-motion";
 import { navVariants } from "../../../utils/animations/animation2";
 import { useEffect, useState } from "react";
 import { CustomModal } from "../../../components/modal/CustomModal";
-import { useAppSelector } from "../../../hooks/useTypedSelectors";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useTypedSelectors";
+import { userProfile } from "../../../services/userAPI";
+import { UserFamily, UserProfession, UserProfile } from "../../../typings/Profile/professionDataType";
+import { useNavigate } from "react-router-dom";
+import { LandingCard } from "../../../components/landingCard/LandingCard";
+import { LandingCardProps } from "../../../typings/landing/LandingCardTypes";
 
 function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [showNavbar, setShowNavbar] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
-  
+    const [user, setUser] = useState<{ profile?: UserProfile; family?: UserFamily; profession?: UserProfession }>();
+    const navigate = useNavigate()
+
+    const dispatch = useAppDispatch();
+
     const userData = useAppSelector(state => state.user.user);
+
+    const verifyImg: LandingCardProps = {
+        img: "/images/shield_1161388.png",
+        caption: "100% Verified Profiles"
+    };
+    const securityImg: LandingCardProps = {
+        img: "/images/security_11632064.png",
+        caption: "Enhanced Privacy Settings"
+    };
+    const matchImg: LandingCardProps = {
+        img: "/images/circuit_677389.png",
+        caption: "Intelligent Matchmaking System"
+    };
+
+    const images:LandingCardProps[] = [ verifyImg, securityImg, matchImg ]; 
 
     useEffect(() => {
         const handleScroll = () => {
@@ -41,6 +65,7 @@ function Home() {
         };
     }, [lastScrollY]);
 
+
     useEffect(() => {
         if (!userData?.subscribed && !localStorage.getItem("subscriptionAlertDismissed")) {
           setIsModalOpen(true);
@@ -52,8 +77,35 @@ function Home() {
         localStorage.setItem("subscriptionAlertDismissed", "true");
       };
 
+      useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                if (userData?._id || "") {
+                    const response = await dispatch(userProfile(userData?._id || ""));
+    
+                    if (response.payload.success) {
+                        const data = response.payload.data;
+    
+                        setUser({
+                            profile: data[0],
+                            profession: data[1],
+                            family: data[2],
+                        })
+    
+                    } else {
+                        alert("profile api calling error")
+                    }
+                }
+            } catch (error) {
+                navigate("/500");
+            }
+        }
+        fetchUserData();
+
+    }, [userData?._id, dispatch, userData, user?.profile?._id]);
+
     return (
-        <div className="home-container">
+        <div className="home-container font-rubik">
 
             <motion.nav
                 variants={navVariants}
@@ -65,7 +117,7 @@ function Home() {
                     width: '100%',
                     zIndex: 1000,
                     opacity: showNavbar ? '1' : '0',
-                    transition: 'background-color 0.5s ease-in-out',
+                    transition: 'background-color 0.5s ease-in',
                 }}
             >
                 <Navbar page="home" />
@@ -75,13 +127,37 @@ function Home() {
                 <Banner />
             </div>
 
-            <Carousal matchBase="profession" matchKey="education" matchData="Bachelor's Degree" />
-            <Carousal matchBase="profile" matchKey="motherTongue" matchData="Malayalam" />
+            <div className="features-cards">
+                <div className="feature-card-heading flex justify-center items-center mx-auto h-[13vh] rounded-b-[40px] md:w-1/4 bg-[#EFECE6]">
+                    <h1 className="text-3xl md:text-4xl font-rubik">Why  MATRIFY ?</h1>
+                </div>
+
+                <div className="flex items-center justify-center">
+                    <div className="md:w-full lg:w-[80%] min-h-[60vh] flex flex-col gap-8 items-center  md:flex-row justify-around py-10">
+                    {images.map((image, index) => (
+                        <LandingCard key={image.img} img={image.img} caption={image.caption} index={index} /> 
+                        ))}
+                    </div>
+                </div>
+
+            </div>
+
+            <Carousal matchBase="random" matchKey="random" matchData="random"/>
+
+            <Carousal matchBase="profession" matchKey="education" matchData={`${user?.profession?.education}`} />
+            <Carousal matchBase="profession" matchKey="occupation" matchData={`${user?.profession?.occupation}`} />
+            <Carousal matchBase="profession" matchKey="empStatus" matchData={`${user?.profession?.empStatus}`} />
+
+            <Carousal matchBase="profile" matchKey="motherTongue" matchData={`${user?.profile?.motherTongue}`} />
 
             <QuoteBanner />
 
-            <Carousal matchBase="family" matchKey="martialStatus" matchData="Single" />
-            <Carousal matchBase="profile" matchKey="state" matchData="Kerala" />
+            <Carousal matchBase="family" matchKey="martialStatus" matchData={`${user?.family?.martialStatus}`} />
+            <Carousal matchBase="family" matchKey="religion" matchData={`${user?.family?.religion}`} />
+            <Carousal matchBase="family" matchKey="familyValue" matchData={`${user?.family?.familyValue}`} />
+
+            <Carousal matchBase="profile" matchKey="state" matchData={`${user?.profile?.state}`} />
+            <Carousal matchBase="profile" matchKey="district" matchData={`${user?.profile?.district}`} />
 
             <Footer />
 
@@ -115,3 +191,4 @@ function Home() {
 
 
 export default Home;
+

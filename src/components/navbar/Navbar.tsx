@@ -9,6 +9,9 @@ import { searchPartner, saveSearchData, getUserNotifications } from "../../servi
 import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
 import { NotificationType } from "../../typings/notifications/notificationType";
+import { NavbarToggleDiv } from "../NavbarToggleDiv/NavbarToggleDiv";
+import { MdOutlineMoreVert } from "react-icons/md";
+
 
 
 interface NavbarProps {
@@ -22,6 +25,9 @@ export default function Navbar({page}: NavbarProps){
     const [value] = useDebounce(searchData, 1000);
     const [searchUserIds, setSearchUserIds] = useState<string[] | []>([]);
     const [notifications, setNotifications] = useState<NotificationType | null>(null);
+
+    const [isHovered, setIsHovered] = useState(false);
+
 
     const dispatch = useAppDispatch();
 
@@ -146,7 +152,7 @@ export default function Navbar({page}: NavbarProps){
             <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent z-10 relative">
                 <div className="flex">
                     <a href="#">
-                        <div className="logo-div h-14 w-16 ">
+                        <div className="logo-div h-14 w-16 hidden sm:flex">
 
                         </div>
                     </a>
@@ -181,12 +187,12 @@ export default function Navbar({page}: NavbarProps){
                     }
 
                     {  page!="landing" &&  
-                        <div className={`md:flex items-center gap-10 justify-end hidden`}>
+                        <div className={`flex items-center gap-2 sm:gap-10 justify-end`}>
                             {
                                 page == "home" && 
                                 <form 
                                     action="#" 
-                                    className={`relative flex px-2 py-1 items-center ${page === "home" && "hover:text-white"} text-[#ffffff73] rounded-t-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
+                                    className={`relative flex  px-2 py-1 items-center ${page === "home" && "hover:text-white"} text-[#ffffff73] rounded-t-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
                                     onSubmit={handleSaveSearchData}
                                 >
                                     <IoSearch className="text-[22px]"/>
@@ -194,7 +200,7 @@ export default function Navbar({page}: NavbarProps){
                                     <input
                                         type="text"
                                         placeholder="Search by username"
-                                        className="w-[343px] h-[40px] px-4 outline-none bg-transparent"
+                                        className="md:w-[343px] h-[40px] px-5 outline-none bg-transparent"
                                         onFocus={handleSearchFocus}
                                         onBlur={handleSearchBlur}
                                         onChange={(e) => {
@@ -204,7 +210,7 @@ export default function Navbar({page}: NavbarProps){
                                     />
 
                                     <div
-                                        className="absolute scale-y-0 transition-transform top-[48px] left-0 min-h-14 max-h-[40vh] w-[382px] overflow-y-scroll no-scrollbar bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
+                                        className="absolute scale-y-0 transition-transform top-[48px] left-0 min-h-14 max-h-[40vh] w-[255px] md:w-[382px] overflow-y-scroll no-scrollbar bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
 
                                         style={{
                                             transitionDuration: '0.2s',
@@ -267,23 +273,39 @@ export default function Navbar({page}: NavbarProps){
                                 </form>
                             }
 
+                            <a href={`/profile/${selector?._id}`} className="hidden sm:flex">
+                                <div
+                                    className="relative w-14 h-14 border-[1.5px] border-gray-400 rounded-full cursor-pointer"
+                                    onMouseEnter={() => setIsHovered(true)}
+                                    onMouseLeave={() => setIsHovered(false)}
+                                >
+                                    <img
+                                        src={selector?.image ?? "/default-profile-pic.jpg"}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover rounded-full"
+                                        
+                                    />
+                                </div>
+
+                                {totalNotificationsCount > 0 ? (
+                                    <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
+                                        {totalNotificationsCount}
+                                    </div>
+                                ) : null}
+                            </a>
+
+                            <MdOutlineMoreVert 
+                            className="text-white text-[25px] block sm:hidden"
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                            />
+                            
+                            {(isHovered) && (
+                                <NavbarToggleDiv />
+                            )}
 
                         </div>
                     }           
-                    <a href={`/profile/${selector?._id}`}>
-                        <div
-                            className="relative h-[3.5rem] w-[3.5rem] rounded-full nav-profile-icon"
-                            style={{
-                                backgroundImage: selector?.image ? `url(${selector.image})` : 'none'
-                            }}
-                        >
-                                {totalNotificationsCount > 0 ? (
-                                <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
-                                    {totalNotificationsCount}
-                                </div>
-                            ) : null}
-                        </div>
-                    </a>
                 </div>
             </div>
     )

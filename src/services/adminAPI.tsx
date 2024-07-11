@@ -2,7 +2,8 @@ import axios, { AxiosResponse } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AdminLoginType } from "../typings/admin/loginType";
 
-const API_URL = "http://localhost:4000/api/admin";
+
+const API_URL = process.env.ADMIN_API_URL;
 
 const axiosInstance = axios.create({
     baseURL: API_URL,

@@ -465,7 +465,7 @@ function Profile() {
 
                                     <div className="w-full h-[30%] md:h-[25%] relative">
                                         <div
-                                            className="rounded-full h-48 w-48 absolute top-[-100px] left-10 border-[5px] border-white z-0"
+                                            className="rounded-full h-48 w-48 absolute top-[-140px] left-7 border-[5px] border-white z-0"
                                             style={{
                                                 backgroundImage: `url(${userData?.profile?.image ?? "/images/profile.png"})`,
                                                 backgroundSize: 'cover',
@@ -474,9 +474,9 @@ function Profile() {
                                             }}
                                         ></div>
 
-                                        <div className="w-full absolute top-[90px] left-16 flex flex-col justify-between overflow-x-auto">
+                                        <div className="w-full absolute top-[70px] left-16 flex flex-col justify-between overflow-x-auto">
 
-                                            <div className="flex flex-col gap-2 ">
+                                            <div className="flex flex-col gap-3 ">
                                                 <h1 className="text-[20px] font-semibold pt-2 flex items-center gap-5">
                                                     {userData?.profile?.username} ({calculateAgeInYears(userData?.profile?.dob || "")})
                                                     {
