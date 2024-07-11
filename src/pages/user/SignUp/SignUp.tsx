@@ -136,9 +136,7 @@ function SignUp() {
                 }else{
                     showToast("error", response.payload.message);
                 }
-            }
-            setIsLoading(false);
-            
+            }            
         } catch (error) {
             navigate("/500");
         }       
