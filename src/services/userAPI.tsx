@@ -14,7 +14,7 @@ interface Error {
     }
 }
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.USER_API_URL;
 
 
 const axiosInstance = axios.create({
@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use((response) => {
 
         if (error.response.data.error === 'User is blocked') {
             alert("You are blocked by admin...")
-            window.location.href = "/login"; // Redirect to login page if user is blocked
+            window.location.href = "/login"; 
             return Promise.reject(new Error("User is blocked"));
         }
 
