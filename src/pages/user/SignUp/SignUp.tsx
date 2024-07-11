@@ -120,7 +120,9 @@ function SignUp() {
 
                         otpConfig.recaptchaVerifier.render();
                         setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
-                        console.log(confirmationResult);
+                        console.log("hello in otp config");
+                        
+                        console.log("confirmation Result-------",confirmationResult);
                         
                         //setting timer
                         const { interval, remainingTime } = startTimer();

@@ -21,9 +21,7 @@ export function onSignInSubmit(signUpBtn: HTMLButtonElement | null) {
     if (signUpBtn != null) {
         const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
             'size': 'normal',
-        });
-        console.log(auth, recaptchaVerifier);
-        
+        });        
         return { auth, recaptchaVerifier };
     }
 }
