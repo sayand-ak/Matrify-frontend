@@ -119,10 +119,7 @@ function SignUp() {
                         console.log(otpConfig);
 
                         otpConfig.recaptchaVerifier.render();
-                        setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
-                        console.log("hello in otp config");
-                        
-                        console.log("confirmation Result-------",confirmationResult);
+                        setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));                        
                         
                         //setting timer
                         const { interval, remainingTime } = startTimer();
@@ -140,6 +137,8 @@ function SignUp() {
                 }
             }            
         } catch (error) {
+            console.log(error, "{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}");
+            
             navigate("/500");
         }       
     }
