@@ -116,8 +116,11 @@ function SignUp() {
                     
                     if (otpConfig) {
                         
+                        console.log(otpConfig);
+
                         otpConfig.recaptchaVerifier.render();
                         setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));
+                        console.log(confirmationResult);
                         
                         //setting timer
                         const { interval, remainingTime } = startTimer();
@@ -125,7 +128,7 @@ function SignUp() {
                             setRemainingTime(remainingTime);
                             setTimerInterval(interval);
                         }                    
-                        setIsModalOpen(false);
+                        setIsModalOpen(true);
         
                     } else{
                         console.log("error otp config");
