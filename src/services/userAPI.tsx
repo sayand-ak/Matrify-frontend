@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { UserGoogleAuthData, UserLoginType, UserSignupType } from "../typings/user/userTypes";
 import { ProfessionData } from "../typings/Profile/professionDataType";
 import { FamilyData, ReligionData } from "../typings/Profile/familyDataTypes";
-import { checkIfUserIsBlocked } from "./checkIfUserIsBlocked";
+// import { checkIfUserIsBlocked } from "./checkIfUserIsBlocked";
 
 interface Error {
     response?: {
@@ -22,12 +22,12 @@ const axiosInstance = axios.create({
 
 //request interceptor
 axiosInstance.interceptors.request.use(async(config) => {
-    const isUserAllowed = await checkIfUserIsBlocked();
+    // const isUserAllowed = await checkIfUserIsBlocked();
 
-    if (!isUserAllowed) {
-        window.location.href = "/"
-        return Promise.reject("user is blocked");
-    }
+    // if (!isUserAllowed) {
+    //     window.location.href = "/"
+    //     return Promise.reject("user is blocked");
+    // }
 
     const token = localStorage.getItem("userAccess");
     // console.log('log from request user api', token);
