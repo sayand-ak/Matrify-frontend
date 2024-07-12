@@ -157,7 +157,7 @@ export function ChatInput({ handleSendMessage, receiverId }: ChatInputProps) {
                     </div>
                     {
                         inputData !== "" || sendImage ? (
-                            <button onClick={handleSendClick} className="absolute md:right-3 lg:right-10">
+                            <button onClick={handleSendClick} className="absolute right-4 md:right-3 lg:right-10">
                                 <IoSendSharp className="text-3xl text-[#A58964]" />
                             </button>
 
