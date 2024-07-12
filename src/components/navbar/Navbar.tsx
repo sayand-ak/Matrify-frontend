@@ -295,7 +295,7 @@ export default function Navbar({page}: NavbarProps){
                             </a>
 
                             <RiMenu3Line 
-                                className="text-white text-[25px] block sm:hidden"
+                                className="text-[#ffffffa9] hover:text-white text-[25px] block sm:hidden"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
                             />
