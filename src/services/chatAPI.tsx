@@ -27,9 +27,7 @@ export const getMessages = createAsyncThunk("/api/message/getMessages", async (c
 });
 
 export const sendMessages = createAsyncThunk("/api/message/getMessages", async (messageData: FormData) => {
-    try {
-        console.log(messageData, "{{{{{{[[[[[[[[[[[]]]]]]]]]]]}}}}}}");
-        
+    try {        
         const response: AxiosResponse = await axios.post(`${MESSAGE_API_URL}/send-message`, messageData,{ withCredentials: true });
         console.log("Message response--------",response);
         return response.data;
