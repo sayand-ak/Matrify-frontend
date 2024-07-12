@@ -9,7 +9,7 @@ import { searchPartner, saveSearchData, getUserNotifications } from "../../servi
 import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
 import { NavbarToggleDiv } from "../NavbarToggleDiv/NavbarToggleDiv";
-import { MdOutlineMoreVert } from "react-icons/md";
+import { RiMenu3Line } from "react-icons/ri";
 import { NotificationType } from "../../typings/notifications/notificationType";
 
 interface NavbarProps {
@@ -294,8 +294,8 @@ export default function Navbar({page}: NavbarProps){
                                 ) : null}
                             </a>
 
-                            <MdOutlineMoreVert 
-                            className="text-white text-[25px] block sm:hidden"
+                            <RiMenu3Line 
+                                className="text-white text-[25px] block sm:hidden"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
                             />
