@@ -68,6 +68,7 @@ import { NotificationType } from "../../../typings/notifications/notificationTyp
 import { IoWalletOutline } from "react-icons/io5";
 import Wallet from "../Wallet/Wallet";
 import ProfileTabs from "../../../components/ProfileTab/ProfileTabs";
+import { PageLoader } from "../../../components/loader/PageLoader";
 
 
 
@@ -114,6 +115,8 @@ function Profile() {
     const [isLoggedUser, setIsLoggedUser] = useState<boolean>(false);
 
     const [notifications, setNotifications] = useState<NotificationType | null>(null);
+
+    const [loading, setLoading] = useState(true);
 
 
     const hasAcceptedInterest = useMemo(() => {
@@ -264,6 +267,8 @@ function Profile() {
                 }
             } catch (error) {
                 navigate("/500");
+            } finally {
+                setLoading(false);
             }
         }
         fetchUserData();
@@ -415,6 +420,10 @@ function Profile() {
         } catch (error) {
             navigate("/500");
         }
+    }
+
+    if(loading) {
+        return <PageLoader/>
     }
 
 
