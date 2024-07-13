@@ -72,6 +72,8 @@ export default function Navbar({page}: NavbarProps){
        // Fetch user details for notifications
        const userIds = response.payload.data?.chat ? Object.keys(response.payload.data.chat) : [];
        const userDetails = await Promise.all(userIds.map(id => dispatch(userProfile(id))));
+       console.log("Notification user details: ",userDetails);
+       
        setNotificationDetails(userDetails.map(res => res.payload.data));
       
     }, [dispatch, notifications])
