@@ -16,6 +16,7 @@ import { changeCallStatus } from "../../../services/videoCallApi";
 import { NotificationType } from "../../../typings/notifications/notificationType";
 import showToast from "../../../components/Toast/Toast";
 import { ToastContainer } from "react-toastify";
+import { PageLoader } from "../../../components/loader/PageLoader";
 
 function Chat() {
     const [currentChat, setCurrentChat] = useState<Message[]>([]);
@@ -27,6 +28,7 @@ function Chat() {
     const [callingUser, setCallingUser] = useState<UserData>({} as UserData);
     const [roomId, setRoomId] = useState<string>("");
     const [notifications, setNotifications] = useState<NotificationType | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const userId = useAppSelector(state => state.user.user?._id);
 
@@ -50,6 +52,8 @@ function Chat() {
                 
             } catch (error) {
                 navigate("/500");
+            } finally {
+                setLoading(false);
             }
         }
         fetchUserData()
@@ -238,7 +242,12 @@ function Chat() {
             navigate("/500");
         }
     }
+    // loading for fetching user data
+    if (loading) {
+        return <PageLoader/>;
+    }
 
+    //user not subscribed alert
     if (!curUserData.subscribed) {
         return (
             <div className="h-[100vh] w-[100vw] flex items-center justify-center">
@@ -259,6 +268,7 @@ function Chat() {
         );
     }
 
+    //actual chat div
     return (
         <div className={`h-[100vh] w-[100vw] flex overflow-hidden`}>
             <ChatMenu 
