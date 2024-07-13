@@ -65,17 +65,19 @@ export default function Navbar({page}: NavbarProps){
     }, [unreadMessagesCount, interestRequestsCount]);
 
     const handleGetNotifications = useCallback(async() => {
-      const response = await dispatch(getUserNotifications());     
-       
-      setNotifications(response.payload.data);
+        const response = await dispatch(getUserNotifications());     
+        
+        setNotifications(response.payload.data);
 
-       // Fetch user details for notifications
-       const userIds = response.payload.data?.chat ? Object.keys(response.payload.data.chat) : [];
-       const userDetails = await Promise.all(userIds.map(id => dispatch(userProfile(id))));
-       console.log("Notification user details: ",userDetails);
-       
-       setNotificationDetails(userDetails.map(res => res.payload.data));
-      
+        // Fetch user details for notifications
+        const userIds = response.payload.data?.chat ? Object.keys(response.payload.data.chat) : [];
+        const userDetails = await Promise.all(userIds.map(id => dispatch(userProfile(id))));
+
+        // Process user details and extract the first element's data
+        const processedUserDetails = userDetails.map(res => res.payload.data[0]); 
+
+        setNotificationDetails(processedUserDetails);
+        
     }, [dispatch, notifications])
 
     useEffect(() => {
