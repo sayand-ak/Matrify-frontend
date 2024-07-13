@@ -5,5 +5,4 @@ const URL = "https://bigbag.site";
 export const socket: Socket = io(URL, {
   withCredentials: true,
   transports: ['websocket'],
-  path: '/socket.io',
 });

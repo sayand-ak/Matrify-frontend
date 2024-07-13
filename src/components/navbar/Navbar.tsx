@@ -5,7 +5,7 @@ import { LegacyRef, useCallback, useEffect, useMemo, useRef, useState } from "re
 import { useDebounce } from "use-debounce";
 import { useAppDispatch, useAppSelector } from "../../hooks/useTypedSelectors";
 import { Users } from "../../typings/user/userTypes";
-import { searchPartner, saveSearchData, getUserNotifications } from "../../services/userAPI";
+import { searchPartner, saveSearchData, getUserNotifications, userProfile } from "../../services/userAPI";
 import { FaHistory } from "react-icons/fa";
 import { BiInfoCircle } from "react-icons/bi";
 import { NavbarToggleDiv } from "../NavbarToggleDiv/NavbarToggleDiv";
@@ -23,6 +23,8 @@ export default function Navbar({page}: NavbarProps){
     const [value] = useDebounce(searchData, 1000);
     const [searchUserIds, setSearchUserIds] = useState<string[] | []>([]);
     const [notifications, setNotifications] = useState<NotificationType | null>(null);
+    const [notificationDetails, setNotificationDetails] = useState<Users[]>([]); 
+    const [isNotificationDropdownVisible, setIsNotificationDropdownVisible] = useState(false); // State to manage dropdown visibility
 
     const [isHovered, setIsHovered] = useState(false);
 
@@ -66,6 +68,11 @@ export default function Navbar({page}: NavbarProps){
       const response = await dispatch(getUserNotifications());     
        
       setNotifications(response.payload.data);
+
+       // Fetch user details for notifications
+       const userIds = response.payload.data?.chat ? Object.keys(response.payload.data.chat) : [];
+       const userDetails = await Promise.all(userIds.map(id => dispatch(userProfile(id))));
+       setNotificationDetails(userDetails.map(res => res.payload.data));
       
     }, [dispatch, notifications])
 
@@ -288,7 +295,10 @@ export default function Navbar({page}: NavbarProps){
                                 </div>
 
                                 {totalNotificationsCount > 0 ? (
-                                    <div className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center">
+                                    <div 
+                                        className="bounce2 absolute -top-1 right-1 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center"
+                                        onClick={() => setIsNotificationDropdownVisible(!isNotificationDropdownVisible)}
+                                    >
                                         {totalNotificationsCount}
                                     </div>
                                 ) : null}
@@ -304,6 +314,31 @@ export default function Navbar({page}: NavbarProps){
                                 <NavbarToggleDiv />
                             )}
 
+
+                            {/* Notification dropdown */}
+                            {isNotificationDropdownVisible && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20">
+                                    <div className="py-2">
+                                        {notificationDetails.map((user, index) => (
+                                            <div key={index} className="px-4 py-2 hover:bg-gray-100">
+                                                <div className="flex items-center">
+                                                    <img src={user.image} alt={user.username} className="h-8 w-8 object-cover rounded-full mr-3" />
+                                                    <div>
+                                                        <p className="text-sm font-medium">{user.username}</p>
+                                                        <p className="text-xs text-gray-500">Messages: {chatMap.get(user._id) || 0}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {interestRequestsCount > 0 && (
+                                            <div className="px-4 py-2 hover:bg-gray-100">
+                                                <p className="text-sm font-medium">Interest Requests</p>
+                                                <p className="text-xs text-gray-500">Count: {interestRequestsCount}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     }           
                 </div>
