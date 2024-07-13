@@ -324,7 +324,7 @@ export default function Navbar({page}: NavbarProps){
                                 <div className="absolute right-5 top-24 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20">
                                     <div className="py-2">
                                         {notificationDetails.map((user, index) => (
-                                            <div key={index} className="px-4 py-2 hover:bg-gray-100">
+                                            <div key={index} className="px-4 py-2 hover:bg-gray-100" onClick={() => navigate("/chat")}>
                                                 <div className="flex items-center">
                                                     <img src={user.image} alt={user.username} className="h-8 w-8 object-cover rounded-full mr-3" />
                                                     <div>
