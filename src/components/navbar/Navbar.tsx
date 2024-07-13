@@ -300,7 +300,7 @@ export default function Navbar({page}: NavbarProps){
 
                                 {totalNotificationsCount > 0 ? (
                                     <div 
-                                        className="bounce2 absolute top-0 right-0 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center"
+                                        className="animate-bounce absolute top-0 right-0 bg-red-500 rounded-full text-white text-sm w-5 h-5 flex items-center justify-center"
                                         onMouseOver={() => setIsNotificationDropdownVisible(!isNotificationDropdownVisible)}
                                     >
                                         {totalNotificationsCount}
