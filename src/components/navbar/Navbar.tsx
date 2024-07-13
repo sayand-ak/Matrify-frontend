@@ -280,9 +280,9 @@ export default function Navbar({page}: NavbarProps){
                                 </form>
                             }
 
-                            <a href={`/profile/${selector?._id}`} className="hidden sm:flex">
+                            <a href={`/profile/${selector?._id}`} className="hidden sm:flex relative ">
                                 <div
-                                    className="relative w-14 h-14 border-[1.5px] border-gray-400 rounded-full cursor-pointer"
+                                    className="w-14 h-14 border-[1.5px] border-gray-400 rounded-full cursor-pointer"
                                     onMouseEnter={() => setIsHovered(true)}
                                     onMouseLeave={() => setIsHovered(false)}
                                 >
