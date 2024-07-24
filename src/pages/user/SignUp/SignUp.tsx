@@ -26,31 +26,20 @@ function SignUp() {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
-
     const [unameErr, setUnameErr] = useState("");
     const [phoneErr, setPhoneErr] = useState("");
     const [passwordErr, setPasswordErr] = useState("");
     const [rePasswordErr, setRePasswordErr] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
-    const [ confirmationResult, setConfirmationResult ] = useState<ConfirmationResult>();
-
+    const [confirmationResult, setConfirmationResult ] = useState<ConfirmationResult>();
     const submitBtn = useRef<HTMLButtonElement>(null)
     const resendLink = useRef<HTMLButtonElement>(null)
-
     const [otp, setOtp] = useState("");
-
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [remainingTime, setRemainingTime] = useState<number | null>(null);
     const [timerInterval, setTimerInterval] = useState<NodeJS.Timeout | null>(null);
-
     const [resendOtp, setResendOtp] = useState(false);
-
-    
-
     const navigate = useNavigate();
-
     const dispatch = useAppDispatch();
 
 
@@ -115,9 +104,6 @@ function SignUp() {
                     const otpConfig = onSignInSubmit(submitBtn.current);
                     
                     if (otpConfig) {
-                        
-                        console.log(otpConfig);
-
                         otpConfig.recaptchaVerifier.render();
                         
                         setConfirmationResult(await signInWithPhoneNumber(otpConfig?.auth, "+91"+phone, otpConfig.recaptchaVerifier));                        
@@ -137,10 +123,7 @@ function SignUp() {
                     showToast("error", response.payload.message);
                 }
             }            
-        } catch (error) {
-
-            console.log(error, "{{{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}");
-            
+        } catch (error) {            
             navigate("/500");
         }       
     }
@@ -205,16 +188,13 @@ function SignUp() {
     
 
     function handleCancel() {        
-            
         const element = document.getElementById("recaptcha-container");
         if (element) {
             element.innerHTML = "";
-        }
-                
+        }    
         setOtp("");
         setRemainingTime(null);
         setTimerInterval(null);
-
         // Close the OTP verification modal
         setIsModalOpen(false);
     }
@@ -225,9 +205,9 @@ function SignUp() {
 
     return(
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="signup-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[75vh] md:rounded-[50px] overflow-hidden">
+            <div className="signup-card-container flex flex-col-reverse w-full h-full lg:flex-row lg:w-[65vw] lg:h-[80vh] lg:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
-                    <form action="#" className="flex flex-col w-[80%] items-center md:items-start mt-12 md:mt-16">
+                    <form action="#" className="flex flex-col w-[80%] items-center md:items-start mt-12 lg:mt-16">
                     <h1 className="heading font-semibold text-3xl font-gillroy pb-2">Matrify Sign up</h1>
                         <div className="w-full input-container flex flex-col" id="username-div">
                             <label 
@@ -320,7 +300,7 @@ function SignUp() {
 
                 <div className="image-container h-[250px] md:h-full md:flex-1 flex items-end" style={{ backgroundImage: `url(${'/images/married-couple-holding-hands-silhouette.jpg'})` }}>
                     <div className="flex flex-col items-center justify-between w-full p-5 h-full md:h-[180px]">
-                        <h1 className="text-white text-2xl font-semibold font-gillroy md:text-3xl">Get Start with MATRIFY</h1>
+                        <h1 className="text-white text-center text-2xl font-semibold font-gillroy lg:text-3xl">Get Start with MATRIFY</h1>
                         <p className="text-white text-sm font-gillroy hidden md:block">
                             Already have an account?
                             <a href="/login"> Login</a>

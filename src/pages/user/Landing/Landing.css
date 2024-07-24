@@ -16,21 +16,21 @@
 
 .banner1_img{
     background-image: url(../../../assets/images/2868468.jpg);
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;   
 }
 
 .banner2_img{
     background-image: url(../../../assets/images/2787678.jpg);
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;   
 }
 
 .banner3_img{
     background-image: url("../../../assets/images/2003.i203.008.virtual relationships online dating cartoon.jpg");
-    background-size: 50rem;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;   
 }

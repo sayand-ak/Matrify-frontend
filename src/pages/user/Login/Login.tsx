@@ -26,9 +26,7 @@ function Login() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [forgotEmail, setForgotEmail] = useState("");
     const [forgotEmailError, setForgotEmailError] = useState("");
-
     const [isLoading, setIsLoading] = useState(false);
-
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -77,7 +75,6 @@ function Login() {
 
     async function handleLoginSubmit() {
         try {
-            console.log("hello from login")
             setIsLoading(true);
             if (type != "email" && type != "phone") {
                 setDataError("Invalid email or phone number");
@@ -118,9 +115,7 @@ function Login() {
             if (credentialResponse.credential) {
                 const userData = decodeJwt(credentialResponse.credential);
                 if (userData) {
-                    const response = await dispatch(googleAuthLogin(userData));
-                    console.log(response);
-    
+                    const response = await dispatch(googleAuthLogin(userData));    
                     if (response.payload.success) {
                         showToast("success", "Login successful", () => {
     
@@ -169,7 +164,7 @@ function Login() {
 
     return (
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="login-card-container flex flex-col-reverse w-full h-full md:flex-row md:w-[65vw] md:h-[75vh] bg-black md:rounded-[50px] overflow-hidden">
+            <div className="login-card-container flex flex-col-reverse w-full h-full lg:flex-row lg:w-[65vw] lg:h-[75vh] bg-black lg:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
                     <form action="#" className="flex flex-col gap-4 w-[80%] items-center md:items-start mt-10 md:mt-16">
                         <h1 className="heading font-semibold text-3xl font-gillroy">Matrify Login</h1>

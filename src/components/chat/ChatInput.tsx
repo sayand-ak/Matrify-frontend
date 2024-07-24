@@ -29,7 +29,6 @@ export function ChatInput({ handleSendMessage, receiverId }: ChatInputProps) {
     const [audioFile, setAudioFile] = useState<File | null>(null);   
     const [sendImage, setSendImage] = useState<File | null>(null)
     const [sendImageUrl, setSendImageUrl] = useState<string | null>(null)
-
     const curUser = useAppSelector(state => state.user.user);
 
     useEffect(() => {
@@ -54,9 +53,7 @@ export function ChatInput({ handleSendMessage, receiverId }: ChatInputProps) {
         }
     }
 
-    function handleEmojiClick(emojiObject: { emoji: string; }) {    
-        console.log(selectedEmoji);
-            
+    function handleEmojiClick(emojiObject: { emoji: string; }) {                
         const { emoji } = emojiObject;
         setInputData((prevInput) => prevInput + emoji);
         setSelectedEmoji(emoji);
