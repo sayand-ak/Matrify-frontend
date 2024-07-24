@@ -57,6 +57,8 @@ export function ChatInput({ handleSendMessage, receiverId }: ChatInputProps) {
         const { emoji } = emojiObject;
         setInputData((prevInput) => prevInput + emoji);
         setSelectedEmoji(emoji);
+        console.log(selectedEmoji);
+        
         setEmoji(false); 
     }
 
