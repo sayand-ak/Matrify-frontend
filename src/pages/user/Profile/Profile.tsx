@@ -468,7 +468,7 @@ function Profile() {
                                 <div className={`w-full ${isLoggedUser ? "md:w-[93%]" : "md:w-[70%]"} min-h-[45rem] bg-[#fff] border-[1px] flex flex-col justify-center items-center md:rounded-lg overflow-hidden`}>
 
                                     {/* the cover image div */}
-                                    <div className="w-full h-[20%] md:h-[25%]" style={{ backgroundImage: "url('/images/bgprofile.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+                                    <div className="w-full h-[20%] md:h-[25%]" style={{ backgroundImage: "url('/images/profile_cover.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
                                         <CgMenuLeft className={`text-2xl rounded-full text-white ml-4 mt-5 md:hidden ${isLoggedUser ? "block" : "hidden"}`} onClick={showSidebar} />
                                     </div>
 
