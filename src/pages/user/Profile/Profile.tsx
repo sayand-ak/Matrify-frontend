@@ -692,8 +692,8 @@ function Profile() {
                                                 text={`${(userData?.profile?.profileProgress || 0)}%`}
                                                 className="h-[40%]"
                                                 styles={buildStyles({
-                                                    pathColor: "#EAC991",
-                                                    textColor: "#E7B10A",
+                                                    pathColor: "#b691c2de",
+                                                    textColor: "#b691c2de",
                                                     trailColor: "#d6d6d6",
                                                 })}
                                             />
@@ -704,10 +704,10 @@ function Profile() {
                                             (<div className="progress-card min-h-[15rem] bg-[#fbfbfb] flex flex-col justify-center items-center gap-7 rounded-lg  w-[90%]">
                                                 <h1 className="text-[15px] md:text-[18px] text-center font-semibold">Add your Preferences</h1>
                                                 <button
-                                                    className={`border-[5px] border-[#EAC991] rounded-full ${isFormVisible ? 'hidden' : ''}`}
+                                                    className={`border-[5px] border-[#b691c2de] rounded-full ${isFormVisible ? 'hidden' : ''}`}
                                                     onClick={handleAddPreferencesClick}
                                                 >
-                                                    <LuPlus className="text-[70px] text-[#e2c799]" />
+                                                    <LuPlus className="text-[70px] text-[#b691c2de]" />
                                                 </button>
 
                                                 <div className={`items-center justify-center flex-col gap-6 w-full ${isFormVisible ? 'flex' : 'hidden'
