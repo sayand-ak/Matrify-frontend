@@ -32,24 +32,40 @@ function Landing(){
     return(
         <div className="-z-0">
             <Navbar page="landing"/>
-            <div className="banner-landing h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#F5F2EC] font-rubik -z-0">
+            <div className="banner-landing h-[fit-content] flex flex-col-reverse rounded-none md:flex-row bg-[#fff] font-rubik -z-0 border-[#ccc]">
                 <div className="quotes flex-1 flex flex-col items-center py-10 md:pt-28">
                     <div className="pl-5 md:px-[50px] min-h-[50vh]">
                         
-                        <h1 className="main-quote leading-tight text-[40px] md:text-[70px] text-[#000]">Find your perfect partner and perfect family with 
-                            <span className="font-semibold text-[#B28849]"> MATRIFY </span>
+                        <h1 className="main-quote leading-tight text-[40px] md:text-[66px] text-[#4a4949]">Find your perfect partner and perfect family with 
+                            <span className="font-semibold text-gradient"> MATRIFY </span>
                         </h1>
                         
 
-                        <motion.button 
-                            whileTap={{ scale: 0.85 }} 
-                            className="bg-[#c5964f] text-[#fff] font-semibold w-[fit-content] py-3 px-5 rounded-md mt-10"
-                            onClick={() => {
-                                window.location.href = "/login";
-                            }}
-                        >
-                            Create Account
-                        </motion.button>
+                        <div className="flex w-[60%] justify-between">
+                            <motion.button 
+                                whileTap={{ scale: 0.9 }}
+                                transition={{ duration: 0.2 }} 
+                                className="bg-[#e3b36c] text-[#fff] w-[fit-content] py-3 px-5 rounded-3xl mt-10 hover:bg-[#fff] hover:text-[#e3b36c] hover:border-[#e3b36c] border-[1px]"
+                                onClick={() => {
+
+                                    window.location.href = "/register";
+                                }}
+                            >
+                                Create Account
+                            </motion.button>
+
+                            <motion.button 
+                                whileTap={{ scale: 0.9 }} 
+                                transition={{ duration: 0.2 }} 
+                                className="border-[#e3b36c] border-[1px] text-[#e3b36c] w-[fit-content] py-3 px-5 rounded-3xl mt-10 hover:bg-[#e3b36c] hover:text-[#fff] hover:border-[#fff]"
+                                onClick={() => {
+                                    window.location.href = "/login";
+                                }}
+                            >
+                                Have an Account ?
+                            </motion.button>
+
+                        </div>
                     </div>
                 </div>
                 <div className="images flex-1 rounded-b-[60px] md:rounded-l-[50px] md:rounded-none"></div>

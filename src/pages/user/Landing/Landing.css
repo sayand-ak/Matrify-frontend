@@ -1,13 +1,13 @@
 
 .images{
-    background-image: url("../../../assets/images/Group74.png");
+    background-image: url("/public/images/banner_new.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     min-height: 90vh;
 }
 
-.quotes button{
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+.quotes button:hover{
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
 }
 
 .feature-card-heading{
@@ -41,3 +41,18 @@
     background-repeat: no-repeat;  
     background-position: center;
 }
+
+.banner-landing{
+    box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+
+.text-gradient {
+    font-size: 4.5rem; /* Adjust the size as needed */
+    font-weight: bold; /* Adjust the weight as needed */
+    background: linear-gradient(to right top, #e5ba70, #e5ba70, #e9b466, #C5964E, #d6a358);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block; /* Ensures the gradient applies to the text */
+  }
+  

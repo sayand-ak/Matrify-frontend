@@ -163,7 +163,7 @@ export default function Navbar({page}: NavbarProps){
             <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent z-10 relative">
                 <div className="flex">
                     <a href="#">
-                        <div className="logo-div h-14 w-16 hidden sm:flex">
+                        <div className="logo-div h-16 w-16 hidden sm:flex">
 
                         </div>
                     </a>
@@ -184,7 +184,7 @@ export default function Navbar({page}: NavbarProps){
 
 
                 <div className="flex items-center gap-10 justify-end w-full">
-                    { page == "landing" &&
+                    {/* { page == "landing" &&
                         <div className="flex items-center gap-5 justify-end w-full">
                             <a href="/login" className="login-btn px-2 py-1 md:py-3 md:px-5">Log in</a>
                             <button 
@@ -195,7 +195,7 @@ export default function Navbar({page}: NavbarProps){
                                 Sign up
                             </button>
                         </div>
-                    }
+                    } */}
 
                     {  page!="landing" &&  
                         <div className={`flex items-center gap-2 sm:gap-10 justify-end`}>
