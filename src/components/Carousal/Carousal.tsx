@@ -82,7 +82,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                         view all <MdKeyboardDoubleArrowRight />
                     </a>
                 </div>
-                <div className="carousal-container flex gap-10 w-fit pl-20">
+                <div className="carousal-container flex gap-10 w-fit pl-20 py-10">
                     <ContentLoader />
                     <ContentLoader />
                     <ContentLoader />
