@@ -46,7 +46,7 @@ export function FeedbackSlider() {
                     <div className="flex justify-center items-center min-h-[35rem] overflow-x-auto shadow-md" ref={sliderRef}>
                         <div className="flex gap-10 w-fit-content" onClick={handleScroll}>
                             {feedbackList.map((feedback, index) => (
-                                <div key={index} className={`feedbackCard max-w-sm px-4 py-10 bg-white rounded-lg text-center flex flex-col justify-center items-center hover:transform scale-110`}>
+                                <div key={index} className={`feedbackCard max-w-sm px-4 py-10 bg-white rounded-lg text-center flex flex-col justify-center items-center hover:scale-110`}>
                                     <div className="w-40 h-40 rounded-full bg-cover bg-center" style={{ backgroundImage: `url(${feedback.image})` }}></div>
                                     <p className="text-gray-600 mt-2">{feedback.story}</p>
                                 </div>
