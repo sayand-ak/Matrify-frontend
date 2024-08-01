@@ -1,7 +1,4 @@
-// import { useNavigate } from "react-router-dom";
 import Navbar from "../../../components/navbar/Navbar";
-// import { useAppDispatch } from "../../../hooks/useTypedSelectors";
-// import { userLogout } from "../../../redux/slices/userSlices";
 import { Banner } from "../../../components/Banner/Banner";
 import { Carousal } from "../../../components/Carousal/Carousal";
 import { Footer } from "../../../components/footer/Footer";
