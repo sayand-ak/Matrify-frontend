@@ -13,7 +13,7 @@ import { ContentLoader } from "../loader/ContentLoader";
 interface HomeProp {
     matchBase: string;
     matchKey: string;
-    matchData: string
+    matchData: string;
 }
 
 export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
@@ -23,10 +23,9 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
 
     const [data, setData] = useState<UserData[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isFetching, setIsFetching] = useState(true); // Add this state
 
     const dispatch = useAppDispatch();
-    
-
 
     useEffect(() => {
         const handleResize = () => {
@@ -39,11 +38,9 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
         };
     }, []);
 
-    
-
     const handleArrowClick = (direction: string) => {
         const maxTranslate = isSmallScreen ? -75 : -20;
-        const step = 25
+        const step = 25;
 
         if (direction === "left" && translateValue < 0) {
             setTranslateValue((prev) => prev + step);
@@ -53,67 +50,56 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     };
 
     const fetchData = useCallback(async () => {
-        //change here
         if (!isLoaded) {
             try {
-                
-                const response = await dispatch(getMatches({matchBase, matchKey, matchData}));
-                if(response.payload.data.length > 0) {
+                setIsFetching(true); // Start fetching
+                const response = await dispatch(getMatches({ matchBase, matchKey, matchData }));
+                if (response.payload.data.length > 0) {
                     const data = response.payload.data;
                     console.log(data);
-                    
-                    
                     setData(data);
-                    setIsLoaded(true);
                 } else {
-                    setData([])
+                    setData([]);
                 }
+                setIsLoaded(true);
             } catch (error) {
-                console.log("error")
+                console.log("error");
+            } finally {
+                setIsFetching(false); // End fetching
             }
         }
     }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
-    
 
-    
     const ref = useIntersectionObserver(fetchData);
 
-    
-    
-    if (data.length <= 0 && isLoaded) {
+    if (isFetching) {
+        // Show skeleton loaders while fetching data
         return (
-            <div className="skeleton-container ">
-                <div className="skeleton-card">
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-text"></div>
-                    <div className="skeleton-sub-text"></div>
+            <div className="carousal-container-child relative w-full overflow-hidden flex flex-col justify-center gap-5">
+                <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
+                    <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
+                    <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
+                        view all <MdKeyboardDoubleArrowRight />
+                    </a>
                 </div>
-                <div className="skeleton-card">
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-text"></div>
-                    <div className="skeleton-sub-text"></div>
-                </div>
-                <div className="skeleton-card">
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-text"></div>
-                    <div className="skeleton-sub-text"></div>
-                </div>
-                <div className="skeleton-card">
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-text"></div>
-                    <div className="skeleton-sub-text"></div>
-                </div>
-                <div className="skeleton-card">
-                    <div className="skeleton-image"></div>
-                    <div className="skeleton-text"></div>
-                    <div className="skeleton-sub-text"></div>
+                <div className="carousal-container flex gap-10 w-fit pl-20">
+                    <ContentLoader />
+                    <ContentLoader />
+                    <ContentLoader />
+                    <ContentLoader />
+                    <ContentLoader />
                 </div>
             </div>
-        ); // Return null to render nothing when data is empty and loaded
+        );
+    }
+
+    if (data.length <= 0 && isLoaded) {
+        // Return nothing if there's no data and fetching is complete
+        return null;
     }
 
     return (
-        <div 
+        <div
             className={`carousal-container-child ${data.length > 0 ? "h-[25rem]" : "h-0"} relative w-full overflow-hidden flex flex-col justify-center gap-5`}
             ref={ref}
         >
@@ -126,39 +112,25 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
 
             {
                 data.length > 0 && (
-                    isLoaded ? (
-                        <div
-                            className="carousal-container w-fit pl-20"
-                            style={{
-                                transition: "transform 0.5s",
-                                transform: `translateX(${translateValue}%)`,
-                            }}
-                            ref={carousalRef}
-                        >
-                            {
-                                data.slice(0, 5).map((user, index) => (
-                                    
-                                    <CarousalItems data={user} index={index}/>  
-                                ))
-                            }
-                        </div>
-                    ) : (
-                        <div
-                        className="carousal-container flex gap-10 w-fit pl-20"
-                        >
-                            <ContentLoader/>
-                            <ContentLoader/>
-                            <ContentLoader/>
-                            <ContentLoader/>
-                            <ContentLoader/>
-                        </div>
-                    )
-                ) 
+                    <div
+                        className="carousal-container w-fit pl-20"
+                        style={{
+                            transition: "transform 0.5s",
+                            transform: `translateX(${translateValue}%)`,
+                        }}
+                        ref={carousalRef}
+                    >
+                        {
+                            data.slice(0, 5).map((user, index) => (
+                                <CarousalItems data={user} index={index} key={index} />
+                            ))
+                        }
+                    </div>
+                )
             }
-           
 
             <div className="absolute top-[50%] px-10 flex justify-between w-full">
-                <button 
+                <button
                     onClick={() => handleArrowClick("left")}
                 >
                     <IoMdArrowDropleftCircle className="text-[5rem] text-transparent hover:text-[#00000043]" />
