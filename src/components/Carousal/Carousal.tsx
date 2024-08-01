@@ -77,9 +77,39 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
 
     
     const ref = useIntersectionObserver(fetchData);
+
     
-    if (data.length === 0 && isLoaded) {
-        return null; // Return null to render nothing when data is empty and loaded
+    
+    if (data.length <= 0 || isLoaded) {
+        return (
+            <div className="skeleton-container ">
+                <div className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-text"></div>
+                    <div className="skeleton-sub-text"></div>
+                </div>
+                <div className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-text"></div>
+                    <div className="skeleton-sub-text"></div>
+                </div>
+                <div className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-text"></div>
+                    <div className="skeleton-sub-text"></div>
+                </div>
+                <div className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-text"></div>
+                    <div className="skeleton-sub-text"></div>
+                </div>
+                <div className="skeleton-card">
+                    <div className="skeleton-image"></div>
+                    <div className="skeleton-text"></div>
+                    <div className="skeleton-sub-text"></div>
+                </div>
+            </div>
+        ); // Return null to render nothing when data is empty and loaded
     }
 
     return (

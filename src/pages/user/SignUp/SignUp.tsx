@@ -100,7 +100,7 @@ function SignUp() {
                 if(response.payload.success){
 
                     setIsLoading(false);
-                    
+
                     const otpConfig = onSignInSubmit(submitBtn.current);
                     
                     if (otpConfig) {
@@ -117,9 +117,11 @@ function SignUp() {
                         setIsModalOpen(true);
         
                     } else{
+                        setIsLoading(false);
                         console.log("error otp config");
                     }
                 }else{
+                    setIsLoading(false);
                     showToast("error", response.payload.message);
                 }
             }            
@@ -148,16 +150,19 @@ function SignUp() {
                             navigate("/login");
                         });
                     } else {
+                        setIsLoading(true)
                         showToast("error", response.payload.message);
                     }
                 } else {
+                    setIsLoading(true)
                     showToast("error", "Invalid OTP");
                 }
-                setIsLoading(false)
             } catch (error) {
+                setIsLoading(true)
                 showToast("error", "Invalid OTP. Check OTP and try again.");
             }
         } else {
+            setIsLoading(true)
             alert("Invalid OTP");
         }
     }
@@ -198,10 +203,6 @@ function SignUp() {
         // Close the OTP verification modal
         setIsModalOpen(false);
     }
-
-    
-    
-
 
     return(
         <div className="h-[100vh] flex items-center justify-center">

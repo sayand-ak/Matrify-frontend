@@ -169,7 +169,7 @@ export default function Navbar({page}: NavbarProps){
                     </a>
 
                     { page!="landing"&&
-                        <ul className={`lg:flex hidden gap-14 items-center w-[fit-content] pl-10 font-semibold ${page == "home" ? "text-[#ffffff73]" : "text-[#000]" } text-[16px]`}>
+                        <ul className={`lg:flex hidden gap-14 items-center w-[fit-content] pl-10 font-semibold ${page == "home" ? "text-[#424141]" : "text-[#000]" } text-[16px]`}>
                             <li className={`${page === "home" && "hover:text-white"} cursor-pointer`}>
                                 <a href="/home">Home</a>
                             </li>
@@ -184,18 +184,6 @@ export default function Navbar({page}: NavbarProps){
 
 
                 <div className="flex items-center gap-10 justify-end w-full">
-                    {/* { page == "landing" &&
-                        <div className="flex items-center gap-5 justify-end w-full">
-                            <a href="/login" className="login-btn px-2 py-1 md:py-3 md:px-5">Log in</a>
-                            <button 
-                                className="px-3 py-2 md:py-3 md:px-5"
-                                onClick={() =>{
-                                    navigate("/register")
-                                }}>
-                                Sign up
-                            </button>
-                        </div>
-                    } */}
 
                     {  page!="landing" &&  
                         <div className={`flex items-center gap-2 sm:gap-10 justify-end`}>
@@ -203,15 +191,15 @@ export default function Navbar({page}: NavbarProps){
                                 page == "home" && 
                                 <form 
                                     action="#" 
-                                    className={`relative flex  px-2 py-1 items-center ${page === "home" && "hover:text-white"} text-[#ffffff73] rounded-t-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
+                                    className={`relative flex  px-2 py-1 items-center ${page === "home" && "hover:text-white"} text-[#ffffff73] rounded-t-md bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border-gray-400`}
                                     onSubmit={handleSaveSearchData}
                                 >
-                                    <IoSearch className="text-[22px]"/>
+                                    <IoSearch className="text-[22px] text-gray-600"/>
 
                                     <input
                                         type="text"
                                         placeholder="Search by username"
-                                        className="md:w-[343px] h-[40px] px-5 outline-none bg-transparent"
+                                        className="md:w-[343px] h-[40px] px-5 outline-none bg-transparent text-gray-600"
                                         onFocus={handleSearchFocus}
                                         onBlur={handleSearchBlur}
                                         onChange={(e) => {
@@ -221,7 +209,7 @@ export default function Navbar({page}: NavbarProps){
                                     />
 
                                     <div
-                                        className="absolute scale-y-0 transition-transform top-[48px] left-0 min-h-14 max-h-[40vh] w-[255px] md:w-[382px] overflow-y-scroll no-scrollbar bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
+                                        className="absolute scale-y-0 transition-transform top-[48px] left-[1px] min-h-14 max-h-[40vh] w-[255px] md:w-[379px] overflow-y-scroll no-scrollbar bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 py-3"
 
                                         style={{
                                             transitionDuration: '0.2s',
@@ -230,12 +218,12 @@ export default function Navbar({page}: NavbarProps){
                                         }}
                                         ref={searchRef}
                                     >
-                                        <span className="text-[#fff] flex items-center px-2 font-poppins">
+                                        <span className="text-gray-600 flex items-center px-2 font-poppins">
                                             {search.length <=0 && (
                                                 <div className="flex flex-col gap-3 w-full h-full">
                                                     {selector?.searchHistory.length === 0 ? (
                                                         <span className="flex items-center gap-3">
-                                                            <FaHistory className="text-gray-300 text-[14px]"/>
+                                                            <FaHistory className="text-gray-600 text-[14px]"/>
 
                                                             <p>No Search yet</p>
                                                         </span>
@@ -246,7 +234,7 @@ export default function Navbar({page}: NavbarProps){
                                                                 className="flex gap-5 items-center cursor-pointer w-fill hover:bg-[#ffffff3b] py-1 px-2"
                                                                 onClick={() => {setSearch(searchHistory.text)}}
                                                             >
-                                                                <FaHistory className="text-gray-300 text-[14px]"/>
+                                                                <FaHistory className="text-gray-600 text-[14px]"/>
 
                                                                 {searchHistory.text}
                                                             </a>
@@ -270,7 +258,7 @@ export default function Navbar({page}: NavbarProps){
                                                             ))
                                                         ) : (
                                                             <div className="h-full w-full flex items-center gap-4">
-                                                                <BiInfoCircle className="text-gray-300 text-[24px]"/>
+                                                                <BiInfoCircle className="text-gray-600 text-[24px]"/>
                                                                 <p>No match found!</p>
                                                             </div>
                                                         )}

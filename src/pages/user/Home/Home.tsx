@@ -97,7 +97,7 @@ function Home() {
                     }
                 }
             } catch (error) {
-                navigate("/500");
+                navigate("/500")
             }
         }
         fetchUserData();
@@ -105,7 +105,7 @@ function Home() {
     }, [userData?._id, dispatch, userData, user?.profile?._id]);
 
     return (
-        <div className="home-container font-rubik">
+        <div className="home-container font-rubik overflow-hidden">
 
             <motion.nav
                 variants={navVariants}
@@ -128,7 +128,7 @@ function Home() {
             </div>
 
             <div className="features-cards">
-                <div className="feature-card-heading flex justify-center items-center mx-auto h-[13vh] rounded-b-[40px] md:w-1/4 bg-[#EFECE6]">
+                <div className="feature-card-heading flex justify-center items-center mx-auto h-[10vh] mt-2 rounded-b-[40px] md:w-1/4 bg-[#F7F4FA]">
                     <h1 className="text-3xl md:text-4xl font-rubik">Why  MATRIFY ?</h1>
                 </div>
 

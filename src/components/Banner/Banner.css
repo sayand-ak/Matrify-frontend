@@ -1,45 +1,28 @@
 .banner{
-    position: absolute;
-    top: 0;
-    z-index: -1;
-    min-height: 100vh;
+    height: 90vh;
     width: 100vw;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .images{
-    background-image: url(/images/3298288.jpg);
+    background-image: url(/public/images/banner_new.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-@media (max-width: 700px) {
-    .banner {
-        background-position: -400px 0;
-    }
-}
-
-@media (min-width: 701px) and (max-width: 1000px) {
-    .banner {
-        background-position: -100px 0;
-    }
-}
-
-@media (max-width: 1001px) and (min-width: 1399px) {
-    .banner {
-        background-position: 0 0;
-    }
-}
-
-
-@media (min-width: 1400px){
-    .banner {
-        background-position: 0 -11rem;
-    }
-}
 
 
 .banner-quote{
     font-weight: 500px;
 }
 
+.banner-2-quote{
+    font-size: 3rem; /* Adjust the size as needed */
+    font-weight: bold; /* Adjust the weight as needed */
+    background: linear-gradient(to right top, #B691C2, #B691C2, #fc74a8, #F87282, #F87282);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block; 
+}
