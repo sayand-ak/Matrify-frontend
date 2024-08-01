@@ -52,6 +52,12 @@ export function FeedbackSlider() {
                                     <p className="text-gray-600 mt-2">{feedback.story}</p>
                                 </div>
                             ))}
+                            {feedbackList.map((feedback, index) => (
+                                <div key={index} className={`feedbackCard max-w-sm px-4 py-10 bg-white rounded-lg text-center flex flex-col justify-center items-center ${index === currentIndex ? 'transform scale-110' : ''}`}>
+                                    <div className="w-40 h-40 rounded-full bg-cover bg-center" style={{ backgroundImage: `url(${feedback.image})` }}></div>
+                                    <p className="text-gray-600 mt-2">{feedback.story}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
