@@ -66,37 +66,22 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
 
     const ref = useIntersectionObserver(fetchData);
 
-    if (isLoading) {
-        return (
-            <div className="carousal-container-child relative w-full overflow-hidden flex flex-col justify-center gap-5">
-                <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
-                    <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
-                    <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
-                        view all <MdKeyboardDoubleArrowRight />
-                    </a>
-                </div>
+    const renderContent = () => {
+        if (isLoading) {
+            return (
                 <div className="carousal-container flex gap-10 w-fit pl-20 py-10">
                     {[...Array(5)].map((_, index) => (
                         <ContentLoader key={index} />
                     ))}
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 
-    if (data.length === 0) {
-        return null;
-    }
+        if (data.length === 0) {
+            return null;
+        }
 
-    return (
-        <div className="carousal-container-child h-[25rem] relative w-full overflow-hidden flex flex-col justify-center gap-5" ref={ref}>
-            <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
-                <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
-                <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
-                    view all <MdKeyboardDoubleArrowRight />
-                </a>
-            </div>
-
+        return (
             <div
                 className="carousal-container w-fit pl-20"
                 style={{
@@ -109,15 +94,34 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                     <CarousalItems data={user} index={index} key={index} />
                 ))}
             </div>
+        );
+    };
 
-            <div className="absolute top-[50%] px-10 flex justify-between w-full">
-                <button onClick={() => handleArrowClick("left")}>
-                    <IoMdArrowDropleftCircle className="text-[5rem] text-transparent hover:text-[#00000043]" />
-                </button>
-                <button onClick={() => handleArrowClick("right")}>
-                    <IoMdArrowDroprightCircle className="text-[5rem] text-transparent hover:text-[#00000043]" />
-                </button>
+    if (!isLoading && data.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="carousal-container-child h-[25rem] relative w-full overflow-hidden flex flex-col justify-center gap-5" ref={ref}>
+            <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
+                <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
+                <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
+                    view all <MdKeyboardDoubleArrowRight />
+                </a>
             </div>
+
+            {renderContent()}
+
+            {!isLoading && data.length > 0 && (
+                <div className="absolute top-[50%] px-10 flex justify-between w-full">
+                    <button onClick={() => handleArrowClick("left")}>
+                        <IoMdArrowDropleftCircle className="text-[5rem] text-transparent hover:text-[#00000043]" />
+                    </button>
+                    <button onClick={() => handleArrowClick("right")}>
+                        <IoMdArrowDroprightCircle className="text-[5rem] text-transparent hover:text-[#00000043]" />
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
