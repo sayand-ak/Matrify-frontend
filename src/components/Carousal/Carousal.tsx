@@ -80,7 +80,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
 
     
     
-    if (data.length <= 0 && !isLoaded) {
+    if (data.length <= 0 && isLoaded) {
         return (
             <div className="skeleton-container ">
                 <div className="skeleton-card">
