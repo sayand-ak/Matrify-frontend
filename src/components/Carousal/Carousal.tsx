@@ -56,16 +56,17 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                 const response = await dispatch(getMatches({ matchBase, matchKey, matchData }));
                 if (response.payload.data.length > 0) {
                     const data = response.payload.data;
-                    console.log(data);
+                    setIsFetching(false);
                     setData(data);
                 } else {
                     setData([]);
+                    setIsFetching(false);
                 }
                 setIsLoaded(true);
             } catch (error) {
                 console.log("error");
             } finally {
-                setIsFetching(false); // End fetching
+                setIsFetching(false); 
             }
         }
     }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
