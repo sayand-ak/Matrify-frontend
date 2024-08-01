@@ -7,7 +7,7 @@ import { textVariants } from '../../utils/animations/animation3';
 export function Banner() {
   return (
     <div
-      className="banner max-w-full flex pt-[10rem] md:pt-0 items-start md:items-center px-16 text-[25px] lg:text-[50px] text-[#ffffff9f]"
+      className="banner max-w-full flex pt-[10rem] md:pt-0 items-start md:items-center px-16 text-[25px] lg:text-[50px] text-[#000000]"
     >
       <motion.h1
         className="font-semibold"
