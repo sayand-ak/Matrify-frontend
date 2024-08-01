@@ -12,7 +12,7 @@ import "./Footer.css";
 
 export function Footer() {
     return (
-        <div className="bg-[#e8e8e8] min-h-[50vh] flex items-center justify-center" >
+        <div className="bg-[#FEFEFE] min-h-[50vh] flex items-center justify-center" >
 
             <ul className="footer-container flex justify-evenly w-full flex-wrap">
                 <li className="w-[fit-content] flex items-center pl-5">
@@ -110,7 +110,7 @@ export function Footer() {
                         <MdEmail/> Stay upto date on latest from MATRIFY
                     </h1>
                     <form action="#" className="flex flex-col gap-5">
-                        <input type="text" className="px-5 py-3 text-sm rounded-lg outline-none bg-[#dfdede]" placeholder="Enter email address"/>
+                        <input type="text" className="px-5 py-3 text-sm rounded-lg outline-none bg-[#ecebeb]" placeholder="Enter email address"/>
                         <button className="subscribe-btn">SUBSCRIBE</button>
                     </form>
                 </li>
