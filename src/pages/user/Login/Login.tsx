@@ -101,6 +101,7 @@ function Login() {
                         }
                     });
                 } else {
+                    setIsLoading(true);
                     showToast("error", response.payload.message);
                 }
             }
