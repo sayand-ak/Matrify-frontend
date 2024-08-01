@@ -4,6 +4,9 @@
     z-index: -1;
     min-height: 100vh;
     width: 100vw;
+}
+
+.images{
     background-image: url(/public/images/3298288.jpg);
     background-size: cover;
     background-repeat: no-repeat;
