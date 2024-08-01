@@ -160,7 +160,7 @@ export default function Navbar({page}: NavbarProps){
     const navigate = useNavigate();
     return (
            
-            <div className="navbar w-full items-center justify-between px-5 flex md:px-14 bg-transparent z-10 relative">
+            <div className="navbar w-full items-center justify-between px-5 flex md:px-16 bg-transparent z-10 relative">
                 <div className="flex">
                     <a href="#">
                         <div className="logo-div h-16 w-16 hidden sm:flex">

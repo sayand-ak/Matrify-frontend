@@ -1,8 +1,9 @@
 
 .images{
-    background-image: url("/public/images/banner_new.jpg");
-    background-size: cover;
+    background-image: url(/public/images/banner_new.jpg);
+    background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
     min-height: 90vh;
 }
 
@@ -49,10 +50,10 @@
 .text-gradient {
     font-size: 4.5rem; /* Adjust the size as needed */
     font-weight: bold; /* Adjust the weight as needed */
-    background: linear-gradient(to right top, #e5ba70, #e5ba70, #e9b466, #C5964E, #d6a358);
+    background: linear-gradient(to right top, #B691C2, #B691C2, #fc74a8, #F87282, #F87282);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    display: inline-block; /* Ensures the gradient applies to the text */
+    display: inline-block; 
   }
   

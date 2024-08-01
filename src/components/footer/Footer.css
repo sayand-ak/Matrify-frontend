@@ -3,7 +3,7 @@
     height: 40px;
     border: none;
     border-radius: 10px;
-    background: linear-gradient(to right,#664607,#ffd277,#77530a,#77530a,#ffd277,#77530a);
+    background: linear-gradient(to right,#EC3079,#EC3079,#B591C2,#B591C2,#EC3079,#B591C2);
     background-size: 250%;
     background-position: left;
     color: #ffd277;
@@ -19,15 +19,15 @@
 .subscribe-btn::before {
     position: absolute;
     content: "SUBSCRIBE";
-    color: #ffd277;
+    color: #EC3079;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 97%;
     height: 90%;
     border-radius: 8px;
+    background-color: rgb(243, 241, 241);
     transition-duration: 1s;
-    background-color: rgba(0, 0, 0, 0.842);
     background-size: 200%;
 }
 

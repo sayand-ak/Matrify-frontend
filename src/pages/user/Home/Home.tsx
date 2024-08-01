@@ -80,7 +80,7 @@ function Home() {
       useEffect(() => {
         const fetchUserData = async () => {
             try {
-                if (userData?._id || "") {
+                if (userData?._id) {
                     const response = await dispatch(userProfile(userData?._id || ""));
     
                     if (response.payload.success) {
