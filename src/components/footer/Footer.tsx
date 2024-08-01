@@ -16,7 +16,7 @@ export function Footer() {
 
             <ul className="footer-container flex justify-evenly w-full flex-wrap">
                 <li className="w-[fit-content] flex items-center pl-5">
-                    <img src="/images/matriim-01.png" alt="" className="h-[10rem] w-[10rem] md:h-[12rem] md:w-[14rem]"/>
+                    <img src="/images/matriim-01.png" alt="" className="h-[10rem] w-[10rem] md:h-[12rem] md:w-[12rem]"/>
                 </li>
                 <li className="pt-8">
                     <h1 className="text-[#000] text-lg py-6 font-semibold">Connect to us</h1>
