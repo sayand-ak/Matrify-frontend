@@ -10,14 +10,14 @@ export function Banner() {
       className="banner max-w-full flex pt-[10rem] md:pt-0 items-start md:items-center px-16 text-[25px] lg:text-[50px] text-[#000000]"
     >
       <motion.h1
-        className="font-semibold"
+        className="font-semibold w-1/2 bg-red-400"
         variants={textVariants}
         initial="hidden"
         animate="visible"
       >
         Discover the path to Love and Unity with Matrify - Where souls connect in Harmony.
       </motion.h1>
-      <div className="images flex-1 rounded-b-[60px] md:rounded-l-[50px] md:rounded-none"></div>
+      <div className="images w-1/2 rounded-b-[60px] md:rounded-l-[50px] md:rounded-none"></div>
     </div>
   );
 }
