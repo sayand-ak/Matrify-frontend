@@ -7,11 +7,13 @@ import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { UserData } from "../../typings/user/userTypes";
 import { useAppDispatch } from "../../hooks/useTypedSelectors";
 import { getMatches } from "../../services/userAPI";
+import { ContentLoader } from "../loader/ContentLoader";
+
 
 interface HomeProp {
     matchBase: string;
     matchKey: string;
-    matchData: string;
+    matchData: string
 }
 
 export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
@@ -23,6 +25,8 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const dispatch = useAppDispatch();
+    
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -35,9 +39,11 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
         };
     }, []);
 
+    
+
     const handleArrowClick = (direction: string) => {
         const maxTranslate = isSmallScreen ? -75 : -20;
-        const step = 25;
+        const step = 25
 
         if (direction === "left" && translateValue < 0) {
             setTranslateValue((prev) => prev + step);
@@ -47,27 +53,36 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     };
 
     const fetchData = useCallback(async () => {
+        //change here
         if (!isLoaded) {
             try {
-                const response = await dispatch(getMatches({ matchBase, matchKey, matchData }));
-                if (response.payload.data.length > 0) {
-                    setData(response.payload.data);
+                
+                const response = await dispatch(getMatches({matchBase, matchKey, matchData}));
+                if(response.payload.data.length > 0) {
+                    const data = response.payload.data;
+                    console.log(data);
+                    
+                    
+                    setData(data);
                     setIsLoaded(true);
                 } else {
-                    setData([]);
-                    setIsLoaded(true);
+                    setData([])
                 }
             } catch (error) {
-                console.log("error");
+                console.log("error")
             }
         }
     }, [dispatch, matchBase, matchData, matchKey, isLoaded]);
+    
 
+    
     const ref = useIntersectionObserver(fetchData);
 
-    if (!isLoaded) {
+    
+    
+    if (data.length <= 0 || !isLoaded) {
         return (
-            <div className="skeleton-container flex gap-10 overflow-hidden">
+            <div className="skeleton-container ">
                 <div className="skeleton-card">
                     <div className="skeleton-image"></div>
                     <div className="skeleton-text"></div>
@@ -94,19 +109,11 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                     <div className="skeleton-sub-text"></div>
                 </div>
             </div>
-        );
-    }
-
-    if (data.length <= 0) {
-        return (
-            <div className="no-data-message text-center">
-                <p>No matches found.</p>
-            </div>
-        );
+        ); // Return null to render nothing when data is empty and loaded
     }
 
     return (
-        <div
+        <div 
             className={`carousal-container-child ${data.length > 0 ? "h-[25rem]" : "h-0"} relative w-full overflow-hidden flex flex-col justify-center gap-5`}
             ref={ref}
         >
@@ -117,21 +124,43 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
                 </a>
             </div>
 
-            <div
-                className="carousal-container w-fit pl-20"
-                style={{
-                    transition: "transform 0.5s",
-                    transform: `translateX(${translateValue}%)`,
-                }}
-                ref={carousalRef}
-            >
-                {data.slice(0, 5).map((user, index) => (
-                    <CarousalItems data={user} index={index} key={index} />
-                ))}
-            </div>
+            {
+                data.length > 0 && (
+                    isLoaded ? (
+                        <div
+                            className="carousal-container w-fit pl-20"
+                            style={{
+                                transition: "transform 0.5s",
+                                transform: `translateX(${translateValue}%)`,
+                            }}
+                            ref={carousalRef}
+                        >
+                            {
+                                data.slice(0, 5).map((user, index) => (
+                                    
+                                    <CarousalItems data={user} index={index}/>  
+                                ))
+                            }
+                        </div>
+                    ) : (
+                        <div
+                        className="carousal-container flex gap-10 w-fit pl-20"
+                        >
+                            <ContentLoader/>
+                            <ContentLoader/>
+                            <ContentLoader/>
+                            <ContentLoader/>
+                            <ContentLoader/>
+                        </div>
+                    )
+                ) 
+            }
+           
 
             <div className="absolute top-[50%] px-10 flex justify-between w-full">
-                <button onClick={() => handleArrowClick("left")}>
+                <button 
+                    onClick={() => handleArrowClick("left")}
+                >
                     <IoMdArrowDropleftCircle className="text-[5rem] text-transparent hover:text-[#00000043]" />
                 </button>
                 <button onClick={() => handleArrowClick("right")}>
