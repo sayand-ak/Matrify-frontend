@@ -232,7 +232,7 @@ export default function Navbar({page}: NavbarProps){
                                                             <a 
                                                                 key={index} 
                                                                 className="flex gap-5 items-center cursor-pointer w-fill hover:bg-[#ffffff3b] py-1 px-2"
-                                                                onClick={() => {setSearch(searchHistory.text)}}
+                                                                onClick={() => {handleSearch(searchHistory.text)}}
                                                             >
                                                                 <FaHistory className="text-gray-600 text-[14px]"/>
 
