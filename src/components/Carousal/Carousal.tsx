@@ -104,7 +104,7 @@ export function Carousal({ matchBase, matchKey, matchData }: HomeProp) {
     return (
         <div className="carousal-container-child h-[25rem] relative w-full overflow-hidden flex flex-col justify-center gap-5" ref={ref}>
             <div className="flex w-full items-center justify-between px-5 md:px-[5rem] h-10">
-                <h1 className="h-fit text-[20px] font-semibold">{matchKey.toUpperCase()}</h1>
+                <h1 className="h-fit text-[20px] font-semibold">{matchKey == "random" ? "You may like": matchKey.toUpperCase()}</h1>
                 <a href={`/viewAllMatches/${matchBase}/${matchKey}/${matchData}`} className="flex items-center gap-2 text-[18px] font-semibold">
                     view all <MdKeyboardDoubleArrowRight />
                 </a>
