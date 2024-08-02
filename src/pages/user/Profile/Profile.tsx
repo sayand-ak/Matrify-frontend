@@ -71,8 +71,6 @@ import ProfileTabs from "../../../components/ProfileTab/ProfileTabs";
 import { PageLoader } from "../../../components/loader/PageLoader";
 
 
-
-
 interface RouteParams extends Record<string, string | undefined> {
     id: string;
     user: string
@@ -520,15 +518,15 @@ function Profile() {
                                         {/* if the profile is for user show edit btn and if its for match show match options */}
                                         {isLoggedUser ? (
                                             <button
-                                                className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#C2A170] border-[#C2A170] border-solid rounded-3xl hover:bg-[#C2A170] hover:text-white"
+                                                className="absolute right-4 md:right-10 top-5 px-3 py-1 md:px-5 md:py-2 border-[1px] text-[12px] md:text-[15px] font-semibold text-[#000] border-[#000] border-solid rounded-3xl hover:bg-[#000] hover:text-white"
                                                 onClick={() => setIsModalOpen(true)}
                                             >
                                                 Edit profile
                                             </button>
                                         ) : (
-                                            <div className="absolute flex items-center gap-5 right-4 md:right-10 top-5 font-semibold text-[#C2A170]">
+                                            <div className="absolute flex items-center gap-5 right-4 md:right-10 top-5 font-semibold text-[#000]">
                                                 <button
-                                                    className="border-[1px] text-[15px] h-10 rounded-lg px-3 border-[#c2a17085]"
+                                                    className="border-[1px] text-[15px] h-10 rounded-lg px-3 border-[#000]"
                                                     onClick={handleSendInterest}
                                                 >
                                                     {sendInterestButtonLabel}
