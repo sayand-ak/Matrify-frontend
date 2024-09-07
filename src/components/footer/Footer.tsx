@@ -16,19 +16,19 @@ export function Footer() {
 
             <ul className="footer-container flex justify-evenly w-full flex-wrap">
                 <li className="w-[fit-content] flex items-center pl-5">
-                    <img src="/images/matriim-01.png" alt="" className="h-[10rem] w-[10rem] md:h-[12rem] md:w-[12rem]"/>
+                    <img src="/images/matriim-01.png" alt="" className="size-[7rem] md:md:size-[8rem]"/>
                 </li>
                 <li className="pt-8">
                     <h1 className="text-[#000] text-lg py-6 font-semibold">Connect to us</h1>
                     <ul className="social-media-links text-[#000] flex flex-col gap-2 justify-center">
-                        <li className="text-xl flex gap-6">
+                        <li className="text-lg flex gap-6">
                             <FaFacebookSquare />
                             <FaInstagram />
                             <FaYoutube />
                             <FaSquareXTwitter />
                         </li>
 
-                        <li className="text-[#000] text-md flex flex-col">
+                        <li className="text-[#000] text-sm flex flex-col">
                             <p className="flex items-center py-2">
                                 <FaPhone /> &nbsp;+1(000)123 45611
                             </p>
@@ -44,9 +44,9 @@ export function Footer() {
                     </ul>
                 </li>
                 <li className="pt-8">
-                    <h1 className="text-[#000] text-lg py-6 font-semibold">Information</h1>
+                    <h1 className="text-[#000] text-sm py-6 font-semibold">Information</h1>
                     <ul className="information-links text-[#000] flex flex-col gap-2 justify-center">
-                        <li className="text-[#000] text-md flex flex-col">
+                        <li className="text-[#000] text-sm flex flex-col">
                             <a className="flex items-center pb-2">
                                 About us
                             </a>
@@ -67,9 +67,9 @@ export function Footer() {
                 </li>
 
                 <li className="pt-8">
-                    <h1 className="text-[#000] text-lg py-6 font-semibold">Help & Support</h1>
+                    <h1 className="text-[#000] text-sm py-6 font-semibold">Help & Support</h1>
                     <ul className="Help-support-links text-[#000] flex flex-col gap-2 justify-center">
-                        <li className="text-[#000] text-md flex flex-col">
+                        <li className="text-[#000] text-sm flex flex-col">
                             <a className="flex items-center pb-2">
                                 24x7 live support
                             </a>
@@ -90,9 +90,9 @@ export function Footer() {
                 </li>
 
                 <li className="pt-8">
-                    <h1 className="text-[#000] text-lg py-6 font-semibold">Testimonials</h1>
+                    <h1 className="text-[#000] text-sm py-6 font-semibold">Testimonials</h1>
                     <ul className="testimonials-links text-[#000] flex flex-col gap-2 justify-center">
-                        <li className="text-[#000] text-md flex flex-col">
+                        <li className="text-[#000] text-sm flex flex-col">
                             <a className="flex items-center pb-2">
                                 Success stories
                             </a>
@@ -110,7 +110,7 @@ export function Footer() {
                         <MdEmail/> Stay upto date on latest from MATRIFY
                     </h1>
                     <form action="#" className="flex flex-col gap-5">
-                        <input type="text" className="px-5 py-3 text-sm rounded-lg outline-none bg-[#ecebeb]" placeholder="Enter email address"/>
+                        <input type="text" className="px-5 py-3 text-xs rounded-lg outline-none bg-[#ecebeb]" placeholder="Enter email address"/>
                         <button className="subscribe-btn">SUBSCRIBE</button>
                     </form>
                 </li>

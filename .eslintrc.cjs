@@ -16,13 +16,13 @@ module.exports = {
       "error",
       {
         selector: "variable",
-        format: ["camelCase", "UPPER_CASE"],
+        format: ["camelCase", "UPPER_CASE", "PascalCase"],
         leadingUnderscore: "allow",
         modifiers: ["exported"]
       },
       {
         selector: "variable",
-        format: ["camelCase", "UPPER_CASE"],
+        format: ["camelCase", "UPPER_CASE","PascalCase"],
         leadingUnderscore: "forbid",
         modifiers: ["global"]
       },

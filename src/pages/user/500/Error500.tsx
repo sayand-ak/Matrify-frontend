@@ -36,9 +36,9 @@ const Error500: React.FC = () => {
 
                         // Add event listener to throw card on click
                         elem.addEventListener('click', () => {
-                            let updown = [800, -800];
-                            let randomY = updown[Math.floor(Math.random() * updown.length)];
-                            let randomX = Math.floor(Math.random() * 1000) - 1000;
+                            const updown = [800, -800];
+                            const randomY = updown[Math.floor(Math.random() * updown.length)];
+                            const randomX = Math.floor(Math.random() * 1000) - 1000;
                             (elem as HTMLElement).style.transform = `translate(${randomX}px, ${randomY}px) rotate(-540deg)`;
                             (elem as HTMLElement).style.transition = 'transform 1s ease, opacity 2s';
                             (elem as HTMLElement).style.opacity = '0';
@@ -53,11 +53,11 @@ const Error500: React.FC = () => {
                         });
 
                         // Generate random number of lines of code between 4 and 10 and add to each card
-                        let numLines = randomIntFromInterval(5, 10);
+                        const numLines = randomIntFromInterval(5, 10);
 
                         // Loop through the lines and add them to the DOM
                         for (let index = 0; index < numLines; index++) {
-                            let lineLength = randomIntFromInterval(25, 97);
+                            const lineLength = randomIntFromInterval(25, 97);
                             const ulElement = elem.querySelector('.code ul');
                             const node = document.createElement('li');
                             node.classList.add(`node-${index}`);

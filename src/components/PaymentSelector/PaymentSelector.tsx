@@ -13,7 +13,7 @@ interface PaymentSelectorProps {
 }
 
 
-const PaymentSelector = ({setShowPaymentOption, setSelectedMethod, selectedMethod, submitSelectedPayment}: PaymentSelectorProps) => {
+function PaymentSelector ({setShowPaymentOption, setSelectedMethod, selectedMethod, submitSelectedPayment}: PaymentSelectorProps){
 
     const handleMethodChange = (method:string) => {
         setSelectedMethod(method);
@@ -69,6 +69,6 @@ const PaymentSelector = ({setShowPaymentOption, setSelectedMethod, selectedMetho
             </motion.div>
         </div>
     );
-};
+}
 
 export default PaymentSelector;

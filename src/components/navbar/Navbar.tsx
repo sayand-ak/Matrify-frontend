@@ -163,7 +163,7 @@ export default function Navbar({page}: NavbarProps){
             <div className="navbar w-full items-center justify-between px-5 flex md:px-16 bg-transparent z-10 relative">
                 <div className="flex">
                     <a href="#">
-                        <div className="logo-div h-16 w-16 hidden sm:flex">
+                        <div className="logo-div h-14 w-14 hidden sm:flex">
 
                         </div>
                     </a>
@@ -232,7 +232,7 @@ export default function Navbar({page}: NavbarProps){
                                                             <a 
                                                                 key={index} 
                                                                 className="flex gap-5 items-center cursor-pointer w-fill hover:bg-[#ffffff3b] py-1 px-2"
-                                                                onClick={() => {handleSearch(searchHistory.text)}}
+                                                                onClick={() => handleSearch(searchHistory.text)}
                                                             >
                                                                 <FaHistory className="text-gray-600 text-[14px]"/>
 

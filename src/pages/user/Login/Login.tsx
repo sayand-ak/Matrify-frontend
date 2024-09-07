@@ -165,10 +165,10 @@ function Login() {
 
     return (
         <div className="h-[100vh] flex items-center justify-center">
-            <div className="login-card-container flex flex-col-reverse w-full h-full lg:flex-row lg:w-[65vw] lg:h-[75vh] bg-black lg:rounded-[50px] overflow-hidden">
+            <div className="login-card-container flex flex-col-reverse w-full h-full lg:flex-row lg:w-[65vw] lg:h-[76vh] bg-black lg:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
-                    <form action="#" className="flex flex-col gap-4 w-[80%] items-center md:items-start mt-10 md:mt-16">
-                        <h1 className="heading font-semibold text-3xl font-gillroy">Matrify Login</h1>
+                    <form action="#" className="flex flex-col gap-4 w-[80%] h-full items-center md:items-start mt-10 md:mt-16">
+                        <h1 className="heading font-semibold text-2xl font-gillroy">Matrify Login</h1>
                         <div className="w-full flex flex-col">
                             <label
                                 htmlFor="phone"
@@ -179,7 +179,7 @@ function Login() {
                             <input
                                 type="text"
                                 id="phone"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="p-3 text-sm outline-none w-full rounded-md"
                                 placeholder="eg: example@gmail.com / xxxxxxxxxx"
                                 value={data}
                                 onChange={(e) => validate("data", e.target.value)}
@@ -197,7 +197,7 @@ function Login() {
                             <input
                                 type="password"
                                 id="password"
-                                className="py-4 px-4 outline-none w-full rounded-md"
+                                className="p-3 text-sm outline-none w-full rounded-md"
                                 value={password}
                                 onChange={(e) => validate("password", e.target.value)}
                                 placeholder="*****************"
@@ -208,12 +208,12 @@ function Login() {
                             <div className="flex justify-between w-full pt-2">
                                 <span className="flex items-center gap-2">
                                     <input type="checkbox" name="remember" id="" />
-                                    <label htmlFor="remember" className="text-sm text-[#bcbdbe]">Remember me</label>
+                                    <label htmlFor="remember" className="text-xs text-[#bcbdbe]">Remember me</label>
                                 </span>
 
                                 <a
                                     href="#"
-                                    className="text-sm text-[#bcbdbe] hover:text-black"
+                                    className="text-xs text-[#bcbdbe] hover:text-black"
                                     onClick={() => {
                                         setIsModalOpen(true);
                                     }}
@@ -260,7 +260,7 @@ function Login() {
                         <div className="flex flex-col items-center gap-2 w-full">
                             <button
                                 type="button"
-                                className="w-[200px] px-5 py-2 flex items-center justify-center rounded-md bg-[#1b2931] text-white font-semibold"
+                                className="w-[200px] px-5 py-2 text-sm flex items-center justify-center rounded-md bg-[#1b2931] text-white font-semibold"
                                 onClick={handleLoginSubmit}
                             >
                                 {isLoading ? <Loader dimension={40}/> : "Login"}
@@ -288,7 +288,7 @@ function Login() {
                             ></GoogleLogin>
 
 
-                            <p className="text-black pt-3 text-sm font-gillroy block md:hidden">
+                            <p className="text-black pt-3 text-xs font-gillroy block md:hidden">
                                 Don't have an account?
                                 <a href="/signup">Sign up</a>
                             </p>

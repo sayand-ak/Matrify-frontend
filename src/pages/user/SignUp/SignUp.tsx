@@ -15,11 +15,6 @@ import showToast from "../../../components/Toast/Toast";
 import { startTimer } from "../../../utils/timer";
 import { Loader } from "../../../components/loader/Loader";
 
-declare global {
-    interface Window {
-        recaptchaVerifier: any;
-    }
-}
 
 function SignUp() {
     const [uname, setUname] = useState("");
@@ -208,12 +203,12 @@ function SignUp() {
         <div className="h-[100vh] flex items-center justify-center">
             <div className="signup-card-container flex flex-col-reverse w-full h-full lg:flex-row lg:w-[65vw] lg:h-[80vh] lg:rounded-[50px] overflow-hidden">
                 <div className="form-container flex-1 flex justify-center bg-[#f4f4f4] rounded-t-[50px] md:rounded-none">
-                    <form action="#" className="flex flex-col w-[80%] items-center md:items-start mt-12 lg:mt-16">
-                    <h1 className="heading font-semibold text-3xl font-gillroy pb-2">Matrify Sign up</h1>
+                    <form action="#" className="flex flex-col w-[80%] items-center md:items-start mt-12 lg:mt-15">
+                    <h1 className="heading font-semibold text-2xl font-gillroy pb-2">Matrify Sign up</h1>
                         <div className="w-full input-container flex flex-col" id="username-div">
                             <label 
                                 htmlFor="username" 
-                                className="text-sm font-semibold pb-2"
+                                className="text-xs font-semibold pb-2"
                             >
                                 Username
                             </label>
@@ -224,13 +219,13 @@ function SignUp() {
                                 value={uname}
                                 onChange={(e) => validate("uname", e.target.value)}
                             />
-                            {<span className="text-red-500 text-sm h-4">{unameErr}</span>}
+                            {<span className="text-red-500 text-xs h-4">{unameErr}</span>}
                         </div>
 
                         <div className="w-full input-container flex flex-col">
                             <label 
                                 htmlFor="phone" 
-                                className="text-sm font-semibold pb-2"
+                                className="text-xs font-semibold pb-2"
                             > 
                                 Phone number
                             </label>
@@ -241,13 +236,13 @@ function SignUp() {
                                 value={phone}
                                 onChange={(e) => validate("phone", e.target.value)}
                             />
-                            {<span className="text-red-500 text-sm h-4">{phoneErr}</span>}
+                            {<span className="text-red-500 text-xs h-4">{phoneErr}</span>}
                         </div>
 
                         <div className="w-full input-container flex flex-col">
                         <label 
                                 htmlFor="password" 
-                                className="text-sm font-semibold pb-2"
+                                className="text-xs font-semibold pb-2"
                             > 
                                 Password
                             </label>
@@ -258,13 +253,13 @@ function SignUp() {
                                 value={password}
                                 onChange={(e) => validate("password", e.target.value)}
                             />
-                            {<span className="text-red-500 text-sm h-4">{passwordErr}</span>}
+                            {<span className="text-red-500 text-xs h-4">{passwordErr}</span>}
                         </div>
 
                         <div className="w-full input-container flex flex-col">
                         <label 
                                 htmlFor="re-enterPassword" 
-                                className="text-sm font-semibold pb-2"
+                                className="text-xs font-semibold pb-2"
                             > 
                                 Re-enter password
                             </label>
@@ -275,7 +270,7 @@ function SignUp() {
                                 value={rePassword}
                                 onChange={(e) => validate("repassword", e.target.value)}
                             />
-                            {<span className="text-red-500 text-sm h-4">{rePasswordErr}</span>}
+                            {<span className="text-red-500 text-xs h-4">{rePasswordErr}</span>}
                         </div>
 
                         <div className="flex flex-col w-full items-center">
@@ -283,13 +278,13 @@ function SignUp() {
                                 id="signupBtn"
                                 type="button" 
                                 ref={submitBtn}
-                                className="w-[200px] signup px-5 py-2  md:mt-5 rounded-md bg-[#1B2931] text-white font-semibold flex items-center justify-center"
+                                className="w-[200px] signup px-5 py-2  md:mt-5 rounded-md bg-[#1B2931] text-sm text-white font-semibold flex items-center justify-center"
                                 onClick={handleRegisterSubmit}
                             >
                                 {isLoading ? <Loader dimension={40}/> : "Signup"}
                             </button>
 
-                            <p className="text-black text-sm font-gillroy py-3 block md:hidden">
+                            <p className="text-black text-xs font-gillroy py-3 block md:hidden">
                                 Already have an account?
                                 <a href="/login"> Login</a>
                             </p>
@@ -302,7 +297,7 @@ function SignUp() {
                 <div className="image-container h-[250px] md:h-full md:flex-1 flex items-end" style={{ backgroundImage: `url(${'/images/married-couple-holding-hands-silhouette.jpg'})` }}>
                     <div className="flex flex-col items-center justify-between w-full p-5 h-full md:h-[180px]">
                         <h1 className="text-white text-center text-2xl font-semibold font-gillroy lg:text-3xl">Get Start with MATRIFY</h1>
-                        <p className="text-white text-sm font-gillroy hidden md:block">
+                        <p className="text-white text-xs font-gillroy hidden md:block">
                             Already have an account?
                             <a href="/login"> Login</a>
                         </p>
